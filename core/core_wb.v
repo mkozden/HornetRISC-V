@@ -28,8 +28,8 @@ module core_wb(input reset_i, //active-low reset
                input         inst_wb_ack_i,
                input [31:0]  inst_wb_dat_i,
                input         inst_wb_err_i,
-               input         inst_wb_rst_i,
-               input         inst_wb_clk_i,
+               //input         inst_wb_rst_i,
+               //input         inst_wb_clk_i,
 
                //Interrupts
                input meip_i,

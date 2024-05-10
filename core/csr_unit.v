@@ -233,12 +233,32 @@ end
 always @(*)
 begin
     fast_irq_index = 5'd15;
-    PE_valid = 1'b0;
-    while(fast_irq_index != 5'd31 && PE_valid != 1'b1)
+/*    PE_valid = 1'b0;
+    while(fast_irq_index != 5'd31 && PE_valid != 1'b1) //ERRORS IN OPENLANE: WHILE LOOP ONLY ALLOWED INSIDE CONSTANT FUNCTION
     begin
         fast_irq_index = fast_irq_index + 5'd1;
         PE_valid = masked_irq[fast_irq_index];
-    end
+    end*/
+    
+    //For guaranteed synthesis in OpenLane, let's unroll the while loop
+    
+    if(masked_irq[5'd15] == 1'b1) fast_irq_index = 5'd15;
+    else if(masked_irq[5'd16] == 1'b1) fast_irq_index = 5'd16;
+    else if(masked_irq[5'd17] == 1'b1) fast_irq_index = 5'd17;
+    else if(masked_irq[5'd18] == 1'b1) fast_irq_index = 5'd18;
+    else if(masked_irq[5'd19] == 1'b1) fast_irq_index = 5'd19;
+    else if(masked_irq[5'd20] == 1'b1) fast_irq_index = 5'd20;
+    else if(masked_irq[5'd21] == 1'b1) fast_irq_index = 5'd21;
+    else if(masked_irq[5'd22] == 1'b1) fast_irq_index = 5'd22;
+    else if(masked_irq[5'd23] == 1'b1) fast_irq_index = 5'd23;
+    else if(masked_irq[5'd24] == 1'b1) fast_irq_index = 5'd24;
+    else if(masked_irq[5'd25] == 1'b1) fast_irq_index = 5'd25;
+    else if(masked_irq[5'd26] == 1'b1) fast_irq_index = 5'd26;
+    else if(masked_irq[5'd27] == 1'b1) fast_irq_index = 5'd27;
+    else if(masked_irq[5'd28] == 1'b1) fast_irq_index = 5'd28;
+    else if(masked_irq[5'd29] == 1'b1) fast_irq_index = 5'd29;
+    else if(masked_irq[5'd30] == 1'b1) fast_irq_index = 5'd30;
+    else if(masked_irq[5'd31] == 1'b1) fast_irq_index = 5'd31;
 end
 
 integer i;

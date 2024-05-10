@@ -31,8 +31,8 @@ wire inst_wb_stall_i;
 wire inst_wb_ack_i;
 wire [31:0] inst_wb_dat_i;
 wire inst_wb_err_i;
-wire inst_wb_rst_i;
-wire inst_wb_clk_i;
+//wire inst_wb_rst_i;
+//wire inst_wb_clk_i;
 
 //Wishbone slave signals for peripherals
 wire [NUM_SLAVES-1 : 0] wb_cyc_i;
@@ -106,15 +106,16 @@ reg r_data_wb_err_i;
 reg r_data_wb_stall_i;
 reg r_data_wb_ack_i;
 reg valid;
+reg Break;
 integer k;
 always @(*)
 begin
-    valid = 1'b0;
-    for (k = 1; k < NUM_SLAVES && valid != 1'b1; k = k+1)
+    /*valid = 1'b0;
+    for (k = 1; k < NUM_SLAVES && valid != 1'b1; k = k+1) //ERRORS IN OPENLANE: 2nd ARGUMENT ISN'T CONSTANT (the valid register i bet)
     begin
         if(r_stb[k])
         begin
-            r_data_wb_dat_i = wb_dat_o[k];
+            r_data_wb_dat_i = wb_dat_o[k]; //Maybe we can AND all of these with r_stb and get rid of the valid register??
             r_data_wb_stall_i = wb_stall_o[k];
             r_data_wb_err_i = wb_err_o[k];
             r_data_wb_ack_i = wb_ack_o[k];
@@ -126,6 +127,27 @@ begin
             r_data_wb_stall_i = 1'b0;
             r_data_wb_err_i = 1'b0;
             r_data_wb_ack_i = 1'b0;
+        end
+    end*/
+	Break = 1'b0;
+    for (k = 1; k < NUM_SLAVES; k = k+1)
+    begin
+        if(Break != 1'b1) begin
+            if(r_stb[k])
+            begin
+                r_data_wb_dat_i = wb_dat_o[k];
+                r_data_wb_stall_i = wb_stall_o[k];
+                r_data_wb_err_i = wb_err_o[k];
+                r_data_wb_ack_i = wb_ack_o[k];
+                Break = 1;
+            end
+            else
+            begin
+                r_data_wb_dat_i = 32'b0;
+                r_data_wb_stall_i = 1'b0;
+                r_data_wb_err_i = 1'b0;
+                r_data_wb_ack_i = 1'b0;
+            end
         end
     end
 end
@@ -165,8 +187,8 @@ core_wb core0 (.reset_i(reset_i),
                .inst_wb_ack_i(inst_wb_ack_i),
                .inst_wb_dat_i(inst_wb_dat_i),
                .inst_wb_err_i(inst_wb_err_i),
-               .inst_wb_rst_i(inst_wb_rst_i),
-               .inst_wb_clk_i(inst_wb_clk_i),
+               //.inst_wb_rst_i(inst_wb_rst_i),
+               //.inst_wb_clk_i(inst_wb_clk_i),
 
                //Interrupts
                .meip_i(meip_i),
