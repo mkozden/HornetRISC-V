@@ -60,7 +60,7 @@ wire [31:0] direct_mode_addr, vector_mode_addr;
 //Priority Encoder index
 reg [4:0] fast_irq_index;
 //Priority Encoder Valid output
-reg PE_valid;
+//reg PE_valid;
 
 wire pending_irq, pending_exception;
 wire [31:0] masked_irq;

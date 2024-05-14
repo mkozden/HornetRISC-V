@@ -6,7 +6,7 @@ module fpga_top(input M100_clk_i,
                 output tx_o,
                 output led1,led2,led4);
 
-parameter SYS_CLK_FREQ = 50000000;
+parameter SYS_CLK_FREQ = 80000000;
 parameter NUM_SLAVES = 5;
 
 wire loader_reset;
@@ -197,8 +197,8 @@ core_wb #(.reset_vector(32'h7400))
           .inst_wb_ack_i(inst_wb_ack_i),
           .inst_wb_dat_i(inst_wb_dat_i),
           .inst_wb_err_i(inst_wb_err_i),
-          .inst_wb_rst_i(inst_wb_rst_i),
-          .inst_wb_clk_i(inst_wb_clk_i),
+          //.inst_wb_rst_i(inst_wb_rst_i),
+          //.inst_wb_clk_i(inst_wb_clk_i),
           //Interrupts
           .meip_i(1'b0),
           .mtip_i(mtip),

@@ -39,7 +39,7 @@ reg        IFID_preg_dummy; //indicates if the instruction in the ID stage is du
 
 //ID SIGNALS--------ID SIGNALS--------ID SIGNALS--------ID SIGNALS--------ID SIGNALS--------ID SIGNALS--------ID SIGNALS
 wire [4:0]  rs1_ID, rs2_ID, rd_ID; //register addresses
-wire [31:0] data1_ID, data2_ID;
+//wire [31:0] data1_ID, data2_ID; //Seems to be unused
 wire [11:0] csr_addr_ID; //CSR register address
 wire        csr_wen_ID;
 wire        mret_ID; //driven high when the instruction in ID stage is MRET.
@@ -83,7 +83,7 @@ reg        IDEX_preg_dummy; //indicates if the instruction in the EX stage is du
 reg        IDEX_preg_mret; //driven high when the instruction in EX stage is MRET.
 reg        IDEX_preg_misaligned; //driven high when the second part of a misaligned access is being executed in EX stage.
 
-reg [31:0] register_bank [31:0]; //32x32 register file
+reg [31:0] register_bank [31:1]; //32x32 register file //REMOVED R0 for optimization
 //END ID SIGNALS--------END ID SIGNALS--------END ID SIGNALS--------END ID SIGNALS--------END ID SIGNALS--------END ID SIGNALS
 
 //EX SIGNALS--------EX SIGNALS--------EX SIGNALS--------EX SIGNALS--------EX SIGNALS--------EX SIGNALS--------EX SIGNALS
@@ -127,7 +127,7 @@ wire        take_branch; //branch decision signal. 1 if the branch is taken, 0 o
 //pipeline registers
 reg [31:0] EXMEM_preg_imm;
 reg [4:0]  EXMEM_preg_rd;
-reg [31:0] EXMEM_preg_data2;
+//reg [31:0] EXMEM_preg_data2; //Unused
 reg [31:0] EXMEM_preg_aluout;
 reg [31:0] EXMEM_preg_pc;
 reg [11:0] EXMEM_preg_csr_addr;
@@ -143,10 +143,10 @@ reg [1:0]  EXMEM_preg_addr_bits; //two least-significant bits of data address.
 //signals from previous stage
 wire [6:0]  wb_MEM;
 wire [2:0]  mem_MEM;
-wire [31:0] aluout_MEM, data2_MEM;
+wire [31:0] aluout_MEM; //data2_MEM; //Unused
 wire [4:0]  rd_MEM;
 wire [31:0] imm_MEM;
-wire [31:0] memout_MEM;
+//wire [31:0] memout_MEM; //Unused
 wire [31:0] pc_MEM;
 wire [11:0] csr_addr_MEM;
 wire        csr_wen_MEM;
@@ -160,7 +160,7 @@ reg [31:0] MEMWB_preg_aluout, MEMWB_preg_imm;
 reg [11:0] MEMWB_preg_csr_addr;
 reg [6:0]  MEMWB_preg_wb;
 reg        MEMWB_preg_mret;
-reg        MEMWB_preg_misaligned;
+//reg        MEMWB_preg_misaligned; //Unused
 //END MEM SIGNALS--------END MEM SIGNALS--------END MEM SIGNALS--------END MEM SIGNALS--------END MEM SIGNALS--------END MEM SIGNALS
 
 //WB SIGNALS--------WB SIGNALS--------WB SIGNALS--------WB SIGNALS--------WB SIGNALS--------WB SIGNALS--------WB SIGNALS
@@ -361,7 +361,7 @@ always @(negedge clk_i or negedge reset_i)
 begin
 	if(!reset_i)
 	begin
-		for(i=0; i < 32; i = i+1)
+		for(i=1; i < 32; i = i+1)
 			register_bank[i] <= 32'b0; //reset all registers to 0.
 	end
 
@@ -565,7 +565,8 @@ begin
 		EXMEM_preg_wb <= 7'h0c;
 		EXMEM_preg_mem <= 3'b1;
 		EXMEM_preg_csr_addr <= 12'b0;
-		{EXMEM_preg_pc, EXMEM_preg_aluout, EXMEM_preg_data2} <= 96'b0;
+		//{EXMEM_preg_pc, EXMEM_preg_aluout, EXMEM_preg_data2} <= 96'b0; //EXMEM_preg_data2 is unused
+		{EXMEM_preg_pc, EXMEM_preg_aluout} <= 64'b0;
 		EXMEM_preg_rd <= 5'b0;
 		EXMEM_preg_imm <= 32'b0;
 		EXMEM_preg_dummy <= 1'b0;
@@ -579,7 +580,8 @@ begin
 	   EXMEM_preg_wb <= 7'h0c;
 	   EXMEM_preg_mem <= 3'b1;
 	   EXMEM_preg_csr_addr <= 12'b0;
-	   {EXMEM_preg_pc, EXMEM_preg_aluout, EXMEM_preg_data2} <= 96'b0;
+	   //{EXMEM_preg_pc, EXMEM_preg_aluout, EXMEM_preg_data2} <= 96'b0; //EXMEM_preg_data2 is unused
+	   {EXMEM_preg_pc, EXMEM_preg_aluout} <= 64'b0;
 	   EXMEM_preg_rd <= 5'b0;
 	   EXMEM_preg_imm <= 32'b0;
 	   EXMEM_preg_dummy <= 1'b1;
@@ -593,7 +595,7 @@ begin
 		EXMEM_preg_imm <= mux7_o_EX;
 		EXMEM_preg_rd <= rd_EX;
 		EXMEM_preg_pc <= pc_EX;
-		EXMEM_preg_data2 <= mux4_o_EX;
+		//EXMEM_preg_data2 <= mux4_o_EX;
 		EXMEM_preg_aluout <= mux6_o_EX;
 		EXMEM_preg_mem <= {mem_EX[2:1],mem_wen_EX};
 		EXMEM_preg_wb[6:4] <= wb_EX[6:4];
@@ -634,7 +636,7 @@ assign data_wen_o  = mem_wen_EX;
 assign wb_MEM 	    = EXMEM_preg_wb;
 assign mem_MEM 	    = EXMEM_preg_mem;
 assign aluout_MEM   = EXMEM_preg_aluout;
-assign data2_MEM    = EXMEM_preg_data2;
+//assign data2_MEM    = EXMEM_preg_data2; //Unused
 assign rd_MEM 	    = EXMEM_preg_rd;
 assign pc_MEM       = EXMEM_preg_pc;
 assign imm_MEM 	    = EXMEM_preg_imm;
@@ -653,7 +655,7 @@ begin
 		MEMWB_preg_aluout <= 32'b0;
 		MEMWB_preg_imm <= 32'b0;
 		MEMWB_preg_mret <= 1'b0;
-		MEMWB_preg_misaligned <= 1'b0;
+		//MEMWB_preg_misaligned <= 1'b0; //Unused
 	end
 
 	else if(csr_mem_flush)
@@ -665,7 +667,7 @@ begin
 		MEMWB_preg_aluout <= 32'b0;
 		MEMWB_preg_imm <= 32'b0;
 		MEMWB_preg_mret <= 1'b0;
-		MEMWB_preg_misaligned <= 1'b0;
+		//MEMWB_preg_misaligned <= 1'b0; //Unused
 	end
 
 	else
@@ -677,7 +679,7 @@ begin
 		MEMWB_preg_aluout <= aluout_MEM;
 		MEMWB_preg_memout <= memout;
 		MEMWB_preg_mret <= EXMEM_preg_mret;
-		MEMWB_preg_misaligned <= EXMEM_preg_misaligned;
+		//MEMWB_preg_misaligned <= EXMEM_preg_misaligned; //Unused
 	end
 end
 //END MEM STAGE-----------------------------------------------------------------------------

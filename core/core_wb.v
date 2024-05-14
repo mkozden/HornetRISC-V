@@ -24,12 +24,12 @@ module core_wb(input reset_i, //active-low reset
                output [31:0] inst_wb_adr_o,
                output [31:0] inst_wb_dat_o,
                output [3:0]  inst_wb_sel_o,
-               input         inst_wb_stall_i,
-               input         inst_wb_ack_i,
+               //input         inst_wb_stall_i, //Unused
+               //input         inst_wb_ack_i,  //Unused
                input [31:0]  inst_wb_dat_i,
                input         inst_wb_err_i,
-               //input         inst_wb_rst_i,
-               //input         inst_wb_clk_i,
+               //input         inst_wb_rst_i, //Unused
+               //input         inst_wb_clk_i, //Unused
 
                //Interrupts
                input meip_i,

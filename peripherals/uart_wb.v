@@ -18,7 +18,7 @@ module uart_wb(input         wb_cyc_i,
                output [7:0] rx_byte_o,
                output rx_irq_o);
 
-parameter SYS_CLK_FREQ = 100000000;
+parameter SYS_CLK_FREQ = 80000000;
 parameter BAUD = 9600;
 parameter CLK_DIVIDER = SYS_CLK_FREQ / BAUD; 
 

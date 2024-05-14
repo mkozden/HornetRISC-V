@@ -19,7 +19,7 @@ module loader_wb(input         wb_cyc_i,
                  output led1, led2, led4);
 
 parameter S0 = 0, S1 = 1, S2 = 2, S3 = 3, S4 = 4;
-parameter SYS_CLK_FREQ = 100000000;
+parameter SYS_CLK_FREQ = 80000000;
 
 reg [2:0] state, next_state;
 reg [31:0] counter;

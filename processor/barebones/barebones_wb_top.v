@@ -27,8 +27,8 @@ wire inst_wb_we_o;
 wire [31:0] inst_wb_adr_o;
 wire [31:0] inst_wb_dat_o;
 wire [3:0] inst_wb_sel_o;
-wire inst_wb_stall_i;
-wire inst_wb_ack_i;
+//wire inst_wb_stall_i;
+//wire inst_wb_ack_i;
 wire [31:0] inst_wb_dat_i;
 wire inst_wb_err_i;
 //wire inst_wb_rst_i;
@@ -73,8 +73,8 @@ assign wb_sel_i[0] = inst_wb_sel_o;
 assign wb_rst_i[0] = ~reset_i;
 assign wb_clk_i[0] = clk_i;
 assign inst_wb_dat_i = wb_dat_o[0];
-assign inst_wb_ack_i = wb_ack_o[0];
-assign inst_wb_stall_i = wb_stall_o[0];
+//assign inst_wb_ack_i = wb_ack_o[0];
+//assign inst_wb_stall_i = wb_stall_o[0];
 assign inst_wb_err_i = wb_err_o[0];
 
 genvar i;
@@ -105,7 +105,7 @@ reg [31:0] r_data_wb_dat_i;
 reg r_data_wb_err_i;
 reg r_data_wb_stall_i;
 reg r_data_wb_ack_i;
-reg valid;
+//reg valid;
 reg Break;
 integer k;
 always @(*)
@@ -183,8 +183,8 @@ core_wb core0 (.reset_i(reset_i),
                .inst_wb_adr_o(inst_wb_adr_o),
                .inst_wb_dat_o(inst_wb_dat_o),
                .inst_wb_sel_o(inst_wb_sel_o),
-               .inst_wb_stall_i(inst_wb_stall_i),
-               .inst_wb_ack_i(inst_wb_ack_i),
+               //.inst_wb_stall_i(inst_wb_stall_i),
+               //.inst_wb_ack_i(inst_wb_ack_i),
                .inst_wb_dat_i(inst_wb_dat_i),
                .inst_wb_err_i(inst_wb_err_i),
                //.inst_wb_rst_i(inst_wb_rst_i),
