@@ -28,23 +28,23 @@ always @(posedge wb_clk_i or posedge wb_rst_i)
 begin
 	if(wb_rst_i) begin end
 
-	/*else
+	else
 	begin
 		if(wb_cyc_i && wb_stb_i && wb_we_i)
 		begin
 			if(wb_dat_i == 32'b1)
 			begin
 				$display("Success!");
-				$finish;
+				//$finish;
 			end
 				
 			else
 			begin
 				$display("Failure!");
-				$finish;
+				//$finish;
 			end
 		end
-	end*/
+	end
 end
 
 endmodule

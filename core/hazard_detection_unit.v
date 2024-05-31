@@ -17,14 +17,20 @@ wire uses_rs1, uses_rs2;
 
 assign uses_rs1 = opcode[4:1] == 4'b1100 || //JALR and branch instructions
                   opcode[4:0] == 5'b00000 || //load instructions
+                  opcode[4:0] == 5'b00001 || //FLW 
                   opcode[4:0] == 5'b01000 || //store instructions
+                  opcode[4:0] == 5'b01001 || //FSW
                   opcode[4:0] == 5'b00100 || //register-immediate arithmetic
                   opcode[4:0] == 5'b01100 || //register-register arithmetic
+                  opcode[4:0] == 5'b10100 || //floating point aritmetic instructions
+                  opcode[4:0] == 5'b01101 || //LUI
                   (opcode[4:0] == 5'b11100 && funct3 == 1'b0); //CSR instructions
 
 assign uses_rs2 = opcode[4:0] == 5'b11000 || //branch instructions
                   opcode[4:0] == 5'b01000 || //store instructions
-                  opcode[4:0] == 5'b01100; //register-register arithmetic
+                  opcode[4:0] == 5'b01001 || //FSW
+                  opcode[4:0] == 5'b01100 || //register-register arithmetic
+                  opcode[4:0] == 5'b10100;   //floating point aritmetic instructions 
 always @(*)
 begin
 	if(L_EX)

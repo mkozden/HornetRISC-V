@@ -18,7 +18,14 @@ module control_unit(input [31:0] instr_i,
                     output reg MEM_wen, WB_rf_wen, WB_csr_wen, //memory write enable, register file write enable, CSR unit write enable
                     output reg [1:0] WB_mux,
                     output reg WB_sign, //load-store sign
-                    output reg illegal_instr, //illegal instruction exception
+					output reg WB_rb_sel, // register bank select input
+					output reg IDEX_data1_sel, // data1 select signal 
+					output reg IDEX_data2_sel, // data2 selector signal
+					output reg INTorFloat,
+					output reg [4:0] fpu_func,
+					output reg [2:0] fpu_rm,
+					output reg       fpu_start,
+                    output reg illegal_instr, //illegal instruction exception				
                     output     ecall_o, ebreak_o, //ecall and ebreak exception signals
                     output     mret_o);
 
@@ -30,7 +37,8 @@ parameter pc_EX    = 1'b1;
 
 parameter aluout_MEM = 2'd0;
 parameter memout_MEM = 2'd1;
-parameter imm_MEM    = 2'd2;
+parameter imm_MEM    = 2'd2; 
+parameter fpu_out_MEM = 2'd3;
 
 wire [6:0] opcode;
 wire [2:0] funct3;
@@ -61,14 +69,27 @@ end
 
 always @*
 begin
+	if(opcode == 7'b10100_11)
+		fpu_start = 1'b1;
+	else
+		fpu_start = 1'b0;
+
+end
+
+always @*
+begin
 	casez(opcode)
 		//BEQ, BNE, BLT, BGE, BLTU, BGEU
 		7'b11000_11:
 		begin
+			IDEX_data1_sel = 1'b0;
+			IDEX_data2_sel = 1'b0;
+			INTorFloat = 1'b0;
 			WB_rf_wen = 1'b1;
 			WB_csr_wen = 1'b1;
 			WB_mux = aluout_MEM;
 			WB_sign = 1'b0;
+			WB_rb_sel = 1'b0;
 			MEM_len = 2'b0;
 			MEM_wen = 1'b1;
 			CSR_ALU_func = 2'b0;
@@ -80,6 +101,8 @@ begin
 			EX_mux5 = 1'b1;
 			EX_mux3 = data2_EX;
 			EX_mux1 = data1_EX;
+			fpu_func = 5'b00000;
+			fpu_rm = 3'b000;			
 			case(funct3)
 				3'b000: ALU_func = 4'b1010; //BEQ
 				3'b001: ALU_func = 4'b1011; //BNE
@@ -94,10 +117,14 @@ begin
 		//LUI
 		7'b01101_11:
 		begin
+			IDEX_data1_sel = 1'b0;
+			IDEX_data2_sel = 1'b0;
+			INTorFloat = 1'b0;
 			WB_rf_wen = 1'b0;
 			WB_csr_wen = 1'b1;
 			WB_mux = imm_MEM;
 			WB_sign = 1'b0;
+			WB_rb_sel = 1'b0;
 			MEM_len = 2'b0;
 			MEM_wen = 1'b1;
 			CSR_ALU_func = 2'b0;
@@ -110,15 +137,21 @@ begin
 			EX_mux3 = imm_EX;
 			EX_mux1 = pc_EX;
 			ALU_func = 4'b1111;
+			fpu_func = 5'b00000;
+			fpu_rm = 3'b000;
 		end
 
 		//AUIPC
 		7'b00101_11:
 		begin
+			IDEX_data1_sel = 1'b0;
+			IDEX_data2_sel = 1'b0;
+			INTorFloat = 1'b0;
 			WB_rf_wen = 1'b0;
 			WB_csr_wen = 1'b1;
 			WB_mux = aluout_MEM;
 			WB_sign = 1'b0;
+			WB_rb_sel = 1'b0;
 			MEM_len = 2'b0;
 			MEM_wen = 1'b1;
 			CSR_ALU_func = 2'b0;
@@ -131,15 +164,21 @@ begin
 			EX_mux3 = imm_EX;
 			EX_mux1 = pc_EX;
 			ALU_func = 4'b0000;
+			fpu_func = 5'b00000;
+			fpu_rm = 3'b000;
 		end
 
 		//JAL, JALR
 		7'b110?1_11:
 		begin
+			IDEX_data1_sel = 1'b0;
+			IDEX_data2_sel = 1'b0;
+			INTorFloat = 1'b0;
 			WB_rf_wen = 1'b0;
 			WB_csr_wen = 1'b1;
 			WB_mux = aluout_MEM;
 			WB_sign = 1'b0;
+			WB_rb_sel = 1'b0;
 			MEM_len = 2'b0;
 			MEM_wen = 1'b1;
 			CSR_ALU_func = 2'b0;
@@ -151,7 +190,8 @@ begin
 			EX_mux3 = data2_EX;
 			EX_mux1 = pc_EX;
 			ALU_func = 4'b1110;
-
+			fpu_func = 5'b00000;
+			fpu_rm = 3'b000;
 			case(opcode[3])
 				1'b1: EX_mux5 = 1'b1; //JAL
 				1'b0: EX_mux5 = 1'b0; //JALR
@@ -161,9 +201,13 @@ begin
 		//LB, LH, LW, LBU, LHU
 		7'b00000_11:
 		begin
+			IDEX_data1_sel = 1'b0;
+			IDEX_data2_sel = 1'b0;
+			INTorFloat = 1'b0;
 			WB_rf_wen = 1'b0;
 			WB_csr_wen = 1'b1;
 			WB_mux = memout_MEM;
+			WB_rb_sel = 1'b0;
 			MEM_wen = 1'b1;
 			CSR_ALU_func = 2'b0;
 			B = 1'b0;
@@ -175,7 +219,8 @@ begin
 			EX_mux3 = imm_EX;
 			EX_mux1 = data1_EX;
 			ALU_func = 4'b0000;
-
+			fpu_func = 5'b00000;
+			fpu_rm = 3'b000;
 			case(funct3)
 				3'b000: begin WB_sign = 1'b1; MEM_len = 2'd0; end //LB
 				3'b001: begin WB_sign = 1'b1; MEM_len = 2'd1; end //LH
@@ -189,10 +234,14 @@ begin
 		//SB, SH, SW
 		7'b01000_11:
 		begin
+			IDEX_data1_sel = 1'b0;
+			IDEX_data2_sel = 1'b0;
+			INTorFloat = 1'b0;
 			WB_rf_wen = 1'b1;
 			WB_csr_wen = 1'b1;
 			WB_mux = aluout_MEM;
 			WB_sign = 1'b0;
+			WB_rb_sel = 1'b0;
 			MEM_wen = 1'b0;
 			CSR_ALU_func = 2'b0;
 			B = 1'b0;
@@ -204,7 +253,8 @@ begin
 			EX_mux3 = imm_EX;
 			EX_mux1 = data1_EX;
 			ALU_func = 4'b0000;
-
+			fpu_func = 5'b00000;
+			fpu_rm = 3'b000;
 			case(funct3)
 				3'b000: MEM_len = 2'd0; //SB
 				3'b001: MEM_len = 2'd1; //SH
@@ -216,10 +266,14 @@ begin
 		//ADDI, SLTI, SLTIU, XORI, ORI, ANDI, SLLI, SRLI, SRAI, ADD, SUB, SLL, SLT, SLTU, XOR, SRL, SRA, OR, AND
 		7'b0?100_11:
 		begin
+			IDEX_data1_sel = 1'b0;
+			IDEX_data2_sel = 1'b0;
+			INTorFloat = 1'b0;
 			WB_rf_wen = 1'b0;
 			WB_csr_wen = 1'b1;
 			WB_mux = aluout_MEM;
 			WB_sign = 1'b0;
+			WB_rb_sel = 1'b0;
 			MEM_len = 2'b0;
 			MEM_wen = 1'b1;
 			CSR_ALU_func = 2'b0;
@@ -227,7 +281,8 @@ begin
 			J = 1'b0;
 			EX_mux7 = 1'b1;
 			EX_mux8 = 2'd0;
-
+			fpu_func = 5'b00000;
+			fpu_rm = 3'b000;
 			//If the instruction is a MUL/DIV, choose the output from the MULDIV block.
 			if(funct7 == 7'd1 && opcode[5] == 1'b1)
 				EX_mux6 = 2'b10;
@@ -271,10 +326,14 @@ begin
 		//CSRRW, CSRRS, CSRRC, CSRRWI, CSRRSI, CSRRCI
 		7'b11100_11:
 		begin
+			IDEX_data1_sel = 1'b0;
+			IDEX_data2_sel = 1'b0;
+			INTorFloat = 1'b0;
 			WB_rf_wen = 1'b0;
 			WB_csr_wen = 1'b0;
 			WB_mux = aluout_MEM;
 			WB_sign = 1'b0;
+			WB_rb_sel = 1'b0;
 			MEM_len = 2'b0;
 			MEM_wen = 1'b1;
 			B = 1'b0;
@@ -286,15 +345,114 @@ begin
 			EX_mux7 = 1'b0;
 			EX_mux8 = funct3[2];
             ALU_func = 4'd0;
-
+			fpu_func = 5'b00000;
+			fpu_rm = 3'b000;
 			casez(funct3)
 				3'b?01: CSR_ALU_func = 2'd0; //RW,RWI
 				3'b?10: CSR_ALU_func = 2'd1; //RS,RSI
 				3'b?11: CSR_ALU_func = 2'd2; //RC,RCI
 				default: CSR_ALU_func = 2'd0;
 			endcase
+			
 
 		end
+		// FLW
+		7'b00001_11:
+		begin
+			IDEX_data1_sel = 1'b0;
+			IDEX_data2_sel = 1'b0;
+			INTorFloat = 1'b1;
+			WB_rf_wen = 1'b0;
+			WB_csr_wen = 1'b1;
+			WB_mux = memout_MEM;
+			WB_sign = 1'b1;
+			WB_rb_sel = 1'b1;
+			MEM_len = 2'd2;
+			MEM_wen = 1'b1;
+			CSR_ALU_func = 2'b0;
+			B = 1'b0;
+			J = 1'b0;
+			EX_mux8 = 2'd0;
+			EX_mux7 = 1'b1;
+			EX_mux6 = 2'b0;
+			EX_mux5 = 1'b0;
+			EX_mux3 = imm_EX;
+			EX_mux1 = data1_EX;
+			ALU_func = 4'b0000;
+			fpu_func = 5'b00000;
+			fpu_rm = 3'b000;
+		end
+		//FSW
+		7'b01001_11:
+		begin
+			
+			IDEX_data1_sel = 1'b0;
+			IDEX_data2_sel = 1'b1;
+			INTorFloat = 1'b1;
+			WB_rf_wen = 1'b1;
+			WB_csr_wen = 1'b1;
+			WB_mux = aluout_MEM;
+			WB_sign = 1'b0;
+			WB_rb_sel = 1'b1;
+			MEM_len = 2'd2;
+			MEM_wen = 1'b0;
+			CSR_ALU_func = 2'b0;
+			B = 1'b0;
+			J = 1'b0;
+			EX_mux8 = 2'd0;
+			EX_mux7 = 1'b1;
+			EX_mux6 = 2'b0;
+			EX_mux5 = 1'b0;
+			EX_mux3 = imm_EX;
+			EX_mux1 = data1_EX;
+			ALU_func = 4'b0000;
+			fpu_func = 5'b00000;
+			fpu_rm = 3'b000;
+
+		end
+		//FADD.S, FSUB.S, FMUL.S, FDIV.S, FSQRT.S, FEQ.S, FLT.S, FLE.S 
+		7'b10100_11:
+		begin
+			if (funct7[6:2] === 5'b11110) // for fmv.w.s select data 1 from integer register bank
+				IDEX_data1_sel = 1'b0;
+			else
+				IDEX_data1_sel = 1'b1;
+			IDEX_data2_sel = 1'b1;
+			INTorFloat = 1'b1;
+			WB_rf_wen = 1'b0;
+			WB_csr_wen = 1'b1;
+			WB_mux = fpu_out_MEM;
+			WB_sign = 1'b0;
+
+			case(funct7[6:3])
+				4'b1100, 4'b1110, 4'b1010 : WB_rb_sel = 1'b0; // write back to integer register bank
+				default : WB_rb_sel = 1'b1; // write back to floating point register bank
+			endcase
+			
+			MEM_len = 2'b0;
+			MEM_wen = 1'b1;
+			CSR_ALU_func = 2'b0;
+			B = 1'b0;
+			J = 1'b0;
+			EX_mux1 = data1_EX;
+			EX_mux3 = data2_EX;
+			EX_mux5 = 1'b0;
+			EX_mux7 = 1'b1;
+			EX_mux6 = 2'b00;
+			EX_mux8 = 2'b00;
+			fpu_func = funct7[6:2];
+			
+			case(funct3)
+				3'b000,3'b111: fpu_rm = 3'b000;
+				3'b001: fpu_rm = 3'b001;
+				3'b010: fpu_rm = 3'b010;
+				3'b011: fpu_rm = 3'b011;
+				3'b100: fpu_rm = 3'b100;
+				default : fpu_rm = 3'b000;
+			endcase
+
+		end
+
 
 		default: begin
 			ALU_func = 4'b0;
@@ -304,7 +462,12 @@ begin
 			MEM_len = 2'b0;
 			WB_mux = 2'b0;
 			WB_sign = 1'b0;
+			WB_rb_sel = 1'b0;
 			{MEM_wen,WB_rf_wen,WB_csr_wen} = 3'b111;
+			//
+			fpu_func = 5'b00000;
+			fpu_rm = 3'b000;
+
 		end
 
 	endcase
@@ -382,6 +545,11 @@ begin
 
 		//CSRRW, CSRRS, CSRRC, CSRRWI, CSRRSI, CSRRCI, EBREAK, ECALL
 		7'b11100_11: illegal_instr = !(ecall || ebreak || mret) && (funct3 == 3'b100);
+
+		//FLW, FSW
+		7'b0?001_11: illegal_instr = 1'b0;   
+		//floating-point aritmetic instructions 
+		7'b10100_11: illegal_instr = 1'b0; 
 
 		default: illegal_instr = 1'b1;
 	endcase

@@ -10,35 +10,51 @@ module forwarding_unit(input [4:0] rs1,
                        input [4:0] rs2,
                        input [4:0] exmem_rd,
                        input [4:0] memwb_rd,
+					   input       fpu_alu_mem_sel,
+					   input       fpu_alu_bank_ex1, //Forward only if hazard generating registers are in the same bank
+					   input       fpu_alu_bank_ex2,
+					   input       fpu_alu_bank_exmem_rd,
+					   input       fpu_alu_bank_memwb_rd,
                        input exmem_wb, memwb_wb,
 
                        output reg [1:0] mux1_ctrl, //control signal for mux2 in EX
                        output reg [1:0] mux2_ctrl); //control signal for mux4 in EX
+
 
 always @(*)
 begin
 	if(!exmem_wb) //forward from MEM stage
 	begin
 		//forward rs1
-		if(rs1 == exmem_rd && rs1 != 5'b0)
-			mux1_ctrl = 2'b10;
+		if(rs1 == exmem_rd && fpu_alu_bank_ex1 == fpu_alu_bank_exmem_rd && rs1 != 5'b0)
+		begin
+			if(!fpu_alu_mem_sel)
+				mux1_ctrl = 2'b10;
+			else
+				mux1_ctrl = 2'b11;
+		end
 		else if(!memwb_wb)
 		begin
-			if(rs1 == memwb_rd && rs1 != 5'b0)
-				mux1_ctrl = 2'b1;
+			if(rs1 == memwb_rd && fpu_alu_bank_ex1 == fpu_alu_bank_memwb_rd && rs1 != 5'b0)
+				mux1_ctrl = 2'b01;
 			else
-				mux1_ctrl = 2'b0;
+				mux1_ctrl = 2'b00;
 		end
 		else
-			mux1_ctrl = 2'b0;
+			mux1_ctrl = 2'b00;
 
 		//forward rs2
-		if(rs2 == exmem_rd && rs2 != 5'b0)
-			mux2_ctrl = 2'b0;
+		if(rs2 == exmem_rd && fpu_alu_bank_ex2 == fpu_alu_bank_exmem_rd && rs2 != 5'b0)
+		begin
+			if(!fpu_alu_mem_sel)
+				mux2_ctrl = 2'b00;
+			else
+				mux2_ctrl = 2'b11;
+		end
 		else if(!memwb_wb)
 		begin
-			if(rs2 == memwb_rd && rs2 != 5'b0)
-				mux2_ctrl = 2'b1;
+			if(rs2 == memwb_rd && fpu_alu_bank_ex2 == fpu_alu_bank_memwb_rd && rs2 != 5'b0)
+				mux2_ctrl = 2'b01;
 			else
 				mux2_ctrl = 2'b10;
 		end
@@ -48,12 +64,12 @@ begin
 
 	else if(!memwb_wb) //forward from WB stage
 	begin
-		if(rs1 == memwb_rd && rs1 != 5'b0)
-			mux1_ctrl = 2'b1;
+		if(rs1 == memwb_rd && fpu_alu_bank_ex1 == fpu_alu_bank_memwb_rd && rs1 != 5'b0)
+			mux1_ctrl = 2'b01;
 		else
-			mux1_ctrl = 2'b0;
+			mux1_ctrl = 2'b00;
 
-		if(rs2 == memwb_rd && rs2 != 5'b0)
+		if(rs2 == memwb_rd && fpu_alu_bank_ex2 == fpu_alu_bank_memwb_rd && rs2 != 5'b0)
 			mux2_ctrl = 2'b1;
 		else
 			mux2_ctrl = 2'b10;
