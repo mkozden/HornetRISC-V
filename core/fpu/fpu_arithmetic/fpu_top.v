@@ -23,6 +23,9 @@ wire in_sel, reg_AB_en;
 wire [31:0] in_A;
 wire [31:0] in_B;
 
+reg [31:0] reg_A;
+reg [31:0] reg_B;
+
 assign in_A = in_sel ? A : reg_A;
 assign in_B = in_sel ? B : reg_B;
 
@@ -31,9 +34,6 @@ fpu_arithmetic_top fpu_arithmetic_top(clk, reset, start, op, rounding_mode, in_A
 
 fpu_top_ctrl fpu_top_ctrl(clk, reset, start, op, in_sel, reg_AB_en);
 
-
-reg [31:0] reg_A;
-reg [31:0] reg_B;
 
 always @ (posedge clk or negedge reset) begin
     if(!reset) begin

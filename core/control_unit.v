@@ -413,7 +413,7 @@ begin
 		//FADD.S, FSUB.S, FMUL.S, FDIV.S, FSQRT.S, FEQ.S, FLT.S, FLE.S 
 		7'b10100_11:
 		begin
-			if (funct7[6:2] === 5'b11110) // for fmv.w.s select data 1 from integer register bank
+			if (funct7[6:2] == 5'b11110) // for fmv.w.s select data 1 from integer register bank //No need for === ?
 				IDEX_data1_sel = 1'b0;
 			else
 				IDEX_data1_sel = 1'b1;
@@ -431,6 +431,7 @@ begin
 			
 			MEM_len = 2'b0;
 			MEM_wen = 1'b1;
+			ALU_func = 4'b0; //To avoid inferring a latch on ALU_func, each case statement must have an assigned value for it
 			CSR_ALU_func = 2'b0;
 			B = 1'b0;
 			J = 1'b0;
@@ -465,6 +466,9 @@ begin
 			WB_rb_sel = 1'b0;
 			{MEM_wen,WB_rf_wen,WB_csr_wen} = 3'b111;
 			//
+			IDEX_data1_sel = 1'b0;
+			IDEX_data2_sel = 1'b0;
+			INTorFloat = 1'b0;
 			fpu_func = 5'b00000;
 			fpu_rm = 3'b000;
 

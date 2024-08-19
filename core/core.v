@@ -90,8 +90,8 @@ reg [29:0] IDEX_preg_ex;
 reg [2:0]  IDEX_preg_mem;
 reg [8:0]  IDEX_preg_wb;
 reg [11:0] IDEX_preg_csr_addr;
-reg       ctrl_unit_IDEX_preg_data1_sel; //To pipeline data1_sel to next stage
-reg       ctrl_unit_IDEX_preg_data2_sel;
+reg        IDEX_preg_data1_sel; //To pipeline data1_sel to next stage
+reg        IDEX_preg_data2_sel;
 reg        IDEX_preg_dummy; //indicates if the instruction in the EX stage is dummy, i.e. a flushed instruction, nop.
 reg        IDEX_preg_mret; //driven high when the instruction in EX stage is MRET.
 reg        IDEX_preg_misaligned; //driven high when the second part of a misaligned access is being executed in EX stage.
@@ -115,8 +115,8 @@ wire [31:0] pc_EX, data1_EX, data2_EX, imm_EX;
 wire [4:0]  rs1_EX, rs2_EX, rd_EX;
 wire [11:0] csr_addr_EX;
 wire        csr_wen_EX;
-wire       ctrl_unit_EXMEM_data1_sel;
-wire       ctrl_unit_EXMEM_data2_sel;
+wire        data1_sel_EX;
+wire        data2_sel_EX;
 //mux signals
 wire [1:0]  mux2_ctrl_EX,  mux4_ctrl_EX, mux6_ctrl_EX;
 wire        mux1_ctrl_EX, mux3_ctrl_EX, mux5_ctrl_EX, mux7_ctrl_EX, mux8_ctrl_EX;
@@ -135,6 +135,8 @@ wire [2:0]  fpu_rm;
 wire [31:0] fpu_out_EX;
 wire        fpu_done_EX;
 wire        fpu_stall_EX;
+wire        forward_fpu_alu_mem_sel;
+
 // exceptions
 wire        fpu_overflow;
 wire        fpu_underflow;
@@ -204,7 +206,7 @@ wire        load_sign;
 wire [1:0]  mem_length_WB;
 wire [1:0]  mux_ctrl_WB;
 wire        mux_ctrl_rb_WB;
-wire        mux_ctrl_alufpu_sel;
+//wire        mux_ctrl_alufpu_sel; //Unused
 wire        rf_wen_WB, csr_wen_WB;
 wire [11:0] csr_addr_WB;
 wire [31:0] memout_WB, aluout_WB, imm_WB;
@@ -414,6 +416,8 @@ begin
 	begin
 		for(i=1; i < 32; i = i+1)
 			register_bank[i] <= 32'b0; //reset all registers to 0.
+        for(i=0; i < 32; i = i+1)
+            f_register_bank[i] <= 32'b0; //reset FPU registers as well
 	end
 
 	else if(!rf_wen_WB)
@@ -441,6 +445,7 @@ begin
 		IDEX_preg_dummy <= 1'b0;
 		IDEX_preg_mret <= 1'b0;
 		IDEX_preg_misaligned <= 1'b0;
+        {IDEX_preg_data1_sel, IDEX_preg_data2_sel} <= 2'b0;
 
 	end
 
@@ -456,6 +461,7 @@ begin
 		IDEX_preg_dummy <= 1'b1;
 		IDEX_preg_mret <= 1'b0;
 		IDEX_preg_misaligned <= 1'b0;
+        {IDEX_preg_data1_sel, IDEX_preg_data2_sel} <= 2'b0;
 	end
 
     else if(stall_EX || misaligned_access)
@@ -500,8 +506,8 @@ begin
             IDEX_preg_mret <= mret_ID;
             IDEX_preg_misaligned <= 1'b0;
             IDEX_preg_dummy <= IFID_preg_dummy;
-            ctrl_unit_IDEX_preg_data1_sel <= ctrl_unit_IDEX_data1_sel;
-		    ctrl_unit_IDEX_preg_data2_sel <= ctrl_unit_IDEX_data2_sel;
+            IDEX_preg_data1_sel <= ctrl_unit_IDEX_data1_sel;
+		    IDEX_preg_data2_sel <= ctrl_unit_IDEX_data2_sel;
 
             if(rs1_ID == 5'b0)
                 IDEX_preg_data1 <= 32'b0;
@@ -564,8 +570,8 @@ assign rd_EX    = IDEX_preg_rd;
 assign imm_EX   = IDEX_preg_imm;
 assign csr_addr_EX = IDEX_preg_csr_addr;
 //assign nets
-assign ctrl_unit_EXMEM_data1_sel = ctrl_unit_IDEX_preg_data1_sel;
-assign ctrl_unit_EXMEM_data2_sel = ctrl_unit_IDEX_preg_data2_sel;
+assign data1_sel_EX = IDEX_preg_data1_sel;
+assign data2_sel_EX = IDEX_preg_data2_sel;
 assign alu_func     = ex_EX[3:0];
 assign csr_alu_func = ex_EX[5:4];
 assign mux1_ctrl_EX = ex_EX[6];
@@ -619,8 +625,8 @@ forwarding_unit FWD_UNIT(.rs1(rs1_EX),
                          .rs2(rs2_EX),
                          .exmem_rd(rd_MEM),
                          .fpu_alu_mem_sel(forward_fpu_alu_mem_sel),
-                         .fpu_alu_bank_ex1(ctrl_unit_EXMEM_data1_sel),
-                         .fpu_alu_bank_ex2(ctrl_unit_EXMEM_data2_sel),
+                         .fpu_alu_bank_ex1(data1_sel_EX),
+                         .fpu_alu_bank_ex2(data2_sel_EX),
                          .fpu_alu_bank_exmem_rd(mux_ctrl_rb_MEM),
                          .fpu_alu_bank_memwb_rd(mux_ctrl_rb_WB),
                          .memwb_rd(rd_WB),

@@ -18,7 +18,7 @@ module uart_wb(input         wb_cyc_i,
                output [7:0] rx_byte_o,
                output rx_irq_o);
 
-parameter SYS_CLK_FREQ = 80000000;
+parameter SYS_CLK_FREQ = 40000000;
 parameter BAUD = 9600;
 parameter CLK_DIVIDER = SYS_CLK_FREQ / BAUD; 
 
@@ -45,7 +45,7 @@ assign wb_ack_o = stb & wb_cyc_i;
 always @(posedge clk or negedge rst)
 begin
     if(!rst)
-        {stb,we,sel,adr,dat} <= 69'b0;
+        {stb,we,sel,adr,dat} <= 70'b0; //Fixed from 69'b0 ?
     else
     begin
         stb <= wb_stb_i;

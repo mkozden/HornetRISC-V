@@ -102,7 +102,7 @@ assign uf = ufAfterRound | ufFromProNorm;
 
 
 
-assign inexact   = |LRS[1:0] | of | uf;
+//assign inexact   = |LRS[1:0] | of | uf; //Repeated below
 
 assign final_sum         = pro_normal_sig[26:2] + round_out;
 assign final_exp         = final_sum[24] ? (of ? `maxExp : pro_normal_exp + 1) : pro_normal_exp;
@@ -128,6 +128,7 @@ fpu_add_sub_rounder fpu_add_sub_rounder(.LRS(LRS), .rounding_mode(rounding_mode)
 wire invalid_fast;
 wire mux_fastres_sel;
 wire [31:0] fast_res;
+wire overflow_fast;
 fpu_add_fast fpu_add_fast(rounding_mode, isZeroA, isZeroB,isInfA, isInfB, isNaNA, isNaNB, isSignaling, sub_op, sign_A, sign_B, exp_A, exp_B,sig_A[22:0], sig_B[22:0], mux_fastres_sel, fast_res, overflow_fast, invalid_fast);
 
 assign OUT       = mux_fastres_sel ? fast_res : {sign_O, final_exp, final_sig};
