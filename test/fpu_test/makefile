@@ -1,5 +1,5 @@
 CC64=riscv64-unknown-elf
-CCFLAGS=-march=rv32imf -mabi=ilp32f -O3 -T ../linksc.ld -lm -nostartfiles -ffunction-sections -fdata-sections -Wl,--gc-sections -o fpu_test.elf
+CCFLAGS=-march=rv32imf -mabi=ilp32f -O3 -fno-math-errno -T ../linksc.ld -lm -nostartfiles -ffunction-sections -fdata-sections -Wl,--gc-sections -o fpu_test.elf
 
 build:
 	$(CC64)-gcc fpu_test.c ../crt0.s $(CCFLAGS)

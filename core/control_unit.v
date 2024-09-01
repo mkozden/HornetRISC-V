@@ -413,10 +413,10 @@ begin
 		//FADD.S, FSUB.S, FMUL.S, FDIV.S, FSQRT.S, FEQ.S, FLT.S, FLE.S 
 		7'b10100_11:
 		begin
-			if (funct7[6:2] == 5'b11110) // for fmv.w.s select data 1 from integer register bank //No need for === ?
-				IDEX_data1_sel = 1'b0;
-			else
-				IDEX_data1_sel = 1'b1;
+			case(funct7[6:2]) // for fmv.w.s and fcvt.s.w select data 1 from integer register bank
+				5'b11110, 5'b11010 : IDEX_data1_sel = 1'b0;
+				default: IDEX_data1_sel = 1'b1;
+			endcase
 			IDEX_data2_sel = 1'b1;
 			INTorFloat = 1'b1;
 			WB_rf_wen = 1'b0;
