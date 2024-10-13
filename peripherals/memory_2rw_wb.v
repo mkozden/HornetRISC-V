@@ -46,6 +46,8 @@ wire [ADDR_WIDTH-1:0] addr1;
 wire [DATA_WIDTH-1:0] din1;
 wire [DATA_WIDTH-1:0] dout1;
 
+reg [DATA_WIDTH-1:0] mem [0:RAM_DEPTH-1] /*verilator public*/;
+
 assign clk0 = port0_wb_clk_i;
 assign cs0 = ~port0_wb_stb_i;
 assign we0 = ~port0_wb_we_i;
@@ -82,7 +84,7 @@ end
 assign port1_wb_ack_o = port1_ack;
 assign port1_wb_err_o = 1'b0;
 
-reg [DATA_WIDTH-1:0] mem [0:RAM_DEPTH-1] /*verilator public*/;
+
 
 `ifdef FPGA_READMEM
 initial $readmemh("reset_handler.mem",mem,7424,7487);

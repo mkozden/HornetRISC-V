@@ -47,6 +47,9 @@ parameter S1 = 1;
 //state register for the FSM
 reg STATE;
 
+//Counter register
+reg [63:0] counter;
+
 //CSRs
 reg [31:0] mstatus, mie, mip, mcause, mtvec, mepc, mscratch;
 
@@ -223,12 +226,32 @@ begin
 
         else if(csr_r_addr_i[11:0] == 12'h344) //0x344 - mip
             csr_reg_o <= mip;
+        //For Zicntr extension
+        else if(csr_r_addr_i[11:0] == 12'hc00) //0xc00 - cycle
+            csr_reg_o <= counter[31:0];
+        else if(csr_r_addr_i[11:0] == 12'hc01) //0xc01 - time
+            csr_reg_o <= counter[31:0]; //Since we're running at a constant clock frequency, cycle and time can be assigned to the same register
+        else if(csr_r_addr_i[11:0] == 12'hc02) //0xc02 - instret
+            ; //TODO: Add a register that counts instructions (not very critical on single hart designs)
+        else if(csr_r_addr_i[11:0] == 12'hc80) //0xc80 - cycleh
+            csr_reg_o <= counter[63:32];
+        else if(csr_r_addr_i[11:0] == 12'hc81) //0xc81 - timeh
+            csr_reg_o <= counter[63:32];
+        else if(csr_r_addr_i[11:0] == 12'hc82) //0xc82 - instreth
+            ;
 
         else
             csr_reg_o <= 32'd0;
     end
 end
-
+//Counter for Zicntr extension
+always @(posedge clk_i or negedge reset_i)
+begin
+    if(!reset_i)
+        counter <= 32'b0;
+    else
+        counter <= counter + 1;
+end
 //Priority Encoder for fast interrupts.
 always @(*)
 begin

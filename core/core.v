@@ -509,8 +509,8 @@ begin
             IDEX_preg_data1_sel <= ctrl_unit_IDEX_data1_sel;
 		    IDEX_preg_data2_sel <= ctrl_unit_IDEX_data2_sel;
 
-            if(rs1_ID == 5'b0)
-                IDEX_preg_data1 <= 32'b0;
+            if(rs1_ID == 5'b0 & ctrl_unit_IDEX_data1_sel == 1'b0) //F registers do not have a dedicated zero register, therefore the select bit must also be specified here
+                IDEX_preg_data1 <= 32'b0;   //Load 0 if register 1 is x0
             else
             begin
                 if(ctrl_unit_IDEX_data1_sel)
@@ -518,7 +518,7 @@ begin
                 else 
                     IDEX_preg_data1 <= register_bank[rs1_ID];
             end
-            if(rs2_ID == 5'b0)
+            if(rs2_ID == 5'b0 & ctrl_unit_IDEX_data2_sel == 1'b0)
                 IDEX_preg_data2 <= 32'b0;
             else
             begin

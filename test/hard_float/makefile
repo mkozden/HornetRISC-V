@@ -1,4 +1,4 @@
-CC64=riscv64-unknown-elf
+CC64=riscv32-unknown-elf
 CCFLAGS=-march=rv32imf -mabi=ilp32f -O3 -T ../linksc.ld -lm -nostartfiles -ffunction-sections -fdata-sections -Wl,--gc-sections -o hard_float.elf
 
 build:

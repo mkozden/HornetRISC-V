@@ -53,16 +53,16 @@ wire [31:0] slave_adr_begin [NUM_SLAVES-1 : 0];
 wire [31:0] slave_adr_end [NUM_SLAVES-1 : 0];
 
 assign slave_adr_begin[0] = 32'h0000_0000;
-assign slave_adr_end[0] = 32'h0000_1DFF;
+assign slave_adr_end[0] = 32'h0000_6FFF;
 
 assign slave_adr_begin[1] = 32'h0000_0000;
-assign slave_adr_end[1] = 32'h0000_1FFF;
+assign slave_adr_end[1] = 32'h0000_7FFF;
 
-assign slave_adr_begin[2] = 32'h0000_2000;
-assign slave_adr_end[2] = 32'h0000_200F;
+assign slave_adr_begin[2] = 32'h0000_8000;
+assign slave_adr_end[2] = 32'h0000_800F;
 
-assign slave_adr_begin[3] = 32'h0000_2010;
-assign slave_adr_end[3] = 32'h0000_2010;
+assign slave_adr_begin[3] = 32'h0000_8010;
+assign slave_adr_end[3] = 32'h0000_8010;
 
 assign wb_cyc_i[0] = inst_wb_cyc_o;
 assign wb_stb_i[0] = inst_wb_stb_o;
@@ -197,7 +197,7 @@ core_wb core0 (.reset_i(reset_i),
                .fast_irq_i(fast_irq_i),
                .irq_ack_o(irq_ack_o));
 
-memory_2rw_wb #(.ADDR_WIDTH(11)) memory(.port0_wb_cyc_i(wb_cyc_i[0]),
+memory_2rw_wb #(.ADDR_WIDTH(13)) memory(.port0_wb_cyc_i(wb_cyc_i[0]),
                                         .port0_wb_stb_i(wb_stb_i[0]),
                                         .port0_wb_we_i(wb_we_i[0]),
                                         .port0_wb_adr_i(wb_adr_i[0]),
@@ -223,8 +223,8 @@ memory_2rw_wb #(.ADDR_WIDTH(11)) memory(.port0_wb_cyc_i(wb_cyc_i[0]),
                                         .port1_wb_rst_i(wb_rst_i[1]),
                                         .port1_wb_clk_i(wb_clk_i[1]));
 
-mtime_registers_wb #(.mtime_adr(32'h0000_2000),
-                     .mtimecmp_adr(32'h0000_2008))
+mtime_registers_wb #(.mtime_adr(32'h0000_8000),
+                     .mtimecmp_adr(32'h0000_8008))
                      mtime_regs(.wb_cyc_i(wb_cyc_i[2]),
                                 .wb_stb_i(wb_stb_i[2]),
                                 .wb_we_i(wb_we_i[2]),

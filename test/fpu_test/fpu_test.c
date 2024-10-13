@@ -1,4 +1,4 @@
-#define DEBUG_IF_ADDR 0x00002010
+#define DEBUG_IF_ADDR 0x00008010
 #include <math.h>
 int main()
 {

@@ -38,11 +38,13 @@ begin
 				//$finish;
 			end
 				
-			else
+			else if(wb_dat_i == 32'b0)
 			begin
 				$display("Failure!");
 				//$finish;
 			end
+			else
+				$write("%c",wb_dat_i[7:0]); //We can output text to the terminal with this
 		end
 	end
 end
