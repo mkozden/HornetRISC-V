@@ -1,60 +1,35 @@
 #define DEBUG_IF_ADDR 0x00008010
 #include <math.h>
-int main()
-{
-    volatile float a = 7.3e8;
-    volatile float b = -21.3346;
-    volatile float c = a/b;
-    volatile float d = 10.06;
-    volatile float e = c+d;
-    volatile float f = b*d;
-    volatile float g = d;
-    volatile float h = sqrtf(g);
-    volatile int i = (int)h;
-    volatile float j = (float)i;
-    int *addr_ptr = DEBUG_IF_ADDR;
-    if(c == -34216716.0f)
-    {
-        if(e == -34216704.0f){
-            if(f == -214.62608f){
-                if(h == 3.17175031f){
-                    if(i == 3){
-                        if(j == 3.0f){
-                            *addr_ptr = 1; // success
-                        }
-                        else
-                        {
-                            //failure at int-float conversion
-                            *addr_ptr = -6;
-                        }
-                    }
-                    else
-                    {
-                        //failure at float-int conversion
-                        *addr_ptr = -5;
-                    }
-                }
-                else{
-                    //failure at sqrt
-                    *addr_ptr = -4;
-                }
-            }
-            else{
-                //failure at multiplication
-                *addr_ptr = -3;
-            }
-        }
-        else
-        {
-            //failure at sum
-            *addr_ptr = -2;
-        }
+int main() {
+    volatile float a = 7.3e8f / -21.3346f;  // division
+    volatile float b = a + 10.06f;         // sum
+    volatile float c = -21.3346f * 10.06f;  // multiplication
+    volatile float d = sqrtf(10.06f);      // sqrt
+    volatile int e = (int)d;              // float-to-int conversion
+    volatile float f = (float)e;          // int-to-float conversion
+    // Pointer to address for result reporting
+    char *addr_ptr = (char*)DEBUG_IF_ADDR;
+    if (a == -34216716.0f && b == -34216704.0f && c == -214.62608f &&
+        d == 3.17175031f && e == 3 && f == 3.0f) {
+        *addr_ptr = 1; // success
     }
-    else
-    {
-        //failure at division
-        *addr_ptr = -1;
+    else if (a != -34216716.0f) {
+        *addr_ptr = 'd'; // failure at division
+    } 
+    else if (b != -34216704.0f) {
+        *addr_ptr = 's'; // failure at sum
+    } 
+    else if (c != -214.62608f) {
+        *addr_ptr = 'm'; // failure at multiplication
+    } 
+    else if (d != 3.17175031f) {
+        *addr_ptr = 'q'; // failure at sqrt
+    } 
+    else if (e != 3) {
+        *addr_ptr = 'r'; // failure at float-int conversion
+    } 
+    else {
+        *addr_ptr = 'c'; // failure at int-float conversion
     }
-
     return 0;
 }

@@ -33,6 +33,7 @@ module csr_unit(input clk_i,
                 input mret_wb_i,
                 input misaligned_ex,
                 input instr_access_fault_i, illegal_instr_i, instr_addr_misaligned_i, ecall_i, ebreak_i, data_err_i,
+                input [31:0] reset_vector,
 
                 output reg [31:0] csr_reg_o,
                 output [31:0] irq_addr_o, mepc_o,
@@ -69,7 +70,7 @@ wire pending_irq, pending_exception;
 wire [31:0] masked_irq;
 
 assign direct_mode_addr = mtvec;
-assign vector_mode_addr = mcause[31] ? {mtvec[31:1],1'b0} + (mcause << 2) : {mtvec[31:1],1'b0};
+assign vector_mode_addr = mcause[31] ? {mtvec[31:1],1'b0} + (mcause << 2) : {mtvec[31:1],1'b0}; //According to spec, the mtvec mode select should be 2-bits wide, but values above 1 are reserved, so this doesn't necessarily violate the spec
 
 assign masked_irq = mie & mip & {32{`mstatus_mie}};
 assign pending_exception = (illegal_instr_i | instr_addr_misaligned_i | ecall_i | ebreak_i) & ~take_branch_i;
@@ -313,7 +314,7 @@ begin
         mepc <= 32'b0;
         mie <= 32'b0;
         mscratch <= 32'b0;
-        mtvec <= 32'b0;
+        mtvec <= {reset_vector[31:1],1'b0}; //Allow setting reset vector
         //unused fields are hardwired to 0
         mstatus[31:13] <= 19'b0; mstatus[10:0] <= 11'b0;
         //mstatus.mpp
