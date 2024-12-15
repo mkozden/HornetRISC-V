@@ -5,12 +5,13 @@ int main() {
     volatile float b = a + 10.06f;         // sum
     volatile float c = -21.3346f * 10.06f;  // multiplication
     volatile float d = sqrtf(10.06f);      // sqrt
-    volatile int e = (int)d;              // float-to-int conversion
-    volatile float f = (float)e;          // int-to-float conversion
+    volatile float e = 0.35f;
+    volatile int f = (int)e;              // float-to-int conversion
+    volatile float g = (float)f;          // int-to-float conversion          
     // Pointer to address for result reporting
     char *addr_ptr = (char*)DEBUG_IF_ADDR;
     if (a == -34216716.0f && b == -34216704.0f && c == -214.62608f &&
-        d == 3.17175031f && e == 3 && f == 3.0f) {
+        d == 3.17175031f && f == 0 && g == 0.0f) {
         *addr_ptr = 1; // success
     }
     else if (a != -34216716.0f) {
@@ -25,7 +26,7 @@ int main() {
     else if (d != 3.17175031f) {
         *addr_ptr = 'q'; // failure at sqrt
     } 
-    else if (e != 3) {
+    else if (f != 0) {
         *addr_ptr = 'r'; // failure at float-int conversion
     } 
     else {

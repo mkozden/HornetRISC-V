@@ -297,13 +297,13 @@ begin
 	begin
 		//reset pc to reset vector.
 		pc_o <= reset_vector;
-		{IFID_preg_pc, IFID_preg_instr} <= {reset_vector, 32'h13}; //nop instruction addi x0,x0,0
+		{IFID_preg_pc, IFID_preg_instr} <= 64'h13; //nop instruction addi x0,x0,0
 		IFID_preg_dummy <= 1'b0;
 	end
 
 	else if(take_branch | csr_if_flush) //flush IF
 	begin
-		{IFID_preg_pc, IFID_preg_instr} <= {reset_vector, 32'h13};
+		{IFID_preg_pc, IFID_preg_instr} <= 64'h13;
 		pc_o <= pc_i;
 		IFID_preg_dummy <= 1'b1;
 	end
@@ -314,7 +314,7 @@ begin
 		begin
             if(stall_IF)
             begin
-                {IFID_preg_pc, IFID_preg_instr} <= {reset_vector, 32'h13};
+                {IFID_preg_pc, IFID_preg_instr} <= 64'h13;
                 pc_o <= pc_i;
                 IFID_preg_dummy <= 1'b1;                
             end
@@ -440,7 +440,7 @@ begin
 		IDEX_preg_mem <= 3'b1;
 		IDEX_preg_csr_addr <= 12'b0;
 		IDEX_preg_ex <= 30'b0;
-		{IDEX_preg_pc, IDEX_preg_data1, IDEX_preg_data2} <= {reset_vector, 64'b0};
+		{IDEX_preg_pc, IDEX_preg_data1, IDEX_preg_data2} <= 96'b0;
 		{IDEX_preg_rs1, IDEX_preg_rs2, IDEX_preg_rd} <= 15'b0;
 		IDEX_preg_imm  <= 32'b0;
 		IDEX_preg_dummy <= 1'b0;
@@ -456,7 +456,7 @@ begin
 		IDEX_preg_mem <= 3'b1;
 		IDEX_preg_csr_addr <= 12'b0;
 		IDEX_preg_ex <= 30'b0;
-		{IDEX_preg_pc, IDEX_preg_data1, IDEX_preg_data2} <= {reset_vector, 64'b0};
+		{IDEX_preg_pc, IDEX_preg_data1, IDEX_preg_data2} <= 96'b0;
 		{IDEX_preg_rs1, IDEX_preg_rs2, IDEX_preg_rd} <= 15'b0;
 		IDEX_preg_imm  <= 32'b0;
 		IDEX_preg_dummy <= 1'b1;
@@ -677,7 +677,7 @@ begin
 		EXMEM_preg_mem <= 3'b1;
 		EXMEM_preg_csr_addr <= 12'b0;
 		//{EXMEM_preg_pc, EXMEM_preg_aluout, EXMEM_preg_fpuout, EXMEM_preg_data2} <= 128'b0; //EXMEM_preg_data2 is unused
-		{EXMEM_preg_pc, EXMEM_preg_aluout, EXMEM_preg_fpuout} <= {reset_vector, 96'b0};
+		{EXMEM_preg_pc, EXMEM_preg_aluout, EXMEM_preg_fpuout} <= 96'b0;
 		EXMEM_preg_rd <= 5'b0;
 		EXMEM_preg_imm <= 32'b0;
 		EXMEM_preg_dummy <= 1'b0;
@@ -693,7 +693,7 @@ begin
         EXMEM_preg_mem <= 3'b1;
         EXMEM_preg_csr_addr <= 12'b0;
         //{EXMEM_preg_pc, EXMEM_preg_aluout, EXMEM_preg_fpuout, EXMEM_preg_data2} <= 128'b0; //EXMEM_preg_data2 is unused
-        {EXMEM_preg_pc, EXMEM_preg_aluout, EXMEM_preg_fpuout} <= {reset_vector, 96'b0};
+        {EXMEM_preg_pc, EXMEM_preg_aluout, EXMEM_preg_fpuout} <= 96'b0;
         EXMEM_preg_rd <= 5'b0;
         EXMEM_preg_imm <= 32'b0;
         EXMEM_preg_dummy <= 1'b1;

@@ -34,7 +34,7 @@ assign isNaN            = isMaxExp  & !isZeroFrac;
 assign isSignaling      = isMaxExp  & !isZeroFrac & !fract[22];
 assign sign_o = sign;
 assign exp_o  = isSubnormal ? 8'd1 : exp;
-assign sig_o  = {!isSubnormal, fract};
+assign sig_o  = {!isSubnormal && !isZero, fract}; //Hidden bit is 1 when the number is not a Subnormal or Zero
 
 endmodule
 
