@@ -38,7 +38,7 @@ assign after_round = int_after_shift[31:8] + round_out;
 assign final_sign = is_unsigned     ? 1'b0               : A[31];
 assign final_exp  = after_round[24] ? shamt + 128        : shamt + 127;
 assign final_sig  = after_round[24] ? after_round[23:1]  : after_round[22:0];
-assign cvrt_to_float_out = |A[31:0] ? {final_sign, final_exp, final_sig} : 32'b0; //If all input bits are 0, the input is 0, thus the output should also be 0. (??)
+assign cvrt_to_float_out = {final_sign, final_exp, final_sig};
 
 
 

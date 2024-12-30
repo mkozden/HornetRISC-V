@@ -1,15 +1,14 @@
-CC32=riscv32-unknown-elf
-CCFLAGS=-march=rv32imf -mabi=ilp32f -O3 -fno-math-errno -T ../linksc.ld -lm -nostartfiles -ffunction-sections -fdata-sections -Wl,--gc-sections -g -ggdb -o fpu_test.elf
-10K-CCFLAGS=-march=rv32imf -mabi=ilp32f -O3 -fno-math-errno -T ../linksc-10000.ld -lm -nostartfiles -ffunction-sections -fdata-sections -Wl,--gc-sections -g -ggdb -o fpu_test-10000.elf
+CC32=/home/deniz/opt/riscv/bin/riscv64-unknown-elf
+CCFLAGS=-march=rv32imf -mabi=ilp32f -ffp-contract=off -mstrict-align -malign-data=xlen -O3 -fno-math-errno -T ../linksc.ld -lm -nostartfiles -ffunction-sections -fdata-sections -Wl,--gc-sections -o fpu_test.elf
+SPIKE-CCFLAGS=-march=rv32imf -mabi=ilp32f -ffp-contract=off -O3 -fno-math-errno -T ../spike-linksc.ld -lm -nostartfiles -ffunction-sections -fdata-sections -Wl,--gc-sections -o fpu_test-spike.elf
 
 build:
 	$(CC32)-gcc fpu_test.c ../crt0.s $(CCFLAGS)
-	$(CC32)-gcc fpu_test.c ../crt0-10000.s $(10K-CCFLAGS)
+	$(CC32)-gcc fpu_test.c ../spike-crt0.s $(SPIKE-CCFLAGS)
 	$(CC32)-objcopy -O binary -j .init -j .text -j .rodata -j .sdata fpu_test.elf fpu_test.bin
-	$(CC32)-objcopy -O binary -j .init -j .text -j .rodata -j .sdata fpu_test-10000.elf fpu_test-10000.bin
 	../rom_generator fpu_test.bin
-	../rom_generator fpu_test-10000.bin
 	cp fpu_test.data ../memory_contents
-	cp fpu_test-10000.data ../memory_contents
+
+
 
 

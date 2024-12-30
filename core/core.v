@@ -18,9 +18,9 @@ module core(input reset_i, //active-low reset
             input         meip_i, mtip_i, msip_i, //interrupts
             input  [15:0] fast_irq_i,
 
-            output irq_ack_o); //interrupt acknowledge signal. driven high for one cycle when an external interrupt is handled. 
+            output irq_ack_o); //interrupt acknowledge signal. driven high for one cycle when an external interrupt is handled.
 
-parameter reset_vector = 32'h0; //pc is set to this address when a reset occurs. Overridden in core_wb and barebones_wb_top.
+parameter reset_vector = 32'h0; //pc is set to this address when a reset occurs.
 
 //IF SIGNALS--------IF SIGNALS--------IF SIGNALS--------IF SIGNALS--------IF SIGNALS--------IF SIGNALS--------IF SIGNALS
 //mux signals
@@ -235,7 +235,7 @@ assign csr_stall = !csr_wen_ID &&
 always @(posedge clk_i or negedge reset_i)
 begin
 	if(!reset_i)
-		csr_pc_input <= reset_vector;
+		csr_pc_input <= 32'b0;
 	else
 		csr_pc_input <= csr_pcin_mux2_o;
 end
@@ -257,7 +257,6 @@ csr_unit CSR_UNIT(.clk_i(clk_i),
                   .misaligned_ex(IDEX_preg_misaligned),
                   .instr_access_fault_i(instr_access_fault_i),
                   .data_err_i(data_err_i),
-                  .reset_vector(reset_vector),
 
                   .csr_reg_o(csr_reg_out),
                   .mepc_o(mepc),
@@ -565,14 +564,14 @@ assign ex_EX    = IDEX_preg_ex;
 assign pc_EX    = IDEX_preg_pc;
 assign data1_EX = IDEX_preg_data1;
 assign data2_EX = IDEX_preg_data2;
-assign data1_sel_EX = IDEX_preg_data1_sel;
-assign data2_sel_EX = IDEX_preg_data2_sel;
 assign rs1_EX   = IDEX_preg_rs1;
 assign rs2_EX   = IDEX_preg_rs2;
 assign rd_EX    = IDEX_preg_rd;
 assign imm_EX   = IDEX_preg_imm;
 assign csr_addr_EX = IDEX_preg_csr_addr;
 //assign nets
+assign data1_sel_EX = IDEX_preg_data1_sel;
+assign data2_sel_EX = IDEX_preg_data2_sel;
 assign alu_func     = ex_EX[3:0];
 assign csr_alu_func = ex_EX[5:4];
 assign mux1_ctrl_EX = ex_EX[6];
@@ -626,10 +625,10 @@ forwarding_unit FWD_UNIT(.rs1(rs1_EX),
                          .rs2(rs2_EX),
                          .exmem_rd(rd_MEM),
                          .fpu_alu_mem_sel(forward_fpu_alu_mem_sel),
-                         .fpu_reg_bank_ex1(data1_sel_EX),
-                         .fpu_reg_bank_ex2(data2_sel_EX),
-                         .fpu_reg_bank_exmem_rd(mux_ctrl_rb_MEM),
-                         .fpu_reg_bank_memwb_rd(mux_ctrl_rb_WB),
+                         .fpu_alu_bank_ex1(data1_sel_EX),
+                         .fpu_alu_bank_ex2(data2_sel_EX),
+                         .fpu_alu_bank_exmem_rd(mux_ctrl_rb_MEM),
+                         .fpu_alu_bank_memwb_rd(mux_ctrl_rb_WB),
                          .memwb_rd(rd_WB),
                          .exmem_wb(wb_MEM[3]),
                          .memwb_wb(rf_wen_WB),
@@ -689,18 +688,18 @@ begin
 
 	else if(stall_EX || csr_ex_flush)
 	begin
-        EXMEM_preg_wb <= 9'h0c;
-        EXMEM_preg_mem <= 3'b1;
-        EXMEM_preg_csr_addr <= 12'b0;
-        //{EXMEM_preg_pc, EXMEM_preg_aluout, EXMEM_preg_fpuout, EXMEM_preg_data2} <= 128'b0; //EXMEM_preg_data2 is unused
-        {EXMEM_preg_pc, EXMEM_preg_aluout, EXMEM_preg_fpuout} <= 96'b0;
-        EXMEM_preg_rd <= 5'b0;
-        EXMEM_preg_imm <= 32'b0;
-        EXMEM_preg_dummy <= 1'b1;
-        EXMEM_preg_mret <= 1'b0;
-        EXMEM_preg_misaligned <= 1'b0;
-        EXMEM_preg_addr_bits <= 2'b0;
-        EXMEM_preg_fpuout <= 32'b0;
+	   EXMEM_preg_wb <= 9'h0c;
+	   EXMEM_preg_mem <= 3'b1;
+	   EXMEM_preg_csr_addr <= 12'b0;
+		//{EXMEM_preg_pc, EXMEM_preg_aluout, EXMEM_preg_fpuout, EXMEM_preg_data2} <= 128'b0; //EXMEM_preg_data2 is unused
+		{EXMEM_preg_pc, EXMEM_preg_aluout, EXMEM_preg_fpuout} <= 96'b0;
+	   EXMEM_preg_rd <= 5'b0;
+	   EXMEM_preg_imm <= 32'b0;
+	   EXMEM_preg_dummy <= 1'b1;
+	   EXMEM_preg_mret <= 1'b0;
+	   EXMEM_preg_misaligned <= 1'b0;
+	   EXMEM_preg_addr_bits <= 2'b0;
+       EXMEM_preg_fpuout <= 32'b0;
 	end
 
 	else

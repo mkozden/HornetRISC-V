@@ -29,6 +29,9 @@ reg [31:0] reg_B;
 assign in_A = in_sel ? A : reg_A;
 assign in_B = in_sel ? B : reg_B;
 
+//assign in_A = A;
+//assign in_B = B; 
+
 fpu_arithmetic_top fpu_arithmetic_top(clk, reset, start, op, rounding_mode, in_A, in_B, rs2_lsb, fpu_arith_out, done, overflow, underflow, invalid, inexact, div_by_zero);
 
 

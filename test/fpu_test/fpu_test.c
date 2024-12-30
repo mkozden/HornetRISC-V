@@ -1,3 +1,163 @@
+/*
+#define DEBUG_IF_ADDR 0x00008010
+
+int main() {
+    // Variables for integer addition
+    int a = 0;
+    int b = 1;
+    int c = 2;
+    int d = 3;
+    int e = 4;
+    int result1 = 0;
+    int result2 = 0;
+    char *addr_ptr = (char*)DEBUG_IF_ADDR;
+
+    // Variables for floating-point fused multiply-add
+    float f1 = 1.5f;
+    float f2 = 2.0f;
+    float f3 = 3.0f;
+    float fmadd_result = 0.0f;
+
+    // Perform 5 integer additions
+    asm volatile (
+        "add %0, %1, %2\n" // result1 = a + b
+        "add %0, %0, %3\n" // result1 = result1 + c
+        "add %0, %0, %4\n" // result1 = result1 + d
+        "add %0, %0, %5\n" // result1 = result1 + e
+        : "=r" (result1) // Output operand
+        : "r" (a), "r" (b), "r" (c), "r" (d), "r" (e) // Input operands
+    );
+
+
+    // Perform single floating-point fmadd.s operation
+    asm volatile (
+        "fmadd.s %0, %1, %2, %3\n"
+        : "=f" (fmadd_result) // Output operand
+        : "f" (f1), "f" (f2), "f" (f3) // Input operands
+    );
+    *addr_ptr = 1;
+    // Perform another 5 integer additions
+    asm volatile (
+        "add %0, %1, %2\n" // result2 = e + d
+        "add %0, %0, %3\n" // result2 = result2 + c
+        "add %0, %0, %4\n" // result2 = result2 + b
+        "add %0, %0, %5\n" // result2 = result2 + a
+        : "=r" (result2) // Output operand
+        : "r" (e), "r" (d), "r" (c), "r" (b), "r" (a) // Input operands
+    );
+
+    return 0;
+}
+*/
+#include "math.h"
+#define DEBUG_IF_ADDR 0x00008010
+
+int main() {
+        //filter coefficients
+    float a0 = 1.363f;
+    float a1 = 0.73f;
+    float a2 = 2.543f;
+    float b1 = 0.0f;
+    float b2 = 1.0f;
+
+    //initial values
+    float x1 = 0.23f;
+    float x2 = -0.1324f;
+    float y_1 = 0.452f;
+    float y2 = 0.7435f;
+
+    //inputs
+
+    const float inputSignal[23] = {0.52f, 0.56f, -0.5f, 0.36f, -0.543222344f, 0.5f, -0.5f, 0.34521f,
+     -0.5f, 0.67324f, 0.0f, 0.124252f, 0.6254234f, 0.12562345f, 0.0f, 0.0f, 0.0f, -0.785675646f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+    float x = 0.0f;
+    float y = 0.0f;
+
+    char *addr_ptr = (char*)DEBUG_IF_ADDR;
+
+    for (int i = 0; i < 23; i++) {
+        x = inputSignal[i];
+
+        y = a0 * x + a1 * x1 + a2 * x2 - b1 * y_1 - b2 * y2;
+        if(fabs(y - (-0.203533f)) < 1e-4f){
+            *addr_ptr = 'a';
+        }
+        else if (fabs(y - (1.275770f)) < 1e-4f){
+            *addr_ptr = 'b';
+        }
+        else if (fabs(y - (1.253193f)) < 1e-4f){
+            *addr_ptr = 'c';
+        }
+        else if (fabs(y - (-3.002305f)) < 1e-4f){
+            *addr_ptr = 'd';
+        }
+        else if (fabs(y - (0.926438f)) < 1e-4f){
+            *addr_ptr = 'e';
+        }
+        else if (fabs(y - 1.304391f) < 1e-4f){
+            *addr_ptr = 'f';
+        }
+        else if (fabs(y - (0.450584f)) < 1e-4f){
+            *addr_ptr = 'g';
+        }
+        else if (fabs(y - (-3.005388f)) < 1e-4f){
+            *addr_ptr = 'h';
+        }
+        else if (fabs(y - (0.979912f)) < 1e-4f){
+            *addr_ptr = 'i';
+        }
+        else if (fabs(y - (2.225353f)) < 1e-4f){
+            *addr_ptr = 'j';
+        }
+        else if (fabs(y - (0.901493f)) < 1e-4f){
+            *addr_ptr = 'k';
+        }
+        else if (fabs(y - (-1.282197f)) < 1e-4f){
+            *addr_ptr = 'l';
+        }
+        else if (fabs(y - (0.042263f)) < 1e-4f){
+            *addr_ptr = 'm';
+        }
+        else if (fabs(y - (2.964354f)) < 1e-4f){
+            *addr_ptr = 'n';
+        }
+        else if (fabs(y - (0.277197f)) < 1e-4f){
+            *addr_ptr = 'o';
+        }
+        else if (fabs(y - (-2.964354f)) < 1e-4f){
+            *addr_ptr = 'p';
+        }
+        else if (fabs(y - (-1.348073f)) < 1e-4f){
+            *addr_ptr = 'q';
+        }
+        else if (fabs(y - (2.390810f)) < 1e-4f){
+            *addr_ptr = 'r';
+        }
+        else if (fabs(y - (-0.649900f)) < 1e-4f){
+            *addr_ptr = 's';
+        }
+        else if (fabs(y - (-2.390810f)) < 1e-4f){
+            *addr_ptr = 't';
+        }
+        else if (fabs(y - (0.649900f)) < 1e-4f){
+            *addr_ptr = 'u';
+        }
+        else if (fabs(y - (2.390810f)) < 1e-4f){
+            *addr_ptr = 'v';
+        }
+        else{
+            *addr_ptr = 'X';
+        }
+        x2 = x1;
+        x1 = x;
+        y2 = y_1;
+        y_1 = y;
+    }
+
+    return 0;
+}
+/*
+
 #define DEBUG_IF_ADDR 0x00008010
 #include <math.h>
 int main() {
@@ -5,13 +165,12 @@ int main() {
     volatile float b = a + 10.06f;         // sum
     volatile float c = -21.3346f * 10.06f;  // multiplication
     volatile float d = sqrtf(10.06f);      // sqrt
-    volatile float e = 0.35f;
-    volatile int f = (int)e;              // float-to-int conversion
-    volatile float g = (float)f;          // int-to-float conversion          
+    volatile int e = (int)d;              // float-to-int conversion
+    volatile float f = (float)e;          // int-to-float conversion
     // Pointer to address for result reporting
     char *addr_ptr = (char*)DEBUG_IF_ADDR;
     if (a == -34216716.0f && b == -34216704.0f && c == -214.62608f &&
-        d == 3.17175031f && f == 0 && g == 0.0f) {
+        d == 3.17175031f && e == 3 && f == 3.0f) {
         *addr_ptr = 1; // success
     }
     else if (a != -34216716.0f) {
@@ -26,7 +185,7 @@ int main() {
     else if (d != 3.17175031f) {
         *addr_ptr = 'q'; // failure at sqrt
     } 
-    else if (f != 0) {
+    else if (e != 3) {
         *addr_ptr = 'r'; // failure at float-int conversion
     } 
     else {
@@ -34,3 +193,4 @@ int main() {
     }
     return 0;
 }
+*/

@@ -413,7 +413,7 @@ begin
 		//FADD.S, FSUB.S, FMUL.S, FDIV.S, FSQRT.S, FEQ.S, FLT.S, FLE.S 
 		7'b10100_11:
 		begin
-			case(funct7[6:2]) // for fmv.w.x and fcvt.s.w select data 1 from integer register bank
+			case(funct7[6:2]) // for fmv.w.s and fcvt.s.w select data 1 from integer register bank
 				5'b11110, 5'b11010 : IDEX_data1_sel = 1'b0;
 				default: IDEX_data1_sel = 1'b1;
 			endcase
