@@ -1,0 +1,209 @@
+
+fpu_test.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .init:
+
+00000000 <_start>:
+   0:	00008117          	auipc	sp,0x8
+   4:	ffc10113          	addi	sp,sp,-4 # 7ffc <__stack_top>
+   8:	00010433          	add	s0,sp,zero
+   c:	0040006f          	j	10 <main>
+
+Disassembly of section .text:
+
+00000010 <main>:
+  10:	fa010113          	addi	sp,sp,-96
+  14:	17c00793          	li	a5,380
+  18:	05078693          	addi	a3,a5,80
+  1c:	00410713          	addi	a4,sp,4
+  20:	0007a803          	lw	a6,0(a5)
+  24:	0047a503          	lw	a0,4(a5)
+  28:	0087a583          	lw	a1,8(a5)
+  2c:	00c7a603          	lw	a2,12(a5)
+  30:	01072023          	sw	a6,0(a4)
+  34:	00a72223          	sw	a0,4(a4)
+  38:	00b72423          	sw	a1,8(a4)
+  3c:	00c72623          	sw	a2,12(a4)
+  40:	01078793          	addi	a5,a5,16
+  44:	01070713          	addi	a4,a4,16
+  48:	fcd79ce3          	bne	a5,a3,20 <main+0x10>
+  4c:	f0000553          	fmv.w.x	fa0,zero
+  50:	0007a283          	lw	t0,0(a5)
+  54:	0047af83          	lw	t6,4(a5)
+  58:	0087af03          	lw	t5,8(a5)
+  5c:	20a505d3          	fmv.s	fa1,fa0
+  60:	20a50653          	fmv.s	fa2,fa0
+  64:	20a506d3          	fmv.s	fa3,fa0
+  68:	20a502d3          	fmv.s	ft5,fa0
+  6c:	20002207          	flw	ft4,512(zero) # 200 <__SDATA_BEGIN__>
+  70:	20402187          	flw	ft3,516(zero) # 204 <__SDATA_BEGIN__+0x4>
+  74:	20802107          	flw	ft2,520(zero) # 208 <__SDATA_BEGIN__+0x8>
+  78:	20c02307          	flw	ft6,524(zero) # 20c <__SDATA_BEGIN__+0xc>
+  7c:	21002387          	flw	ft7,528(zero) # 210 <__SDATA_BEGIN__+0x10>
+  80:	21402807          	flw	fa6,532(zero) # 214 <__SDATA_BEGIN__+0x14>
+  84:	21c02e07          	flw	ft8,540(zero) # 21c <__SDATA_BEGIN__+0x1c>
+  88:	000086b7          	lui	a3,0x8
+  8c:	21802887          	flw	fa7,536(zero) # 218 <__SDATA_BEGIN__+0x18>
+  90:	00410793          	addi	a5,sp,4
+  94:	00572023          	sw	t0,0(a4)
+  98:	01f72223          	sw	t6,4(a4)
+  9c:	01e72423          	sw	t5,8(a4)
+  a0:	01068693          	addi	a3,a3,16 # 8010 <__stack_top+0x14>
+  a4:	06a00593          	li	a1,106
+  a8:	1046f7d3          	fmul.s	fa5,fa3,ft4
+  ac:	0007a707          	flw	fa4,0(a5)
+  b0:	00c670d3          	fadd.s	ft1,fa2,fa2
+  b4:	1055f053          	fmul.s	ft0,fa1,ft5
+  b8:	20d68653          	fmv.s	fa2,fa3
+  bc:	00e7f7d3          	fadd.s	fa5,fa5,fa4
+  c0:	20e706d3          	fmv.s	fa3,fa4
+  c4:	00478793          	addi	a5,a5,4
+  c8:	06300713          	li	a4,99
+  cc:	0017f7d3          	fadd.s	fa5,fa5,ft1
+  d0:	0807f7d3          	fsub.s	fa5,fa5,ft0
+  d4:	08a7f7d3          	fsub.s	fa5,fa5,fa0
+  d8:	20b58553          	fmv.s	fa0,fa1
+  dc:	0837f753          	fsub.s	fa4,fa5,ft3
+  e0:	20f785d3          	fmv.s	fa1,fa5
+  e4:	20e72753          	fabs.s	fa4,fa4
+  e8:	a0271653          	flt.s	a2,fa4,ft2
+  ec:	06061c63          	bnez	a2,164 <main+0x154>
+  f0:	0037f753          	fadd.s	fa4,fa5,ft3
+  f4:	06400713          	li	a4,100
+  f8:	20e72753          	fabs.s	fa4,fa4
+  fc:	a0271653          	flt.s	a2,fa4,ft2
+ 100:	06061263          	bnez	a2,164 <main+0x154>
+ 104:	0067f753          	fadd.s	fa4,fa5,ft6
+ 108:	06500713          	li	a4,101
+ 10c:	20e72753          	fabs.s	fa4,fa4
+ 110:	a0271653          	flt.s	a2,fa4,ft2
+ 114:	04061863          	bnez	a2,164 <main+0x154>
+ 118:	0877f753          	fsub.s	fa4,fa5,ft7
+ 11c:	06600713          	li	a4,102
+ 120:	20e72753          	fabs.s	fa4,fa4
+ 124:	a0271653          	flt.s	a2,fa4,ft2
+ 128:	02061e63          	bnez	a2,164 <main+0x154>
+ 12c:	0907f753          	fsub.s	fa4,fa5,fa6
+ 130:	06700713          	li	a4,103
+ 134:	20e72753          	fabs.s	fa4,fa4
+ 138:	a0271653          	flt.s	a2,fa4,ft2
+ 13c:	02061463          	bnez	a2,164 <main+0x154>
+ 140:	0917f753          	fsub.s	fa4,fa5,fa7
+ 144:	06800713          	li	a4,104
+ 148:	20e72753          	fabs.s	fa4,fa4
+ 14c:	a0271653          	flt.s	a2,fa4,ft2
+ 150:	00061a63          	bnez	a2,164 <main+0x154>
+ 154:	01c7f7d3          	fadd.s	fa5,fa5,ft8
+ 158:	20f7a7d3          	fabs.s	fa5,fa5
+ 15c:	a0279753          	flt.s	a4,fa5,ft2
+ 160:	40e58733          	sub	a4,a1,a4
+ 164:	00e68023          	sb	a4,0(a3)
+ 168:	06010713          	addi	a4,sp,96
+ 16c:	f2e79ee3          	bne	a5,a4,a8 <main+0x98>
+ 170:	00000513          	li	a0,0
+ 174:	06010113          	addi	sp,sp,96
+ 178:	00008067          	ret
+
+Disassembly of section .rodata:
+
+0000017c <.rodata>:
+ 17c:	0000                	.insn	2, 0x
+ 17e:	3f00                	.insn	2, 0x3f00
+ 180:	0000                	.insn	2, 0x
+ 182:	3f00                	.insn	2, 0x3f00
+ 184:	0000                	.insn	2, 0x
+ 186:	bf00                	.insn	2, 0xbf00
+ 188:	0000                	.insn	2, 0x
+ 18a:	3f00                	.insn	2, 0x3f00
+ 18c:	0000                	.insn	2, 0x
+ 18e:	bf00                	.insn	2, 0xbf00
+ 190:	0000                	.insn	2, 0x
+ 192:	3f00                	.insn	2, 0x3f00
+ 194:	0000                	.insn	2, 0x
+ 196:	bf00                	.insn	2, 0xbf00
+ 198:	0000                	.insn	2, 0x
+ 19a:	3f00                	.insn	2, 0x3f00
+ 19c:	0000                	.insn	2, 0x
+ 19e:	bf00                	.insn	2, 0xbf00
+	...
+
+Disassembly of section .eh_frame:
+
+000001d8 <.eh_frame>:
+ 1d8:	0010                	.insn	2, 0x0010
+ 1da:	0000                	.insn	2, 0x
+ 1dc:	0000                	.insn	2, 0x
+ 1de:	0000                	.insn	2, 0x
+ 1e0:	00527a03          	.insn	4, 0x00527a03
+ 1e4:	7c01                	.insn	2, 0x7c01
+ 1e6:	0101                	.insn	2, 0x0101
+ 1e8:	00020c1b          	.insn	4, 0x00020c1b
+ 1ec:	0010                	.insn	2, 0x0010
+ 1ee:	0000                	.insn	2, 0x
+ 1f0:	0018                	.insn	2, 0x0018
+ 1f2:	0000                	.insn	2, 0x
+ 1f4:	fe0c                	.insn	2, 0xfe0c
+ 1f6:	ffff                	.insn	2, 0xffff
+ 1f8:	0010                	.insn	2, 0x0010
+ 1fa:	0000                	.insn	2, 0x
+ 1fc:	0000                	.insn	2, 0x
+	...
+
+Disassembly of section .sdata:
+
+00000200 <__SDATA_BEGIN__>:
+ 200:	3f333333          	.insn	4, 0x3f333333
+ 204:	5532                	.insn	2, 0x5532
+ 206:	3f10                	.insn	2, 0x3f10
+ 208:	38d1b717          	auipc	a4,0x38d1b
+ 20c:	a29c                	.insn	2, 0xa29c
+ 20e:	1eb83ea3          	.insn	4, 0x1eb83ea3
+ 212:	3f05                	.insn	2, 0x3f05
+ 214:	89a0                	.insn	2, 0x89a0
+ 216:	3f70                	.insn	2, 0x3f70
+ 218:	8bac                	.insn	2, 0x8bac
+ 21a:	2a993edb          	.insn	4, 0x2a993edb
+ 21e:	3fc8                	.insn	2, 0x3fc8
+
+Disassembly of section .comment:
+
+00000000 <.comment>:
+   0:	3a434347          	.insn	4, 0x3a434347
+   4:	2820                	.insn	2, 0x2820
+   6:	36343067          	.insn	4, 0x36343067
+   a:	3639                	.insn	2, 0x3639
+   c:	6664                	.insn	2, 0x6664
+   e:	3930                	.insn	2, 0x3930
+  10:	3336                	.insn	2, 0x3336
+  12:	2029                	.insn	2, 0x2029
+  14:	3431                	.insn	2, 0x3431
+  16:	322e                	.insn	2, 0x322e
+  18:	302e                	.insn	2, 0x302e
+	...
+
+Disassembly of section .riscv.attributes:
+
+00000000 <.riscv.attributes>:
+   0:	3741                	.insn	2, 0x3741
+   2:	0000                	.insn	2, 0x
+   4:	7200                	.insn	2, 0x7200
+   6:	7369                	.insn	2, 0x7369
+   8:	01007663          	bgeu	zero,a6,14 <main+0x4>
+   c:	002d                	.insn	2, 0x002d
+   e:	0000                	.insn	2, 0x
+  10:	1004                	.insn	2, 0x1004
+  12:	7205                	.insn	2, 0x7205
+  14:	3376                	.insn	2, 0x3376
+  16:	6932                	.insn	2, 0x6932
+  18:	7032                	.insn	2, 0x7032
+  1a:	5f31                	.insn	2, 0x5f31
+  1c:	326d                	.insn	2, 0x326d
+  1e:	3070                	.insn	2, 0x3070
+  20:	665f 7032 5f32      	.insn	6, 0x5f327032665f
+  26:	697a                	.insn	2, 0x697a
+  28:	32727363          	bgeu	tp,t2,34e <__BSS_END__+0x12e>
+  2c:	3070                	.insn	2, 0x3070
+  2e:	7a5f 6d6d 6c75      	.insn	6, 0x6c756d6d7a5f
+  34:	7031                	.insn	2, 0x7031
+  36:	0030                	.insn	2, 0x0030

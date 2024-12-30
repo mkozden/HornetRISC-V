@@ -14,7 +14,7 @@ module fpu_cvt_to_int
 
 );
 
-wire signed [7:0] actual_exp;
+wire[7:0] actual_exp;
 assign actual_exp = exp_A - 127;
 
 wire signed [54:0]  adjusted_sig;

@@ -111,7 +111,7 @@ fpu_sign_inj fpu_sign_inj(rounding_mode[1:0], sign_A, sign_B, sign_O_inj);
 wire is_exp_neg;
 wire [31:0] cvt_to_int_out;
 wire overflow_cvt_to_int;
-assign is_exp_neg = exp_A[7] ? 1'b0 : (&exp_A[6:0] ? 1'b0 : 1'b1);
+assign is_exp_neg = exp_A[7] ? 1'b0 : (&exp_A[6:0] ? 1'b1 : 1'b0);
 fpu_cvt_to_int fpu_cvt_to_int(rs2_lsb, is_exp_neg, rounding_mode, isNaNA, isInfA, sign_A, exp_A, sig_A, cvt_to_int_out, overflow_cvt_to_int);
 
 

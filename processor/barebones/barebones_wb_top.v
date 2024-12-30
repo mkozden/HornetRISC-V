@@ -5,7 +5,6 @@ module barebones_wb_top(input clk_i,
                         output irq_ack_o);
 
 parameter NUM_SLAVES = 4;
-parameter reset_vector = 32'h0001_0000; //The starting address for the program counter
 wire mtip;
 
 //Wishbone master interface signals for core
@@ -53,11 +52,11 @@ reg [NUM_SLAVES-1 : 0] r_stb;
 wire [31:0] slave_adr_begin [NUM_SLAVES-1 : 0];
 wire [31:0] slave_adr_end [NUM_SLAVES-1 : 0];
 
-assign slave_adr_begin[0] = 32'h0000_0000 + reset_vector;
-assign slave_adr_end[0] = 32'h0000_6FFF + reset_vector;
+assign slave_adr_begin[0] = 32'h0000_0000;
+assign slave_adr_end[0] = 32'h0000_6FFF;
 
-assign slave_adr_begin[1] = 32'h0000_0000 + reset_vector;
-assign slave_adr_end[1] = 32'h0000_7FFF + reset_vector;
+assign slave_adr_begin[1] = 32'h0000_0000;
+assign slave_adr_end[1] = 32'h0000_7FFF;
 
 assign slave_adr_begin[2] = 32'h0000_8000;
 assign slave_adr_end[2] = 32'h0000_800F;
@@ -160,7 +159,7 @@ assign data_wb_err_i = r_data_wb_err_i;
 assign data_wb_clk_i = clk_i;
 assign data_wb_rst_i = ~reset_i;
 
-core_wb #(.reset_vector(reset_vector)) core0  (.reset_i(reset_i),
+core_wb core0 (.reset_i(reset_i),
                .clk_i(clk_i),
 
                //Wishbone interface for data memory
