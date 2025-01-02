@@ -277,7 +277,7 @@ begin
 
                 // A = (SUB)NORMAL & B = 0
                 if(isZeroB) begin 
-                    fast_res = {1'b0, 8'd255, 23'd0};
+                    fast_res = {sign_A, 8'd255, 23'd0}; //For negative A, the output is negative infinity
                     overflow_fast = 1;
                     invalid_fast = 0;                     
                     divByZero_fast = 1; 

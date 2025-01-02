@@ -8,6 +8,7 @@ module fpu_compare
     input [23:0] sig_A,
     input [23:0] sig_B,
     input        isNaNA, isNaNB,
+    input        isZeroA, isZeroB,
     input        isSignaling,
     output       comp_out,
     output       invalid
@@ -30,8 +31,9 @@ assign is_sign_equal = !(sign_A ^ sign_B);
 assign is_exp_equal  = !(exp_A ^ exp_B);
 assign is_sig_equal  = !(sig_A ^ sig_B);
 
-assign is_equal = is_sign_equal & is_exp_equal & is_sig_equal;
-assign is_less  = !is_sign_equal ? sign_A & !sign_B :
+assign is_equal = (isZeroA & isZeroB) | (is_sign_equal & is_exp_equal & is_sig_equal); //If both inputs are zero, they're always equal, no matter what
+assign is_less  = (isZeroA & isZeroB) ? 1'b0        : //(Not sure about this part)
+                  !is_sign_equal ? sign_A & !sign_B :
                   !is_exp_equal  ? exp_A  < exp_B   :
                   !is_sig_equal  ? sig_A  < sig_B   :
                   1'b0;

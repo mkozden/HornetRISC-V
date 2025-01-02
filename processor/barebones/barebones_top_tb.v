@@ -27,7 +27,7 @@ for (i = 0; i < uut.memory.RAM_DEPTH; i = i + 1) begin
 end
 #200;
 reset_i = 1'b1;
-$readmemh("coremark-10000.data",uut.memory.mem); //read data after reset, because reset initializes memory to 0
+$readmemh("fputest2.data",uut.memory.mem); //read data after reset, because reset initializes memory to 0
 
 //interrupt signals, arbitrarily generated. uncomment if you need to.
 /*

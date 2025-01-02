@@ -91,7 +91,7 @@ wire comp_out;
 wire invalid_comp;
 // rounding_mode[1:0] is used  for compare function
 
-fpu_compare fpu_compare(rounding_mode[1:0], sign_A, sign_B, exp_A, exp_B, sig_A, sig_B, isNaNA, isNaNB, isSignaling, comp_out, invalid_comp);
+fpu_compare fpu_compare(rounding_mode[1:0], sign_A, sign_B, exp_A, exp_B, sig_A, sig_B, isNaNA, isNaNB, isZeroA, isZeroB, isSignaling, comp_out, invalid_comp);
 
 //FPU-MIN_MAX signals
 wire [31:0] min_max_out;
