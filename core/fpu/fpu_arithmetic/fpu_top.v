@@ -32,7 +32,7 @@ assign in_B = in_sel ? B : reg_B;
 fpu_arithmetic_top fpu_arithmetic_top(clk, reset, start, op, rounding_mode, in_A, in_B, rs2_lsb, fpu_arith_out, done, overflow, underflow, invalid, inexact, div_by_zero);
 
 
-fpu_top_ctrl fpu_top_ctrl(clk, reset, start, op, in_sel, reg_AB_en);
+fpu_top_ctrl fpu_top_ctrl(clk, reset, start, op, done, in_sel, reg_AB_en);
 
 
 always @ (posedge clk or negedge reset) begin

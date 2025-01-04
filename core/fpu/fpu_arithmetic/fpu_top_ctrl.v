@@ -4,6 +4,7 @@ module fpu_top_ctrl
     input reset,
     input start,
     input [4:0] op,
+    input done,
     output reg in_sel,
     output reg reg_AB_en
 );
@@ -35,7 +36,10 @@ always @* begin
             in_sel = 1'b0;
             reg_AB_en = 1'b0;
             if(start)
-                next_state = SECOND;
+                if(done)
+                    next_state = FIRST;
+                else
+                    next_state = SECOND;
             else 
                 next_state = FIRST;
         end
