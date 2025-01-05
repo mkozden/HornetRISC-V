@@ -37,7 +37,7 @@ module fpu_add_sub
 wire        is_exp_equal;
 wire        is_exp_A_Big;
 wire [27:0] big_sig;
-wire [47:0] less_sig;
+wire [27:0] less_sig;
 wire [47:0] less_sig_shifted;
 wire [27:0] less_adjusted;
 wire [27:0] big_sig_2C;
@@ -100,48 +100,6 @@ wire ufAfterRound;
 assign of = ofAfterRound | ofFromProNorm;
 assign uf = ufAfterRound | ufFromProNorm;
 
-
-
-//assign inexact   = |LRS[1:0] | of | uf; //Repeated below
-
-assign final_sum         = pro_normal_sig[26:2] + round_out;
-assign final_exp         = final_sum[24] ? (of ? `maxExp : pro_normal_exp + 1) : pro_normal_exp;
-assign final_sig         = final_sum[24] ? (of ? 23'd0  : final_sum[23:1]) : final_sum[22:0];
-assign ofAfterRound      = (final_sum[24] && pro_normal_exp+1 == `maxExp);
-assign ufAfterRound      = of ? 1'b0 :  !(|final_sum[24:23])  | (!(|final_exp) & !(|final_sig));
-
-
-wire isout_sigNeg        = (sign_A && eff_sign_B) || (sign_A && out_sig[27] || (eff_sign_B && out_sig[27]));
-
-
-assign exp_O             = (exp_A_adjusted >= exp_B_adjusted) ? exp_A_adjusted : exp_B_adjusted;
-assign out_sig           = first_operand + second_operand;
-assign out_sig_abs       = isout_sigNeg  ? ~out_sig+1 : out_sig; 
-assign sign_O            = (exp_A_adjusted == exp_B_adjusted) ? (sig_A_adjusted > sig_B_adjusted ? sign_A : eff_sign_B) :
-                           (exp_A_adjusted >  exp_B_adjusted) ? sign_A : eff_sign_B;  
-
-
-add_sub_normalizer add_sub_normalizer(.inSig(out_sig_abs), .inExp(exp_O), .LGRS(LGRS), .outExp(pro_normal_exp), .of(ofFromProNorm), .uf(ufFromProNorm), .out_sig(pro_normal_sig));
-fpu_add_sub_rounder fpu_add_sub_rounder(.LRS(LRS), .rounding_mode(rounding_mode), .sign_O(sign_O), .round_out(round_out));
-
-
-wire invalid_fast;
-wire mux_fastres_sel;
-wire [31:0] fast_res;
-wire overflow_fast;
-fpu_add_fast fpu_add_fast(rounding_mode, isZeroA, isZeroB,isInfA, isInfB, isNaNA, isNaNB, isSignaling, sub_op, sign_A, sign_B, exp_A, exp_B,sig_A[22:0], sig_B[22:0], mux_fastres_sel, fast_res, overflow_fast, invalid_fast);
-
-assign OUT       = mux_fastres_sel ? fast_res : {sign_O, final_exp, final_sig};
-assign inexact   = |LRS[1:0] | of | uf;
-assign invalid   = invalid_fast;
-assign overflow  = mux_fastres_sel ? overflow_fast : of;
-assign underflow = uf;
-
-
-
-
-
-
 always @(*) // exp and significand assignment
 begin
 
@@ -178,6 +136,43 @@ begin
     else
         exp_diff = exp_B_adjusted - exp_A_adjusted;
 end
+
+
+//assign inexact   = |LRS[1:0] | of | uf; //Repeated below
+
+assign final_sum         = pro_normal_sig[26:2] + round_out;
+assign final_exp         = final_sum[24] ? (of ? `maxExp : pro_normal_exp + 1) : pro_normal_exp;
+assign final_sig         = final_sum[24] ? (of ? 23'd0  : final_sum[23:1]) : final_sum[22:0];
+assign ofAfterRound      = (final_sum[24] && pro_normal_exp+1 == `maxExp);
+assign ufAfterRound      = of ? 1'b0 :  !(|final_sum[24:23])  | (!(|final_exp) & !(|final_sig));
+
+
+wire isout_sigNeg        = (sign_A && eff_sign_B) || (sign_A && out_sig[27] || (eff_sign_B && out_sig[27]));
+
+
+assign exp_O             = (exp_A_adjusted >= exp_B_adjusted) ? exp_A_adjusted : exp_B_adjusted;
+assign out_sig           = first_operand + second_operand;
+assign out_sig_abs       = isout_sigNeg  ? ~out_sig+1 : out_sig; 
+assign sign_O            = (exp_A_adjusted == exp_B_adjusted) ? (sig_A_adjusted >= sig_B_adjusted ? sign_A : eff_sign_B) : //if both significands and exponents are equal, the sign should be sign_A -> positive, since result should be 0 or a positive number 
+                           (exp_A_adjusted >  exp_B_adjusted) ? sign_A : eff_sign_B;  
+
+
+add_sub_normalizer add_sub_normalizer(.inSig(out_sig_abs), .inExp(exp_O), .LGRS(LGRS), .outExp(pro_normal_exp), .of(ofFromProNorm), .uf(ufFromProNorm), .out_sig(pro_normal_sig));
+fpu_add_sub_rounder fpu_add_sub_rounder(.LRS(LRS), .rounding_mode(rounding_mode), .sign_O(sign_O), .round_out(round_out));
+
+
+wire invalid_fast;
+wire mux_fastres_sel;
+wire [31:0] fast_res;
+wire overflow_fast;
+fpu_add_fast fpu_add_fast(rounding_mode, isZeroA, isZeroB,isInfA, isInfB, isNaNA, isNaNB, isSignaling, sub_op, sign_A, sign_B, exp_A, exp_B,sig_A[22:0], sig_B[22:0], mux_fastres_sel, fast_res, overflow_fast, invalid_fast);
+
+assign OUT       = mux_fastres_sel ? fast_res : {sign_O, final_exp, final_sig};
+assign inexact   = |LRS[1:0] | of | uf;
+assign invalid   = invalid_fast;
+assign overflow  = mux_fastres_sel ? overflow_fast : of;
+assign underflow = uf;
+
 
 endmodule
 
@@ -240,6 +235,12 @@ begin
             temp = inSig[26:2];
         else
             temp = inSig[27:3] << inExp - 1;
+    end
+    else if (zeroCount == 27) //Tentative fix
+    begin
+        outExp = 8'b0;
+        uf = 1'b0;
+        temp = inSig[25:1] << zeroCount - 2;
     end
     else 
     begin

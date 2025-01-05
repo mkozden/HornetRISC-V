@@ -68,7 +68,7 @@ fpu_add_sub fas(sign_A, sign_B, exp_A, exp_B, sig_A, sig_B, isZeroA, isZeroB, is
 
 // MUL-DIV-SQRT signals
 
-
+wire        mds_start;
 wire        mds_done;
 wire        overflow_mds;
 wire        underflow_mds;
@@ -82,8 +82,9 @@ assign mds_op = op[3:0] == 4'b1011 ? 2'b10 : // sqrt
                 op[3:0] == 4'b0011 ? 2'b01 : // div
                                      2'b00 ; // mul
 
+assign mds_start = start & (op == 5'b00010 | op == 5'b00011 | op == 5'b01011);
 
-fpu_mds_top fpu_mds_top(clk, start, reset, rounding_mode, isSubnormalA, isZeroA, isZeroB, isInfA, isInfB, isNaNA, isNaNB, isSignaling, sign_A, sign_B, exp_A, exp_B, sig_A, sig_B, mds_op, mds_out, mds_done, overflow_mds, underflow_mds, invalid_mds, inexact_mds, div_by_zero_mds);
+fpu_mds_top fpu_mds_top(clk, mds_start, reset, rounding_mode, isSubnormalA, isZeroA, isZeroB, isInfA, isInfB, isNaNA, isNaNB, isSignaling, sign_A, sign_B, exp_A, exp_B, sig_A, sig_B, mds_op, mds_out, mds_done, overflow_mds, underflow_mds, invalid_mds, inexact_mds, div_by_zero_mds);
 
 
 // FPU-COMPARE signals

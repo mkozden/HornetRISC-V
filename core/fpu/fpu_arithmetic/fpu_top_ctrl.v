@@ -27,10 +27,13 @@ always @* begin
         FIRST: begin
             in_sel = 1'b1;
             reg_AB_en = 1'b1;
-            casez(op)
-                5'b0001?, 5'b01011 : next_state = SECOND;
-                default : next_state = FIRST;
-            endcase
+            if(start && done) //If both signals are on at the same cycle, this is actually a single-cycle operation (think of edge cases for sqrt, mul and div)
+                next_state = FIRST;
+            else
+                casez(op)
+                    5'b0001?, 5'b01011 : next_state = SECOND;
+                    default : next_state = FIRST;
+                endcase
         end 
         SECOND: begin
             in_sel = 1'b0;
