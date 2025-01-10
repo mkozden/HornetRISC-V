@@ -34,19 +34,19 @@ void div()
 
 void mul() 
 {
-    volatile float mul_res[5];
-    const volatile float a[5] = {0.0f,INFINITY,1.0f,NAN,NAN};
-    const volatile float b[5] = {INFINITY,0.0f,NAN,0.0f,NAN};
-    const volatile float c[5] = {NAN,NAN,NAN,NAN,NAN};
+    volatile float mul_res[7];
+    const volatile float a[7] = {0.0f,INFINITY,1.0f,NAN,NAN,3.0f,9.0f};
+    const volatile float b[7] = {INFINITY,0.0f,NAN,0.0f,NAN,9.0f,3.0f};
+    const volatile float c[7] = {NAN,NAN,NAN,NAN,NAN,27.0f,27.0f};
 
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 7; i++)
     {
         mul_res[i] = a[i] * b[i];
     }
     
     char *addr_ptr = (char*)DEBUG_IF_ADDR;
 
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 7; i++)
     {
         if(memcmp(&mul_res[i],&c[i],4) == 0) //Let's iteratively check each value, and see where it fails
         {
@@ -63,19 +63,19 @@ void mul()
 }
 void sub() 
 {
-    volatile float sub_res[6];
-    const volatile float a[6] = {INFINITY,-INFINITY,-0.0f,NAN,0.0f,NAN};
-    const volatile float b[6] = {INFINITY,-INFINITY,-0.0f,1.0f,NAN,NAN};
-    const volatile float c[6] = {NAN,NAN,+0.0f,NAN,NAN,NAN};
+    volatile float sub_res[9];
+    const volatile float a[9] = {INFINITY,-INFINITY,-0.0f,NAN,0.0f,NAN,1.5f,1.0000048f,1.0f};
+    const volatile float b[9] = {INFINITY,-INFINITY,-0.0f,1.0f,NAN,NAN,1.25f,1.0000024f,0.00003051758f};
+    const volatile float c[9] = {NAN,NAN,+0.0f,NAN,NAN,NAN,0.25f,2.3841858E-6f,0.9999695f};
 
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 9; i++)
     {
         sub_res[i] = a[i] - b[i];
     }
     
     char *addr_ptr = (char*)DEBUG_IF_ADDR;
 
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 9; i++)
     {
         if(memcmp(&sub_res[i],&c[i],4) == 0) //Let's iteratively check each value, and see where it fails
         {
@@ -92,19 +92,19 @@ void sub()
 }
 void add() 
 {
-    volatile float add_res[7];
-    const volatile float a[7] = {INFINITY,-INFINITY,-0.0f,0.0f,0.0f,NAN,NAN};
-    const volatile float b[7] = {-INFINITY,INFINITY,0.0f,-0.0f,NAN,1.0f,NAN};
-    const volatile float c[7] = {NAN,NAN,+0.0f,0.0f,NAN,NAN,NAN};
+    volatile float add_res[9];
+    const volatile float a[9] = {INFINITY,-INFINITY,-0.0f,0.0f,0.0f,NAN,NAN,1.0f,2.0f};
+    const volatile float b[9] = {-INFINITY,INFINITY,0.0f,-0.0f,NAN,1.0f,NAN,1.0f,1.0f};
+    const volatile float c[9] = {NAN,NAN,+0.0f,0.0f,NAN,NAN,NAN,2.0f,3.0f};
 
-    for (int i = 0; i < 7; i++)
+    for (int i = 0; i < 9; i++)
     {
         add_res[i] = a[i] + b[i];
     }
     
     char *addr_ptr = (char*)DEBUG_IF_ADDR;
 
-    for (int i = 0; i < 7; i++)
+    for (int i = 0; i < 9; i++)
     {
         if(memcmp(&add_res[i],&c[i],4) == 0) //Let's iteratively check each value, and see where it fails
         {
@@ -151,7 +151,7 @@ void sq()
 void lt() //Less than
 {
     volatile int lt_res[5];
-    const volatile float a[5] = {INFINITY,-INFINITY,-0.0f,0.0f,-INFINITY}; //3RD ONE FAILS IN HORNET !!
+    const volatile float a[5] = {INFINITY,-INFINITY,-0.0f,0.0f,-INFINITY};
     const volatile float b[5] = {INFINITY,-INFINITY,0.0f,-0.0f,INFINITY};
     const volatile int c[5] = {0,0,0,0,1};
 

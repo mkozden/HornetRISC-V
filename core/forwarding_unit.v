@@ -26,7 +26,7 @@ begin
 	if(!exmem_wb) //forward from MEM stage
 	begin
 		//forward rs1
-		if(rs1 == exmem_rd && fpu_reg_bank_ex1 == fpu_reg_bank_exmem_rd && rs1 != 5'b0)
+		if(rs1 == exmem_rd && fpu_reg_bank_ex1 == fpu_reg_bank_exmem_rd && ((rs1 != 5'b0) || fpu_reg_bank_ex1)) //Skip forwarding if rs1 is x0, but forward if it is in the floating point register bank
 		begin
 			if(!fpu_alu_mem_sel)
 				mux1_ctrl = 2'b10;
@@ -35,7 +35,7 @@ begin
 		end
 		else if(!memwb_wb)
 		begin
-			if(rs1 == memwb_rd && fpu_reg_bank_ex1 == fpu_reg_bank_memwb_rd && rs1 != 5'b0)
+			if(rs1 == memwb_rd && fpu_reg_bank_ex1 == fpu_reg_bank_memwb_rd && ((rs1 != 5'b0) || fpu_reg_bank_ex1))
 				mux1_ctrl = 2'b01;
 			else
 				mux1_ctrl = 2'b00;
@@ -44,7 +44,7 @@ begin
 			mux1_ctrl = 2'b00;
 
 		//forward rs2
-		if(rs2 == exmem_rd && fpu_reg_bank_ex2 == fpu_reg_bank_exmem_rd && rs2 != 5'b0)
+		if(rs2 == exmem_rd && fpu_reg_bank_ex2 == fpu_reg_bank_exmem_rd && ((rs2 != 5'b0) || fpu_reg_bank_ex2))
 		begin
 			if(!fpu_alu_mem_sel)
 				mux2_ctrl = 2'b00;
@@ -53,7 +53,7 @@ begin
 		end
 		else if(!memwb_wb)
 		begin
-			if(rs2 == memwb_rd && fpu_reg_bank_ex2 == fpu_reg_bank_memwb_rd && rs2 != 5'b0)
+			if(rs2 == memwb_rd && fpu_reg_bank_ex2 == fpu_reg_bank_memwb_rd && ((rs2 != 5'b0) || fpu_reg_bank_ex2))
 				mux2_ctrl = 2'b01;
 			else
 				mux2_ctrl = 2'b10;
@@ -64,12 +64,12 @@ begin
 
 	else if(!memwb_wb) //forward from WB stage
 	begin
-		if(rs1 == memwb_rd && fpu_reg_bank_ex1 == fpu_reg_bank_memwb_rd && rs1 != 5'b0)
+		if(rs1 == memwb_rd && fpu_reg_bank_ex1 == fpu_reg_bank_memwb_rd && ((rs1 != 5'b0) || fpu_reg_bank_ex1))
 			mux1_ctrl = 2'b01;
 		else
 			mux1_ctrl = 2'b00;
 
-		if(rs2 == memwb_rd && fpu_reg_bank_ex2 == fpu_reg_bank_memwb_rd && rs2 != 5'b0)
+		if(rs2 == memwb_rd && fpu_reg_bank_ex2 == fpu_reg_bank_memwb_rd && ((rs2 != 5'b0) || fpu_reg_bank_ex2))
 			mux2_ctrl = 2'b1;
 		else
 			mux2_ctrl = 2'b10;
