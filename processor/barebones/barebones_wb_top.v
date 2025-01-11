@@ -66,7 +66,7 @@ assign slave_adr_begin[3] = 32'h0000_8010;
 assign slave_adr_end[3] = 32'h0000_8010;
 
 assign wb_cyc_i[0] = inst_wb_cyc_o;
-assign wb_stb_i[0] = inst_wb_stb_o;
+assign wb_stb_i[0] = inst_wb_stb_o && ((slave_adr_begin[0] <= wb_adr_i[0]) && (wb_adr_i[0] <= slave_adr_end[0])); //0 if out of instruction address range
 assign wb_we_i[0] = inst_wb_we_o;
 assign wb_adr_i[0] = inst_wb_adr_o;
 assign wb_dat_i[0] = inst_wb_dat_o;
@@ -83,7 +83,7 @@ generate
     for (i = 1; i<NUM_SLAVES ;i=i+1)
     begin
         assign wb_cyc_i[i] = data_wb_cyc_o;
-        assign wb_stb_i[i] = data_wb_stb_o & ((slave_adr_begin[i] <= wb_adr_i[i]) && (wb_adr_i[i] <= slave_adr_end[i]));
+        assign wb_stb_i[i] = data_wb_stb_o && ((slave_adr_begin[i] <= wb_adr_i[i]) && (wb_adr_i[i] <= slave_adr_end[i]));
         assign wb_we_i[i] = data_wb_we_o;
         assign wb_adr_i[i] = data_wb_adr_o;
         assign wb_dat_i[i] = data_wb_dat_o;

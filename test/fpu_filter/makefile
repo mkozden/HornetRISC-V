@@ -1,4 +1,4 @@
-CC32=/home/deniz/opt/riscv/bin/riscv64-unknown-elf
+CC32=riscv32-unknown-elf
 CCFLAGS=-march=rv32imf -mabi=ilp32f -ffp-contract=off -mstrict-align -malign-data=xlen -O3 -fno-math-errno -T ../linksc-10000.ld -lm -nostartfiles -ffunction-sections -fdata-sections -Wl,--gc-sections -o fpu_filter.elf
 
 
