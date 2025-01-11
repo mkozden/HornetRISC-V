@@ -117,7 +117,7 @@ int main() {
         else if (fabs(y - (-0.397898f)) < 1e-4f){
             *addr_ptr = 'l';
         }
-        else if (fabs(y - (1.500044f)) < 1e-4f){
+        else if (fabs(y - (1.5000441074f)) < 1e-4f){
             *addr_ptr = 'm';
         }
         else if (fabs(y - (0.428606f)) < 1e-4f){
