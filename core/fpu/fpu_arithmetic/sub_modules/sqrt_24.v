@@ -25,7 +25,7 @@ module sqrt_24
     always @ (posedge clk or negedge reset) begin
       
 	   if(!reset) begin
-            sq_root = 0;
+            sq_root <= 0;
             reg_adjusted_input <= 0;
             reg_remainder <= 0;
             reg_partial_root <= 0;
@@ -34,7 +34,7 @@ module sqrt_24
 
 	   else begin
             if (load) begin
-                sq_root = 0;
+                sq_root <= 0;
                 reg_adjusted_input <= is_exp_odd ? {significand, 30'b0} : {1'b0, significand, 29'b0};
                 reg_remainder <= 0;
                 reg_partial_root <= 0;
@@ -52,7 +52,7 @@ module sqrt_24
                 else
                     reg_partial_root <= reg_partial_root;
                 
-                sq_root = reg_partial_root;
+                sq_root <= reg_partial_root;
                 reg_remainder <= result;
 
             end

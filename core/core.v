@@ -240,7 +240,8 @@ begin
 		csr_pc_input <= csr_pcin_mux2_o;
 end
 //instantiate CSR Unit
-csr_unit CSR_UNIT(.clk_i(clk_i),
+csr_unit #(.reset_vector(reset_vector)) CSR_UNIT 
+                (.clk_i(clk_i),
                   .reset_i(reset_i),
                   .pc_i(csr_pc_input),
                   .csr_r_addr_i(IFID_preg_instr[31:20]),
@@ -257,7 +258,6 @@ csr_unit CSR_UNIT(.clk_i(clk_i),
                   .misaligned_ex(IDEX_preg_misaligned),
                   .instr_access_fault_i(instr_access_fault_i),
                   .data_err_i(data_err_i),
-                  .reset_vector(reset_vector),
 
                   .csr_reg_o(csr_reg_out),
                   .mepc_o(mepc),

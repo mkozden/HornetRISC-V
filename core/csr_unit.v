@@ -14,7 +14,8 @@ The module utilizes a finite state machine to realize the task.
 `define mie_msie mie[3]
 `define mip_msip mip[3]
 
-module csr_unit(input clk_i,
+module csr_unit #(parameter reset_vector = 32'h0)
+(input clk_i,
                 input reset_i,
                 input [31:0] pc_i,
                 input [11:0] csr_r_addr_i, //CSR read address
@@ -33,7 +34,6 @@ module csr_unit(input clk_i,
                 input mret_wb_i,
                 input misaligned_ex,
                 input instr_access_fault_i, illegal_instr_i, instr_addr_misaligned_i, ecall_i, ebreak_i, data_err_i,
-                input [31:0] reset_vector,
 
                 output reg [31:0] csr_reg_o,
                 output [31:0] irq_addr_o, mepc_o,

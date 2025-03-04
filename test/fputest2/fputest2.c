@@ -64,9 +64,9 @@ void mul()
 void sub() 
 {
     volatile float sub_res[9];
-    const volatile float a[9] = {INFINITY,-INFINITY,-0.0f,NAN,0.0f,NAN,1.5f,1.0000048f,1.0f};
-    const volatile float b[9] = {INFINITY,-INFINITY,-0.0f,1.0f,NAN,NAN,1.25f,1.0000024f,0.00003051758f};
-    const volatile float c[9] = {NAN,NAN,+0.0f,NAN,NAN,NAN,0.25f,2.3841858E-6f,0.9999695f};
+    const volatile float a[9] = {INFINITY,-INFINITY,-0.0f,NAN,0.0f,NAN,1.5f,1.0000048f,3.0f};
+    const volatile float b[9] = {INFINITY,-INFINITY,-0.0f,1.0f,NAN,NAN,1.25f,1.0000024f,2.0f};
+    const volatile float c[9] = {NAN,NAN,+0.0f,NAN,NAN,NAN,0.25f,2.3841858E-6f,1.0f};
 
     for (int i = 0; i < 9; i++)
     {
