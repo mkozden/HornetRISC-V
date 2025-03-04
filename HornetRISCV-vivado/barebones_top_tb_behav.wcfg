@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="barebones_top_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="barebones_top_tb" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="955.000 ns"></ZoomEndTime>
+      <Cursor1Time time="365.000 ns"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="165"></NameColumnWidth>
+      <ValueColumnWidth column_width="58"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="69" />
+   <wvobject fp_name="/barebones_top_tb/reset_i" type="logic">
+      <obj_property name="ElementShortName">reset_i</obj_property>
+      <obj_property name="ObjectShortName">reset_i</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/clk_i" type="logic">
+      <obj_property name="ElementShortName">clk_i</obj_property>
+      <obj_property name="ObjectShortName">clk_i</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/wb_dat_i" type="array">
+      <obj_property name="ElementShortName">wb_dat_i[3:0][31:0]</obj_property>
+      <obj_property name="ObjectShortName">wb_dat_i[3:0][31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/instr_i" type="array">
+      <obj_property name="ElementShortName">instr_i[31:0]</obj_property>
+      <obj_property name="ObjectShortName">instr_i[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/CTRL_UNIT/opcode" type="array">
+      <obj_property name="ElementShortName">opcode[6:0]</obj_property>
+      <obj_property name="ObjectShortName">opcode[6:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/pc_o" type="array">
+      <obj_property name="ElementShortName">pc_o[31:0]</obj_property>
+      <obj_property name="ObjectShortName">pc_o[31:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/IFID_preg_pc" type="array">
+      <obj_property name="ElementShortName">IFID_preg_pc[31:0]</obj_property>
+      <obj_property name="ObjectShortName">IFID_preg_pc[31:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/IDEX_preg_pc" type="array">
+      <obj_property name="ElementShortName">IDEX_preg_pc[31:0]</obj_property>
+      <obj_property name="ObjectShortName">IDEX_preg_pc[31:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/EXMEM_preg_pc" type="array">
+      <obj_property name="ElementShortName">EXMEM_preg_pc[31:0]</obj_property>
+      <obj_property name="ObjectShortName">EXMEM_preg_pc[31:0]</obj_property>
+      <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/register_bank" type="array">
+      <obj_property name="ElementShortName">register_bank[31:1][31:0]</obj_property>
+      <obj_property name="ObjectShortName">register_bank[31:1][31:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/f_register_bank" type="array">
+      <obj_property name="ElementShortName">f_register_bank[31:0][31:0]</obj_property>
+      <obj_property name="ObjectShortName">f_register_bank[31:0][31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/fpu_out_EX" type="array">
+      <obj_property name="ElementShortName">fpu_out_EX[31:0]</obj_property>
+      <obj_property name="ObjectShortName">fpu_out_EX[31:0]</obj_property>
+      <obj_property name="Radix">REALRADIX</obj_property>
+      <obj_property name="radix_realType">FLOATINGPOINTRADIX</obj_property>
+      <obj_property name="radix_fractionWidth">24</obj_property>
+      <obj_property name="radix_otherWidth">8</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/mux_o_WB" type="array">
+      <obj_property name="ElementShortName">mux_o_WB[31:0]</obj_property>
+      <obj_property name="ObjectShortName">mux_o_WB[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/LS_UNIT/data_o" type="array">
+      <obj_property name="ElementShortName">data_o[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data_o[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/LS_UNIT/addr_o" type="array">
+      <obj_property name="ElementShortName">addr_o[31:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_o[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/LS_UNIT/data_i" type="array">
+      <obj_property name="ElementShortName">data_i[31:0]</obj_property>
+      <obj_property name="ObjectShortName">data_i[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/mux4_o_EX" type="array">
+      <obj_property name="ElementShortName">mux4_o_EX[31:0]</obj_property>
+      <obj_property name="ObjectShortName">mux4_o_EX[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/mux4_ctrl_EX" type="array">
+      <obj_property name="ElementShortName">mux4_ctrl_EX[1:0]</obj_property>
+      <obj_property name="ObjectShortName">mux4_ctrl_EX[1:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/ctrl_unit_IDEX_data1_sel" type="logic">
+      <obj_property name="ElementShortName">ctrl_unit_IDEX_data1_sel</obj_property>
+      <obj_property name="ObjectShortName">ctrl_unit_IDEX_data1_sel</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/ctrl_unit_IDEX_data2_sel" type="logic">
+      <obj_property name="ElementShortName">ctrl_unit_IDEX_data2_sel</obj_property>
+      <obj_property name="ObjectShortName">ctrl_unit_IDEX_data2_sel</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/data1_sel_EX" type="logic">
+      <obj_property name="ElementShortName">data1_sel_EX</obj_property>
+      <obj_property name="ObjectShortName">data1_sel_EX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/data2_sel_EX" type="logic">
+      <obj_property name="ElementShortName">data2_sel_EX</obj_property>
+      <obj_property name="ObjectShortName">data2_sel_EX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/FWD_UNIT/rs1" type="array">
+      <obj_property name="ElementShortName">rs1[4:0]</obj_property>
+      <obj_property name="ObjectShortName">rs1[4:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/FWD_UNIT/rs2" type="array">
+      <obj_property name="ElementShortName">rs2[4:0]</obj_property>
+      <obj_property name="ObjectShortName">rs2[4:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/FWD_UNIT/exmem_rd" type="array">
+      <obj_property name="ElementShortName">exmem_rd[4:0]</obj_property>
+      <obj_property name="ObjectShortName">exmem_rd[4:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/FWD_UNIT/memwb_rd" type="array">
+      <obj_property name="ElementShortName">memwb_rd[4:0]</obj_property>
+      <obj_property name="ObjectShortName">memwb_rd[4:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/FWD_UNIT/fpu_alu_mem_sel" type="logic">
+      <obj_property name="ElementShortName">fpu_alu_mem_sel</obj_property>
+      <obj_property name="ObjectShortName">fpu_alu_mem_sel</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/FWD_UNIT/fpu_alu_bank_ex1" type="logic">
+      <obj_property name="ElementShortName">fpu_alu_bank_ex1</obj_property>
+      <obj_property name="ObjectShortName">fpu_alu_bank_ex1</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/FWD_UNIT/fpu_alu_bank_ex2" type="logic">
+      <obj_property name="ElementShortName">fpu_alu_bank_ex2</obj_property>
+      <obj_property name="ObjectShortName">fpu_alu_bank_ex2</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/FWD_UNIT/fpu_alu_bank_exmem_rd" type="logic">
+      <obj_property name="ElementShortName">fpu_alu_bank_exmem_rd</obj_property>
+      <obj_property name="ObjectShortName">fpu_alu_bank_exmem_rd</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/FWD_UNIT/fpu_alu_bank_memwb_rd" type="logic">
+      <obj_property name="ElementShortName">fpu_alu_bank_memwb_rd</obj_property>
+      <obj_property name="ObjectShortName">fpu_alu_bank_memwb_rd</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/FWD_UNIT/exmem_wb" type="logic">
+      <obj_property name="ElementShortName">exmem_wb</obj_property>
+      <obj_property name="ObjectShortName">exmem_wb</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/FWD_UNIT/memwb_wb" type="logic">
+      <obj_property name="ElementShortName">memwb_wb</obj_property>
+      <obj_property name="ObjectShortName">memwb_wb</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/FWD_UNIT/mux1_ctrl" type="array">
+      <obj_property name="ElementShortName">mux1_ctrl[1:0]</obj_property>
+      <obj_property name="ObjectShortName">mux1_ctrl[1:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/FWD_UNIT/mux2_ctrl" type="array">
+      <obj_property name="ElementShortName">mux2_ctrl[1:0]</obj_property>
+      <obj_property name="ObjectShortName">mux2_ctrl[1:0]</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/irq_ack_o" type="logic">
+      <obj_property name="ElementShortName">irq_ack_o</obj_property>
+      <obj_property name="ObjectShortName">irq_ack_o</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/meip_i" type="logic">
+      <obj_property name="ElementShortName">meip_i</obj_property>
+      <obj_property name="ObjectShortName">meip_i</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/fast_irq_i" type="array">
+      <obj_property name="ElementShortName">fast_irq_i[15:0]</obj_property>
+      <obj_property name="ObjectShortName">fast_irq_i[15:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/csr_if_flush" type="logic">
+      <obj_property name="ElementShortName">csr_if_flush</obj_property>
+      <obj_property name="ObjectShortName">csr_if_flush</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/csr_id_flush" type="logic">
+      <obj_property name="ElementShortName">csr_id_flush</obj_property>
+      <obj_property name="ObjectShortName">csr_id_flush</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/csr_ex_flush" type="logic">
+      <obj_property name="ElementShortName">csr_ex_flush</obj_property>
+      <obj_property name="ObjectShortName">csr_ex_flush</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/csr_mem_flush" type="logic">
+      <obj_property name="ElementShortName">csr_mem_flush</obj_property>
+      <obj_property name="ObjectShortName">csr_mem_flush</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/csr_stall" type="logic">
+      <obj_property name="ElementShortName">csr_stall</obj_property>
+      <obj_property name="ObjectShortName">csr_stall</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/hazard_stall" type="logic">
+      <obj_property name="ElementShortName">hazard_stall</obj_property>
+      <obj_property name="ObjectShortName">hazard_stall</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/fpu_start" type="logic">
+      <obj_property name="ElementShortName">fpu_start</obj_property>
+      <obj_property name="ObjectShortName">fpu_start</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/fpu_stall_EX" type="logic">
+      <obj_property name="ElementShortName">fpu_stall_EX</obj_property>
+      <obj_property name="ObjectShortName">fpu_stall_EX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/fpu_done_EX" type="logic">
+      <obj_property name="ElementShortName">fpu_done_EX</obj_property>
+      <obj_property name="ObjectShortName">fpu_done_EX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/fpu_top/clk" type="logic">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/fpu_top/reset" type="logic">
+      <obj_property name="ElementShortName">reset</obj_property>
+      <obj_property name="ObjectShortName">reset</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/fpu_top/start" type="logic">
+      <obj_property name="ElementShortName">start</obj_property>
+      <obj_property name="ObjectShortName">start</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/fpu_top/op" type="array">
+      <obj_property name="ElementShortName">op[4:0]</obj_property>
+      <obj_property name="ObjectShortName">op[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/fpu_top/rounding_mode" type="array">
+      <obj_property name="ElementShortName">rounding_mode[2:0]</obj_property>
+      <obj_property name="ObjectShortName">rounding_mode[2:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/fpu_top/A" type="array">
+      <obj_property name="ElementShortName">A[31:0]</obj_property>
+      <obj_property name="ObjectShortName">A[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/fpu_top/B" type="array">
+      <obj_property name="ElementShortName">B[31:0]</obj_property>
+      <obj_property name="ObjectShortName">B[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/fpu_top/rs2_lsb" type="logic">
+      <obj_property name="ElementShortName">rs2_lsb</obj_property>
+      <obj_property name="ObjectShortName">rs2_lsb</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/fpu_top/fpu_arith_out" type="array">
+      <obj_property name="ElementShortName">fpu_arith_out[31:0]</obj_property>
+      <obj_property name="ObjectShortName">fpu_arith_out[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/fpu_top/done" type="logic">
+      <obj_property name="ElementShortName">done</obj_property>
+      <obj_property name="ObjectShortName">done</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/fpu_top/overflow" type="logic">
+      <obj_property name="ElementShortName">overflow</obj_property>
+      <obj_property name="ObjectShortName">overflow</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/fpu_top/underflow" type="logic">
+      <obj_property name="ElementShortName">underflow</obj_property>
+      <obj_property name="ObjectShortName">underflow</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/fpu_top/invalid" type="logic">
+      <obj_property name="ElementShortName">invalid</obj_property>
+      <obj_property name="ObjectShortName">invalid</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/fpu_top/inexact" type="logic">
+      <obj_property name="ElementShortName">inexact</obj_property>
+      <obj_property name="ObjectShortName">inexact</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/fpu_top/div_by_zero" type="logic">
+      <obj_property name="ElementShortName">div_by_zero</obj_property>
+      <obj_property name="ObjectShortName">div_by_zero</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/fpu_top/in_sel" type="logic">
+      <obj_property name="ElementShortName">in_sel</obj_property>
+      <obj_property name="ObjectShortName">in_sel</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/fpu_top/reg_AB_en" type="logic">
+      <obj_property name="ElementShortName">reg_AB_en</obj_property>
+      <obj_property name="ObjectShortName">reg_AB_en</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/fpu_top/in_A" type="array">
+      <obj_property name="ElementShortName">in_A[31:0]</obj_property>
+      <obj_property name="ObjectShortName">in_A[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/fpu_top/in_B" type="array">
+      <obj_property name="ElementShortName">in_B[31:0]</obj_property>
+      <obj_property name="ObjectShortName">in_B[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/fpu_top/reg_A" type="array">
+      <obj_property name="ElementShortName">reg_A[31:0]</obj_property>
+      <obj_property name="ObjectShortName">reg_A[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/core0/core0/fpu_top/reg_B" type="array">
+      <obj_property name="ElementShortName">reg_B[31:0]</obj_property>
+      <obj_property name="ObjectShortName">reg_B[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/barebones_top_tb/uut/memory/mem" type="array">
+      <obj_property name="ElementShortName">mem[0:2047][31:0]</obj_property>
+      <obj_property name="ObjectShortName">mem[0:2047][31:0]</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+</wave_config>
