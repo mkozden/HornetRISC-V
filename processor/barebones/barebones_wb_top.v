@@ -160,6 +160,11 @@ assign data_wb_err_i = r_data_wb_err_i;
 assign data_wb_clk_i = clk_i;
 assign data_wb_rst_i = ~reset_i;
 
+//Tracer signals
+wire [31:0] tr_mem_data, tr_mem_addr, tr_reg_data, tr_pc, tr_instr;
+wire [4:0] tr_reg_addr;
+wire tr_valid, tr_mem_we;
+
 core_wb #(.reset_vector(reset_vector)) core0  (.reset_i(reset_i),
                .clk_i(clk_i),
 
@@ -196,7 +201,30 @@ core_wb #(.reset_vector(reset_vector)) core0  (.reset_i(reset_i),
                .mtip_i(mtip),
                .msip_i(1'b0),
                .fast_irq_i(fast_irq_i),
-               .irq_ack_o(irq_ack_o));
+               .irq_ack_o(irq_ack_o),        
+               .tr_mem_data(tr_mem_data),
+               .tr_mem_addr(tr_mem_addr),
+               .tr_reg_data(tr_reg_data),
+               .tr_pc(tr_pc),
+               .tr_instr(tr_instr),
+               .tr_reg_addr(tr_reg_addr),
+               .tr_valid(tr_valid),
+               .tr_load(tr_load),
+               .tr_store(tr_store),
+               .tr_is_float(tr_is_float));
+
+
+tracer tracer(.clk_i(clk_i),
+                .valid(tr_valid),
+                .pc(tr_pc),
+                .instr(tr_instr),
+                .reg_addr(tr_reg_addr),
+                .reg_data(tr_reg_data),
+                .is_load(tr_load),
+                .is_store(tr_store),
+                .is_float(tr_is_float),
+                .mem_addr(tr_mem_addr),
+                .mem_data(tr_mem_data));
 
 memory_2rw_wb #(.ADDR_WIDTH(13)) memory(.port0_wb_cyc_i(wb_cyc_i[0]),
                                         .port0_wb_stb_i(wb_stb_i[0]),

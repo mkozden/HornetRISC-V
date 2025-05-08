@@ -18,7 +18,13 @@ module core(input reset_i, //active-low reset
             input         meip_i, mtip_i, msip_i, //interrupts
             input  [15:0] fast_irq_i,
 
-            output irq_ack_o); //interrupt acknowledge signal. driven high for one cycle when an external interrupt is handled. 
+            output irq_ack_o, //interrupt acknowledge signal. driven high for one cycle when an external interrupt is handled. 
+            //Tracer signals
+            output reg [31:0] tr_mem_data, tr_mem_addr,
+            output [31:0] tr_reg_data, tr_pc, tr_instr,
+            output [4:0]  tr_reg_addr,
+            output        tr_valid, tr_load, tr_store, tr_is_float
+            ); 
 
 parameter reset_vector = 32'h0; //pc is set to this address when a reset occurs. Overridden in core_wb and barebones_wb_top.
 
@@ -80,12 +86,14 @@ wire [29:0] mux3_o_ID; //EX field
 wire [29:0] imm_dec_i; //immediate decoder input
 wire [31:0] imm_dec_o; //immediate decoder output
 wire [31:0] pc_ID; //pc value
+wire [31:0] instr_ID; //instruction value, for tracing purposes
 
 //pipeline registers
 reg [31:0] IDEX_preg_imm;
 reg [4:0]  IDEX_preg_rd, IDEX_preg_rs2, IDEX_preg_rs1;
 reg [31:0] IDEX_preg_data2, IDEX_preg_data1;
 reg [31:0] IDEX_preg_pc;
+reg [31:0] IDEX_preg_instr; //for tracing purposes
 reg [29:0] IDEX_preg_ex;
 reg [2:0]  IDEX_preg_mem;
 reg [8:0]  IDEX_preg_wb;
@@ -112,6 +120,7 @@ wire [8:0]  wb_EX;
 wire [2:0]  mem_EX;
 wire [29:0] ex_EX;
 wire [31:0] pc_EX, data1_EX, data2_EX, imm_EX;
+wire [31:0] instr_EX; //for tracing purposes
 wire [4:0]  rs1_EX, rs2_EX, rd_EX;
 wire [11:0] csr_addr_EX;
 wire        csr_wen_EX;
@@ -162,6 +171,8 @@ reg [4:0]  EXMEM_preg_rd;
 //reg [31:0] EXMEM_preg_data2; //Unused
 reg [31:0] EXMEM_preg_aluout;
 reg [31:0] EXMEM_preg_pc;
+reg [31:0] EXMEM_preg_instr; //for tracing purposes
+reg [31:0] EXMEM_preg_memin; //for tracing purposes
 reg [11:0] EXMEM_preg_csr_addr;
 reg [2:0]  EXMEM_preg_mem;
 reg [8:0]  EXMEM_preg_wb;
@@ -180,8 +191,10 @@ wire [31:0] aluout_MEM; //data2_MEM; //Unused
 wire [31:0] fpu_out_MEM;
 wire [4:0]  rd_MEM;
 wire [31:0] imm_MEM;
+wire [31:0] memin_MEM;
 //wire [31:0] memout_MEM; //Unused
 wire [31:0] pc_MEM;
+wire [31:0] instr_MEM;
 wire [11:0] csr_addr_MEM;
 wire        csr_wen_MEM;
 wire [1:0]  addr_bits_MEM; //two least-significant bits of data address, from previous stage.
@@ -189,12 +202,17 @@ wire        mux_ctrl_rb_MEM;
 wire [31:0] memout; //output of load-store unit
 //pipeline registers
 reg [4:0]  MEMWB_preg_rd;
+reg [31:0] MEMWB_preg_pc; //for tracing purposes
+reg [31:0] MEMWB_preg_instr; //for tracing purposes
 reg [31:0] MEMWB_preg_memout;
+reg [31:0] MEMWB_preg_memin; //Data going into memory, for tracing purposes
+reg [2:0]  MEMWB_preg_mem; //To forward to WB stage for debugging (?)
 reg [31:0] MEMWB_preg_aluout, MEMWB_preg_imm;
 reg [31:0] MEMWB_preg_fpuout;
 reg [11:0] MEMWB_preg_csr_addr;
 reg [8:0]  MEMWB_preg_wb;
 reg        MEMWB_preg_mret;
+reg        MEMWB_preg_dummy;
 //reg        MEMWB_preg_misaligned; //Unused
 //END MEM SIGNALS--------END MEM SIGNALS--------END MEM SIGNALS--------END MEM SIGNALS--------END MEM SIGNALS--------END MEM SIGNALS
 
@@ -202,6 +220,7 @@ reg        MEMWB_preg_mret;
 //signals from previous stage
 wire [4:0]  rd_WB;
 wire [8:0]  wb_WB;
+wire [2:0]  mem_WB;
 wire        load_sign;
 wire [1:0]  mem_length_WB;
 wire [1:0]  mux_ctrl_WB;
@@ -210,9 +229,12 @@ wire        mux_ctrl_rb_WB;
 wire        rf_wen_WB, csr_wen_WB;
 wire [11:0] csr_addr_WB;
 wire [31:0] memout_WB, aluout_WB, imm_WB;
+wire [31:0] memin_WB;
 wire [31:0] fpuout_WB;
 wire        mret_WB;
 reg [31:0]  mux_o_WB;
+wire [31:0] pc_WB; //for tracing purposes
+wire [31:0] instr_WB; //for tracing purposes
 //END WB SIGNALS--------END WB SIGNALS--------END WB SIGNALS--------END WB SIGNALS--------END WB SIGNALS--------END WB SIGNALS
 
 //CSR SIGNALS--------CSR SIGNALS--------CSR SIGNALS--------CSR SIGNALS--------CSR SIGNALS--------CSR SIGNALS
@@ -338,6 +360,7 @@ assign rd_ID        = IFID_preg_instr[11:7];
 assign pc_ID        = IFID_preg_pc;
 assign imm_dec_i    = IFID_preg_instr[31:2];
 assign csr_addr_ID  = IFID_preg_instr[31:20];
+assign instr_ID     = IFID_preg_instr; //for tracing purposes
 //assign nets
 assign stall_ID = hazard_stall | muldiv_stall_EX | fpu_stall_EX | misaligned_access | data_stall_i | csr_stall; //TODO: move csr stall below
 assign mux_ctrl_ID = hazard_stall;
@@ -441,6 +464,7 @@ begin
 		IDEX_preg_csr_addr <= 12'b0;
 		IDEX_preg_ex <= 30'b0;
 		{IDEX_preg_pc, IDEX_preg_data1, IDEX_preg_data2} <= 96'b0;
+        IDEX_preg_instr <= 32'b0;
 		{IDEX_preg_rs1, IDEX_preg_rs2, IDEX_preg_rd} <= 15'b0;
 		IDEX_preg_imm  <= 32'b0;
 		IDEX_preg_dummy <= 1'b0;
@@ -457,6 +481,7 @@ begin
 		IDEX_preg_csr_addr <= 12'b0;
 		IDEX_preg_ex <= 30'b0;
 		{IDEX_preg_pc, IDEX_preg_data1, IDEX_preg_data2} <= 96'b0;
+        IDEX_preg_instr <= 32'b0;
 		{IDEX_preg_rs1, IDEX_preg_rs2, IDEX_preg_rd} <= 15'b0;
 		IDEX_preg_imm  <= 32'b0;
 		IDEX_preg_dummy <= 1'b1;
@@ -500,6 +525,7 @@ begin
             IDEX_preg_rs2 <= rs2_ID;
             IDEX_preg_rs1 <= rs1_ID;
             IDEX_preg_pc  <= pc_ID;
+            IDEX_preg_instr <= instr_ID;
             IDEX_preg_ex  <= mux3_o_ID;
             IDEX_preg_mem <= mux2_o_ID;
             IDEX_preg_wb  <= mux1_o_ID;
@@ -563,6 +589,7 @@ assign wb_EX    = IDEX_preg_wb;
 assign mem_EX   = IDEX_preg_mem;
 assign ex_EX    = IDEX_preg_ex;
 assign pc_EX    = IDEX_preg_pc;
+assign instr_EX = IDEX_preg_instr; //for tracing purposes
 assign data1_EX = IDEX_preg_data1;
 assign data2_EX = IDEX_preg_data2;
 assign data1_sel_EX = IDEX_preg_data1_sel;
@@ -678,6 +705,8 @@ begin
 		EXMEM_preg_csr_addr <= 12'b0;
 		//{EXMEM_preg_pc, EXMEM_preg_aluout, EXMEM_preg_fpuout, EXMEM_preg_data2} <= 128'b0; //EXMEM_preg_data2 is unused
 		{EXMEM_preg_pc, EXMEM_preg_aluout, EXMEM_preg_fpuout} <= 96'b0;
+        EXMEM_preg_instr <= 32'b0;
+        EXMEM_preg_memin <= 32'b0;
 		EXMEM_preg_rd <= 5'b0;
 		EXMEM_preg_imm <= 32'b0;
 		EXMEM_preg_dummy <= 1'b0;
@@ -694,6 +723,8 @@ begin
         EXMEM_preg_csr_addr <= 12'b0;
         //{EXMEM_preg_pc, EXMEM_preg_aluout, EXMEM_preg_fpuout, EXMEM_preg_data2} <= 128'b0; //EXMEM_preg_data2 is unused
         {EXMEM_preg_pc, EXMEM_preg_aluout, EXMEM_preg_fpuout} <= 96'b0;
+        EXMEM_preg_instr <= 32'b0;
+        EXMEM_preg_memin <= 32'b0;
         EXMEM_preg_rd <= 5'b0;
         EXMEM_preg_imm <= 32'b0;
         EXMEM_preg_dummy <= 1'b1;
@@ -708,9 +739,11 @@ begin
 		EXMEM_preg_imm <= mux7_o_EX;
 		EXMEM_preg_rd <= rd_EX;
 		EXMEM_preg_pc <= pc_EX;
+        EXMEM_preg_instr <= instr_EX;
 		//EXMEM_preg_data2 <= mux4_o_EX;
 		EXMEM_preg_aluout <= mux6_o_EX;
         EXMEM_preg_fpuout <= fpu_out_EX;
+        EXMEM_preg_memin <= data_o;
 		EXMEM_preg_mem <= {mem_EX[2:1],mem_wen_EX};
         EXMEM_preg_wb[8] <= wb_EX[8];
         EXMEM_preg_wb[7] <= wb_EX[7];
@@ -757,6 +790,8 @@ assign fpu_out_MEM  = EXMEM_preg_fpuout;
 assign mux_ctrl_rb_MEM = wb_MEM[7];
 assign rd_MEM 	    = EXMEM_preg_rd;
 assign pc_MEM       = EXMEM_preg_pc;
+assign instr_MEM    = EXMEM_preg_instr; //for tracing purposes
+assign memin_MEM    = EXMEM_preg_memin; //for tracing purposes
 assign imm_MEM 	    = EXMEM_preg_imm;
 assign csr_addr_MEM = EXMEM_preg_csr_addr;
 assign addr_bits_MEM = EXMEM_preg_addr_bits;
@@ -768,9 +803,13 @@ begin
 	if(!reset_i)
 	begin
 		MEMWB_preg_wb <= 9'h0c;
+        MEMWB_preg_mem <= 3'b1;
 		MEMWB_preg_csr_addr <= 12'b0;
 		MEMWB_preg_rd <= 5'b0;
+        MEMWB_preg_pc <= 32'b0;
+        MEMWB_preg_instr <= 32'b0;
 		MEMWB_preg_memout <= 32'b0;
+		MEMWB_preg_memin <= 32'b0;
 		MEMWB_preg_aluout <= 32'b0;
         MEMWB_preg_fpuout <= 32'b0;
 		MEMWB_preg_imm <= 32'b0;
@@ -781,26 +820,36 @@ begin
 	else if(csr_mem_flush)
 	begin
 		MEMWB_preg_wb <= 9'h0c;
+        MEMWB_preg_mem <= 3'b1;
 		MEMWB_preg_csr_addr <= 12'b0;
 		MEMWB_preg_rd <= 5'b0;
+        MEMWB_preg_pc <= 32'b0;
+        MEMWB_preg_instr <= 32'b0;
 		MEMWB_preg_memout <= 32'b0;
+		MEMWB_preg_memin <= 32'b0;
 		MEMWB_preg_aluout <= 32'b0;
         MEMWB_preg_fpuout <= 32'b0;
 		MEMWB_preg_imm <= 32'b0;
 		MEMWB_preg_mret <= 1'b0;
+        MEMWB_preg_dummy <= 1'b1;
 		//MEMWB_preg_misaligned <= 1'b0; //Unused
 	end
 
 	else
 	begin
 		MEMWB_preg_wb <= wb_MEM;
+        MEMWB_preg_mem <= mem_MEM;
 		MEMWB_preg_rd <= rd_MEM;
+        MEMWB_preg_pc <= pc_MEM;
+        MEMWB_preg_instr <= instr_MEM;
 		MEMWB_preg_csr_addr <= csr_addr_MEM;
 		MEMWB_preg_imm <= imm_MEM;
 		MEMWB_preg_aluout <= aluout_MEM;
         MEMWB_preg_fpuout <= fpu_out_MEM;
 		MEMWB_preg_memout <= memout;
+		MEMWB_preg_memin <= memin_MEM;
 		MEMWB_preg_mret <= EXMEM_preg_mret;
+        MEMWB_preg_dummy <= EXMEM_preg_dummy;
 		//MEMWB_preg_misaligned <= EXMEM_preg_misaligned; //Unused
 	end
 end
@@ -809,8 +858,12 @@ end
 //WB STAGE---------------------------------------------------------------------------------
 //assign fields
 assign wb_WB 	   = MEMWB_preg_wb;
+assign mem_WB      = MEMWB_preg_mem; 
 assign memout_WB   = MEMWB_preg_memout;
+assign memin_WB   = MEMWB_preg_memin;
 assign rd_WB 	   = MEMWB_preg_rd;
+assign pc_WB       = MEMWB_preg_pc;
+assign instr_WB    = MEMWB_preg_instr; //for tracing purposes
 assign csr_addr_WB = MEMWB_preg_csr_addr;
 assign imm_WB      = MEMWB_preg_imm;
 assign aluout_WB   = MEMWB_preg_aluout;
@@ -823,7 +876,6 @@ assign rf_wen_WB   = wb_WB[3];
 assign load_sign   = wb_WB[4];
 assign mux_ctrl_WB = wb_WB[6:5];
 assign mux_ctrl_rb_WB = wb_WB[7];
-
 //WB mux
 always @(*)
 begin
@@ -857,5 +909,53 @@ begin
 end
 
 //END WB STAGE-----------------------------------------------------------------------------
+
+// output [31:0] tr_mem_data, tr_mem_addr, tr_reg_data, tr_pc, tr_instr,
+// output [4:0]  tr_reg_addr,
+// output        tr_valid, tr_mem_we
+
+reg is_load, is_store; //For debugging purposes
+always @(*) begin
+    if (instr_WB[6:0] == 7'b0000011) begin //Load instruction
+        tr_mem_data = memout_WB; //Load instruction, data to be read from memory
+        tr_mem_addr = aluout_WB; //Load instruction, address to be read from ALU
+        is_load = 1'b1;
+        is_store = 1'b0;
+    end else if (instr_WB[6:0] == 7'b0100011) begin //Store instruction
+        tr_mem_data = memin_WB; //Store instruction, data to be written to memory
+        tr_mem_addr = aluout_WB; //Store instruction, address to be written to ALU
+        is_load = 1'b0;
+        is_store = 1'b1;
+    end else if (instr_WB[6:0] == 7'b0000111) begin //Float load instruction
+        tr_mem_data = memout_WB; //Float load instruction, data to be read from memory
+        tr_mem_addr = aluout_WB; //Float load instruction, address to be read from ALU
+        is_load = 1'b1;
+        is_store = 1'b0;
+    end else if (instr_WB[6:0] == 7'b0100111) begin //Float store instruction
+        tr_mem_data = memin_WB; //Float store instruction, data to be written to memory
+        tr_mem_addr = aluout_WB; //Float store instruction, address to be written to ALU
+        is_load = 1'b0;
+        is_store = 1'b1;
+    end
+    else begin
+        tr_mem_data = 32'b0; //Branch instruction, no data to be written to memory
+        tr_mem_addr = 32'b0; //Branch instruction, no address to be written to ALU
+        is_load = 1'b0;
+        is_store = 1'b0;
+    end
+end
+
+assign tr_load = is_load; //Load instruction
+assign tr_store = is_store; //Store instruction
+
+assign tr_is_float = mux_ctrl_rb_WB; //Uses float register bank
+
+assign tr_reg_data = {32{~rf_wen_WB}} & mux_o_WB; //Return this only if register file is being written to, otherwise it's 0, we should also invert the active low WE signal
+assign tr_reg_addr = {5{~rf_wen_WB}} & rd_WB; //Return this only if register file is being written to, otherwise it's 0, we should also invert the active low WE signal
+
+assign tr_pc = pc_WB; //Return the WB stage PC
+assign tr_instr = instr_WB; //Return the instruction from the WB stage
+
+assign tr_valid = ((instr_WB != 32'h0) && !MEMWB_preg_dummy) && ~clk_i; //If instruction is 0 (NOT NOP), then it's due to reset signal, and these aren't valid either. We also want to only update once per clock cycle
 endmodule
 

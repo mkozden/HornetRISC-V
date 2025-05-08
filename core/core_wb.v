@@ -36,8 +36,12 @@ module core_wb(input reset_i, //active-low reset
                input mtip_i,
                input msip_i,
                input [15:0] fast_irq_i,
-               output irq_ack_o); //Interrupt acknowledge signal. driven high for one cycle when an external interrupt is handled.
-
+               output irq_ack_o, //Interrupt acknowledge signal. driven high for one cycle when an external interrupt is handled.
+               //Tracer signals
+               output [31:0] tr_mem_data, tr_mem_addr, tr_reg_data, tr_pc, tr_instr,
+               output [4:0]  tr_reg_addr,
+               output        tr_valid, tr_load, tr_store, tr_is_float
+            ); 
 parameter reset_vector = 32'h0;
 
 wire [31:0] data_addr_o;
@@ -79,7 +83,17 @@ core    #(.reset_vector(reset_vector))
         .mtip_i(mtip_i),
         .msip_i(msip_i),
         .fast_irq_i(fast_irq_i),
-        .irq_ack_o(irq_ack_o));
+        .irq_ack_o(irq_ack_o),
+        .tr_mem_data(tr_mem_data),
+        .tr_mem_addr(tr_mem_addr),
+        .tr_reg_data(tr_reg_data),
+        .tr_pc(tr_pc),
+        .tr_instr(tr_instr),
+        .tr_reg_addr(tr_reg_addr),
+        .tr_valid(tr_valid),
+        .tr_load(tr_load),
+        .tr_store(tr_store),
+        .tr_is_float(tr_is_float));
 
 reg data_cyc;
 always @(posedge data_wb_clk_i or posedge data_wb_rst_i)
