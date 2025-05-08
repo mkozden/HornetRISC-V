@@ -26,8 +26,9 @@ for (i = 0; i < uut.memory.RAM_DEPTH; i = i + 1) begin
     uut.memory.mem[i] = {uut.memory.DATA_WIDTH{1'b0}};  // Initialize to 0
 end
 #200;
-reset_i = 1'b1;
-$readmemh("fputest2.data",uut.memory.mem); //read data after reset, because reset initializes memory to 0
+$readmemh("paranoia.data",uut.memory.mem); //read data after reset, because reset initializes memory to 0
+#25;
+reset_i = 1'b1; //Wait a cycle so that the instruction memory is ready
 
 //interrupt signals, arbitrarily generated. uncomment if you need to.
 /*

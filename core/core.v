@@ -23,6 +23,7 @@ module core(input reset_i, //active-low reset
             output reg [31:0] tr_mem_data, tr_mem_addr,
             output [31:0] tr_reg_data, tr_pc, tr_instr,
             output [4:0]  tr_reg_addr,
+            output [1:0]  tr_mem_len,
             output        tr_valid, tr_load, tr_store, tr_is_float
             ); 
 
@@ -945,6 +946,8 @@ always @(*) begin
     end
 end
 
+assign tr_mem_len = mem_length_WB;
+
 assign tr_load = is_load; //Load instruction
 assign tr_store = is_store; //Store instruction
 
@@ -956,6 +959,6 @@ assign tr_reg_addr = {5{~rf_wen_WB}} & rd_WB; //Return this only if register fil
 assign tr_pc = pc_WB; //Return the WB stage PC
 assign tr_instr = instr_WB; //Return the instruction from the WB stage
 
-assign tr_valid = ((instr_WB != 32'h0) && !MEMWB_preg_dummy) && ~clk_i; //If instruction is 0 (NOT NOP), then it's due to reset signal, and these aren't valid either. We also want to only update once per clock cycle
+assign tr_valid = ((instr_WB != 32'h0) && !MEMWB_preg_dummy) && ~clk_i; //The dummy signal refers to invalid results, so we invert it. An instruction that's all 0 is also invalid, so we take that into account as well. We also want to only update once per clock cycle
 endmodule
 

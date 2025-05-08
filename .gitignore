@@ -1,2 +1,3 @@
 /HornetRISCV-vivado/*
 !/HornetRISCV-vivado/barebones_top_tb_behav.wcfg
+trace.log

@@ -40,6 +40,7 @@ module core_wb(input reset_i, //active-low reset
                //Tracer signals
                output [31:0] tr_mem_data, tr_mem_addr, tr_reg_data, tr_pc, tr_instr,
                output [4:0]  tr_reg_addr,
+               output [1:0]  tr_mem_len,
                output        tr_valid, tr_load, tr_store, tr_is_float
             ); 
 parameter reset_vector = 32'h0;
@@ -84,12 +85,14 @@ core    #(.reset_vector(reset_vector))
         .msip_i(msip_i),
         .fast_irq_i(fast_irq_i),
         .irq_ack_o(irq_ack_o),
+        
         .tr_mem_data(tr_mem_data),
         .tr_mem_addr(tr_mem_addr),
         .tr_reg_data(tr_reg_data),
         .tr_pc(tr_pc),
         .tr_instr(tr_instr),
         .tr_reg_addr(tr_reg_addr),
+        .tr_mem_len(tr_mem_len),
         .tr_valid(tr_valid),
         .tr_load(tr_load),
         .tr_store(tr_store),
