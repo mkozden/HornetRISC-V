@@ -150,19 +150,19 @@ void sq()
 
 void lt() //Less than
 {
-    volatile int lt_res[5];
-    const volatile float a[5] = {INFINITY,-INFINITY,-0.0f,0.0f,-INFINITY};
-    const volatile float b[5] = {INFINITY,-INFINITY,0.0f,-0.0f,INFINITY};
-    const volatile int c[5] = {0,0,0,0,1};
+    volatile int lt_res[9];
+    const volatile float a[9] = {INFINITY,-INFINITY,-0.0f,0.0f,-INFINITY, -0.5f, -1.0f, -1.5f, -1.25f};
+    const volatile float b[9] = {INFINITY,-INFINITY,0.0f,-0.0f,INFINITY, -1.0f, -0.5f, -1.25f, -1.5f};
+    const volatile int c[9] = {0,0,0,0,1,0,1,1,0};
 
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 9; i++)
     {
         lt_res[i] = (a[i] < b[i]);
     }
     
     char *addr_ptr = (char*)DEBUG_IF_ADDR;
 
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 9; i++)
     {
         if(memcmp(&lt_res[i],&c[i],4) == 0) //Let's iteratively check each value, and see where it fails
         {
