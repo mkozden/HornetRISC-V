@@ -43,6 +43,8 @@ begin
 				$display("Failure!");
 				//$finish;
 			end
+			else if(wb_dat_i == 32'h90)
+				$finish;
 			else
 				$write("%c",wb_dat_i[7:0]); //We can output text to the terminal with this
 		end

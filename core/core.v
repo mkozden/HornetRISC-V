@@ -21,7 +21,7 @@ module core(input reset_i, //active-low reset
             output irq_ack_o, //interrupt acknowledge signal. driven high for one cycle when an external interrupt is handled. 
             //Tracer signals
             output reg [31:0] tr_mem_data, tr_mem_addr,
-            output [31:0] tr_reg_data, tr_pc, tr_instr,
+            output [31:0] tr_reg_data, tr_pc, tr_instr, fflags,
             output [4:0]  tr_reg_addr,
             output [1:0]  tr_mem_len,
             output        tr_valid, tr_load, tr_store, tr_is_float
@@ -154,6 +154,8 @@ wire        fpu_invalid;
 wire        fpu_inexact;
 wire        fpu_div_by_zero;
 
+wire [31:0] csr_float_i; // Can be connected to the CSR unit later for a proper privileged float implementation, but it's for the tracer only for now.
+
 wire        stall_EX;
 wire        J, B, L; //jump, branch, load
 wire        misaligned_access; //driven high when the first part of a misaligned access is being executed.
@@ -182,6 +184,7 @@ reg        EXMEM_preg_mret; //driven high when the instruction in MEM stage is M
 reg        EXMEM_preg_misaligned; //driven high when the instruction in MEM stage is a misaligned access.
 reg [1:0]  EXMEM_preg_addr_bits; //two least-significant bits of data address.
 reg [31:0] EXMEM_preg_fpuout;
+reg [31:0] EXMEM_preg_fflags;
 //END EX SIGNALS--------END EX SIGNALS--------END EX SIGNALS--------END EX SIGNALS--------END EX SIGNALS--------END EX SIGNALS
 
 //MEM SIGNALS--------MEM SIGNALS--------MEM SIGNALS--------MEM SIGNALS--------MEM SIGNALS--------MEM SIGNALS--------MEM SIGNALS
@@ -210,6 +213,7 @@ reg [31:0] MEMWB_preg_memin; //Data going into memory, for tracing purposes
 reg [2:0]  MEMWB_preg_mem; //To forward to WB stage for debugging (?)
 reg [31:0] MEMWB_preg_aluout, MEMWB_preg_imm;
 reg [31:0] MEMWB_preg_fpuout;
+reg [31:0] MEMWB_preg_fflags;
 reg [11:0] MEMWB_preg_csr_addr;
 reg [8:0]  MEMWB_preg_wb;
 reg        MEMWB_preg_mret;
@@ -689,6 +693,8 @@ fpu_top fpu_top
     .div_by_zero(fpu_div_by_zero)
     );
 
+assign csr_float_i = {24'b0,fpu_rm,fpu_invalid,fpu_div_by_zero,fpu_overflow,fpu_underflow,fpu_inexact} & {32{fpu_done_EX}};
+
 //branch logic and address calculation
 assign take_branch = J | (B & aluout_EX[0]);
 assign branch_addr_calc = mux5_o_EX + imm_EX;
@@ -715,6 +721,7 @@ begin
 		EXMEM_preg_misaligned <= 1'b0;
 		EXMEM_preg_addr_bits <= 2'b0;
         EXMEM_preg_fpuout <= 32'b0;
+        EXMEM_preg_fflags <= 32'b0;
 	end
 
 	else if(stall_EX || csr_ex_flush)
@@ -733,6 +740,7 @@ begin
         EXMEM_preg_misaligned <= 1'b0;
         EXMEM_preg_addr_bits <= 2'b0;
         EXMEM_preg_fpuout <= 32'b0;
+        EXMEM_preg_fflags <= 32'b0;
 	end
 
 	else
@@ -756,6 +764,7 @@ begin
 		EXMEM_preg_mret <= IDEX_preg_mret;
 		EXMEM_preg_misaligned <= IDEX_preg_misaligned;
 		EXMEM_preg_addr_bits <= aluout_EX[1:0];
+        EXMEM_preg_fflags <= {27'b0,csr_float_i[4:0]};
 	end
 end
 
@@ -815,6 +824,7 @@ begin
         MEMWB_preg_fpuout <= 32'b0;
 		MEMWB_preg_imm <= 32'b0;
 		MEMWB_preg_mret <= 1'b0;
+        MEMWB_preg_fflags <= 32'b0;
 		//MEMWB_preg_misaligned <= 1'b0; //Unused
 	end
 
@@ -833,6 +843,7 @@ begin
 		MEMWB_preg_imm <= 32'b0;
 		MEMWB_preg_mret <= 1'b0;
         MEMWB_preg_dummy <= 1'b1;
+        MEMWB_preg_fflags <= 32'b0;
 		//MEMWB_preg_misaligned <= 1'b0; //Unused
 	end
 
@@ -851,6 +862,7 @@ begin
 		MEMWB_preg_memin <= memin_MEM;
 		MEMWB_preg_mret <= EXMEM_preg_mret;
         MEMWB_preg_dummy <= EXMEM_preg_dummy;
+        MEMWB_preg_fflags <= EXMEM_preg_fflags;
 		//MEMWB_preg_misaligned <= EXMEM_preg_misaligned; //Unused
 	end
 end
@@ -952,6 +964,8 @@ assign tr_load = is_load; //Load instruction
 assign tr_store = is_store; //Store instruction
 
 assign tr_is_float = mux_ctrl_rb_WB; //Uses float register bank
+
+assign fflags = MEMWB_preg_fflags;
 
 assign tr_reg_data = {32{~rf_wen_WB}} & mux_o_WB; //Return this only if register file is being written to, otherwise it's 0, we should also invert the active low WE signal
 assign tr_reg_addr = {5{~rf_wen_WB}} & rd_WB; //Return this only if register file is being written to, otherwise it's 0, we should also invert the active low WE signal

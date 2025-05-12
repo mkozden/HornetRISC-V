@@ -1,0 +1,771 @@
+
+fputest2.elf:     file format elf32-littleriscv
+
+
+Disassembly of section .init:
+
+00010000 <_start>:
+.section .init, "ax"
+.global _start
+_start:
+    .cfi_startproc
+    la sp, __stack_top
+   10000:	00008117          	auipc	sp,0x8
+   10004:	ffc10113          	addi	sp,sp,-4 # 17ffc <__stack_top>
+    add s0, sp, zero
+   10008:	00010433          	add	s0,sp,zero
+	#bitmask with bit 13 set to 1
+	li t0, 0x2000
+   1000c:	000022b7          	lui	t0,0x2
+	#load value to mstatus CSR to set mstatus.FS to 1
+	csrrs x0, mstatus, t0
+   10010:	3002a073          	csrs	mstatus,t0
+    #Return address is stored at x1, which is 0x10000 in this case
+    li x1, 0x10000
+   10014:	000100b7          	lui	ra,0x10
+    jal zero, main
+   10018:	0040006f          	j	1001c <main>
+
+Disassembly of section .text:
+
+0001001c <main>:
+        }      
+    }
+    return;
+}
+
+int main(){
+   1001c:	ff010113          	addi	sp,sp,-16
+   10020:	00812423          	sw	s0,8(sp)
+    *addr_ptr = 'A';
+   10024:	00017437          	lui	s0,0x17
+   10028:	00042783          	lw	a5,0(s0) # 17000 <addr_ptr>
+int main(){
+   1002c:	00112623          	sw	ra,12(sp)
+   10030:	00912223          	sw	s1,4(sp)
+    *addr_ptr = 'A';
+   10034:	04100713          	li	a4,65
+   10038:	00e78023          	sb	a4,0(a5)
+    *addr_ptr = '\n';
+   1003c:	00042783          	lw	a5,0(s0)
+   10040:	00a00493          	li	s1,10
+   10044:	00978023          	sb	s1,0(a5)
+    add();
+   10048:	358000ef          	jal	103a0 <add>
+    *addr_ptr = 'S';
+   1004c:	00042783          	lw	a5,0(s0)
+   10050:	05300713          	li	a4,83
+   10054:	00e78023          	sb	a4,0(a5)
+    *addr_ptr = '\n';
+   10058:	00042783          	lw	a5,0(s0)
+   1005c:	00978023          	sb	s1,0(a5)
+    sub();
+   10060:	25c000ef          	jal	102bc <sub>
+    *addr_ptr = 'D';
+   10064:	00042783          	lw	a5,0(s0)
+   10068:	04400713          	li	a4,68
+   1006c:	00e78023          	sb	a4,0(a5)
+    *addr_ptr = '\n';
+   10070:	00042783          	lw	a5,0(s0)
+   10074:	00978023          	sb	s1,0(a5)
+    div();
+   10078:	07c000ef          	jal	100f4 <div>
+    *addr_ptr = 'M';
+   1007c:	00042783          	lw	a5,0(s0)
+   10080:	04d00713          	li	a4,77
+   10084:	00e78023          	sb	a4,0(a5)
+    *addr_ptr = '\n';
+   10088:	00042783          	lw	a5,0(s0)
+   1008c:	00978023          	sb	s1,0(a5)
+    mul();
+   10090:	148000ef          	jal	101d8 <mul>
+    *addr_ptr = 'Q';
+   10094:	00042783          	lw	a5,0(s0)
+   10098:	05100713          	li	a4,81
+   1009c:	00e78023          	sb	a4,0(a5)
+    *addr_ptr = '\n';
+   100a0:	00042783          	lw	a5,0(s0)
+   100a4:	00978023          	sb	s1,0(a5)
+    sq();
+   100a8:	3dc000ef          	jal	10484 <sq>
+    *addr_ptr = 'L';
+   100ac:	00042783          	lw	a5,0(s0)
+   100b0:	04c00713          	li	a4,76
+   100b4:	00e78023          	sb	a4,0(a5)
+    *addr_ptr = '\n';
+   100b8:	00042783          	lw	a5,0(s0)
+   100bc:	00978023          	sb	s1,0(a5)
+    lt();
+   100c0:	48c000ef          	jal	1054c <lt>
+    *addr_ptr = 'K';
+   100c4:	00042783          	lw	a5,0(s0)
+   100c8:	04b00713          	li	a4,75
+   100cc:	00e78023          	sb	a4,0(a5)
+    *addr_ptr = '\n';
+   100d0:	00042783          	lw	a5,0(s0)
+   100d4:	00978023          	sb	s1,0(a5)
+    lte();
+   100d8:	558000ef          	jal	10630 <lte>
+    return 0;
+   100dc:	00c12083          	lw	ra,12(sp)
+   100e0:	00812403          	lw	s0,8(sp)
+   100e4:	00412483          	lw	s1,4(sp)
+   100e8:	00000513          	li	a0,0
+   100ec:	01010113          	addi	sp,sp,16
+   100f0:	00008067          	ret
+
+000100f4 <div>:
+{
+   100f4:	f5010113          	addi	sp,sp,-176
+   100f8:	09312e23          	sw	s3,156(sp)
+    const volatile float a[9] = {1.0f,-1.0f,0.0f,INFINITY,0.0f,INFINITY,NAN,1.0f,NAN};
+   100fc:	000115b7          	lui	a1,0x11
+   10100:	02410993          	addi	s3,sp,36
+{
+   10104:	0a912223          	sw	s1,164(sp)
+    const volatile float a[9] = {1.0f,-1.0f,0.0f,INFINITY,0.0f,INFINITY,NAN,1.0f,NAN};
+   10108:	02400613          	li	a2,36
+   1010c:	8b058493          	addi	s1,a1,-1872 # 108b0 <memcpy+0x128>
+   10110:	00098513          	mv	a0,s3
+   10114:	8b058593          	addi	a1,a1,-1872
+{
+   10118:	0a112623          	sw	ra,172(sp)
+   1011c:	0a812423          	sw	s0,168(sp)
+   10120:	0b212023          	sw	s2,160(sp)
+   10124:	09412c23          	sw	s4,152(sp)
+    const volatile float a[9] = {1.0f,-1.0f,0.0f,INFINITY,0.0f,INFINITY,NAN,1.0f,NAN};
+   10128:	660000ef          	jal	10788 <memcpy>
+    const volatile float b[9] = {0.0f,0.0f,0.0f,INFINITY,INFINITY,0.0f,0.0f,NAN,NAN};
+   1012c:	02400613          	li	a2,36
+   10130:	04810413          	addi	s0,sp,72
+   10134:	00c485b3          	add	a1,s1,a2
+   10138:	00040513          	mv	a0,s0
+   1013c:	64c000ef          	jal	10788 <memcpy>
+    const volatile float c[9] = {INFINITY,-INFINITY,NAN,NAN,0.0f,INFINITY,NAN,NAN,NAN};
+   10140:	06c10913          	addi	s2,sp,108
+   10144:	04848593          	addi	a1,s1,72
+   10148:	02400613          	li	a2,36
+   1014c:	00090513          	mv	a0,s2
+   10150:	638000ef          	jal	10788 <memcpy>
+    for (int i = 0; i < 9; i++)
+   10154:	00000713          	li	a4,0
+        div_res[i] = a[i] / b[i];
+   10158:	00010493          	mv	s1,sp
+    for (int i = 0; i < 9; i++)
+   1015c:	00900693          	li	a3,9
+        div_res[i] = a[i] / b[i];
+   10160:	00271793          	slli	a5,a4,0x2
+   10164:	00f98633          	add	a2,s3,a5
+   10168:	00062787          	flw	fa5,0(a2)
+   1016c:	00f40633          	add	a2,s0,a5
+   10170:	00062707          	flw	fa4,0(a2)
+   10174:	009787b3          	add	a5,a5,s1
+    for (int i = 0; i < 9; i++)
+   10178:	00170713          	addi	a4,a4,1
+        div_res[i] = a[i] / b[i];
+   1017c:	18e7f7d3          	fdiv.s	fa5,fa5,fa4
+   10180:	00f7a027          	fsw	fa5,0(a5)
+    for (int i = 0; i < 9; i++)
+   10184:	fcd71ee3          	bne	a4,a3,10160 <div+0x6c>
+   10188:	00000413          	li	s0,0
+            *addr_ptr = 1;
+   1018c:	00017a37          	lui	s4,0x17
+    for (int i = 0; i < 9; i++)
+   10190:	02400993          	li	s3,36
+        if(memcmp(&div_res[i],&c[i],4) == 0) //Let's iteratively check each value, and see where it fails
+   10194:	008905b3          	add	a1,s2,s0
+   10198:	00848533          	add	a0,s1,s0
+   1019c:	00400613          	li	a2,4
+   101a0:	574000ef          	jal	10714 <memcmp>
+            *addr_ptr = 1;
+   101a4:	000a2783          	lw	a5,0(s4) # 17000 <addr_ptr>
+        if(memcmp(&div_res[i],&c[i],4) == 0) //Let's iteratively check each value, and see where it fails
+   101a8:	00153513          	seqz	a0,a0
+    for (int i = 0; i < 9; i++)
+   101ac:	00440413          	addi	s0,s0,4
+        if(memcmp(&div_res[i],&c[i],4) == 0) //Let's iteratively check each value, and see where it fails
+   101b0:	00a78023          	sb	a0,0(a5)
+    for (int i = 0; i < 9; i++)
+   101b4:	ff3410e3          	bne	s0,s3,10194 <div+0xa0>
+}
+   101b8:	0ac12083          	lw	ra,172(sp)
+   101bc:	0a812403          	lw	s0,168(sp)
+   101c0:	0a412483          	lw	s1,164(sp)
+   101c4:	0a012903          	lw	s2,160(sp)
+   101c8:	09c12983          	lw	s3,156(sp)
+   101cc:	09812a03          	lw	s4,152(sp)
+   101d0:	0b010113          	addi	sp,sp,176
+   101d4:	00008067          	ret
+
+000101d8 <mul>:
+{
+   101d8:	f7010113          	addi	sp,sp,-144
+   101dc:	08812423          	sw	s0,136(sp)
+    const volatile float a[7] = {0.0f,INFINITY,1.0f,NAN,NAN,3.0f,9.0f};
+   101e0:	00011437          	lui	s0,0x11
+   101e4:	8b040413          	addi	s0,s0,-1872 # 108b0 <memcpy+0x128>
+{
+   101e8:	07412c23          	sw	s4,120(sp)
+    const volatile float a[7] = {0.0f,INFINITY,1.0f,NAN,NAN,3.0f,9.0f};
+   101ec:	01c10a13          	addi	s4,sp,28
+   101f0:	01c00613          	li	a2,28
+   101f4:	06c40593          	addi	a1,s0,108
+   101f8:	000a0513          	mv	a0,s4
+{
+   101fc:	08112623          	sw	ra,140(sp)
+   10200:	08912223          	sw	s1,132(sp)
+   10204:	09212023          	sw	s2,128(sp)
+   10208:	07312e23          	sw	s3,124(sp)
+    const volatile float b[7] = {INFINITY,0.0f,NAN,0.0f,NAN,9.0f,3.0f};
+   1020c:	03810493          	addi	s1,sp,56
+    const volatile float a[7] = {0.0f,INFINITY,1.0f,NAN,NAN,3.0f,9.0f};
+   10210:	578000ef          	jal	10788 <memcpy>
+    const volatile float b[7] = {INFINITY,0.0f,NAN,0.0f,NAN,9.0f,3.0f};
+   10214:	01c00613          	li	a2,28
+   10218:	08840593          	addi	a1,s0,136
+   1021c:	00048513          	mv	a0,s1
+   10220:	568000ef          	jal	10788 <memcpy>
+    const volatile float c[7] = {NAN,NAN,NAN,NAN,NAN,27.0f,27.0f};
+   10224:	05410993          	addi	s3,sp,84
+   10228:	01c00613          	li	a2,28
+   1022c:	0a440593          	addi	a1,s0,164
+   10230:	00098513          	mv	a0,s3
+   10234:	554000ef          	jal	10788 <memcpy>
+    for (int i = 0; i < 7; i++)
+   10238:	00000713          	li	a4,0
+        mul_res[i] = a[i] * b[i];
+   1023c:	00010913          	mv	s2,sp
+    for (int i = 0; i < 7; i++)
+   10240:	00700693          	li	a3,7
+        mul_res[i] = a[i] * b[i];
+   10244:	00271793          	slli	a5,a4,0x2
+   10248:	00fa0633          	add	a2,s4,a5
+   1024c:	00062787          	flw	fa5,0(a2)
+   10250:	00f48633          	add	a2,s1,a5
+   10254:	00062707          	flw	fa4,0(a2)
+   10258:	012787b3          	add	a5,a5,s2
+    for (int i = 0; i < 7; i++)
+   1025c:	00170713          	addi	a4,a4,1
+        mul_res[i] = a[i] * b[i];
+   10260:	10e7f7d3          	fmul.s	fa5,fa5,fa4
+   10264:	00f7a027          	fsw	fa5,0(a5)
+    for (int i = 0; i < 7; i++)
+   10268:	fcd71ee3          	bne	a4,a3,10244 <mul+0x6c>
+   1026c:	000084b7          	lui	s1,0x8
+   10270:	00000413          	li	s0,0
+   10274:	01048493          	addi	s1,s1,16 # 8010 <_start-0x7ff0>
+    for (int i = 0; i < 7; i++)
+   10278:	01c00a13          	li	s4,28
+        if(memcmp(&mul_res[i],&c[i],4) == 0) //Let's iteratively check each value, and see where it fails
+   1027c:	008985b3          	add	a1,s3,s0
+   10280:	00890533          	add	a0,s2,s0
+   10284:	00400613          	li	a2,4
+   10288:	48c000ef          	jal	10714 <memcmp>
+   1028c:	00153513          	seqz	a0,a0
+   10290:	00a48023          	sb	a0,0(s1)
+    for (int i = 0; i < 7; i++)
+   10294:	00440413          	addi	s0,s0,4
+   10298:	ff4412e3          	bne	s0,s4,1027c <mul+0xa4>
+}
+   1029c:	08c12083          	lw	ra,140(sp)
+   102a0:	08812403          	lw	s0,136(sp)
+   102a4:	08412483          	lw	s1,132(sp)
+   102a8:	08012903          	lw	s2,128(sp)
+   102ac:	07c12983          	lw	s3,124(sp)
+   102b0:	07812a03          	lw	s4,120(sp)
+   102b4:	09010113          	addi	sp,sp,144
+   102b8:	00008067          	ret
+
+000102bc <sub>:
+{
+   102bc:	f5010113          	addi	sp,sp,-176
+   102c0:	0a812423          	sw	s0,168(sp)
+    const volatile float a[9] = {INFINITY,-INFINITY,-0.0f,NAN,0.0f,NAN,1.5f,1.0000048f,3.0f};
+   102c4:	00011437          	lui	s0,0x11
+   102c8:	8b040413          	addi	s0,s0,-1872 # 108b0 <memcpy+0x128>
+{
+   102cc:	09412c23          	sw	s4,152(sp)
+    const volatile float a[9] = {INFINITY,-INFINITY,-0.0f,NAN,0.0f,NAN,1.5f,1.0000048f,3.0f};
+   102d0:	02410a13          	addi	s4,sp,36
+   102d4:	02400613          	li	a2,36
+   102d8:	0c040593          	addi	a1,s0,192
+   102dc:	000a0513          	mv	a0,s4
+{
+   102e0:	0a112623          	sw	ra,172(sp)
+   102e4:	0a912223          	sw	s1,164(sp)
+   102e8:	0b212023          	sw	s2,160(sp)
+   102ec:	09312e23          	sw	s3,156(sp)
+    const volatile float b[9] = {INFINITY,-INFINITY,-0.0f,1.0f,NAN,NAN,1.25f,1.0000024f,2.0f};
+   102f0:	04810493          	addi	s1,sp,72
+    const volatile float a[9] = {INFINITY,-INFINITY,-0.0f,NAN,0.0f,NAN,1.5f,1.0000048f,3.0f};
+   102f4:	494000ef          	jal	10788 <memcpy>
+    const volatile float b[9] = {INFINITY,-INFINITY,-0.0f,1.0f,NAN,NAN,1.25f,1.0000024f,2.0f};
+   102f8:	02400613          	li	a2,36
+   102fc:	0e440593          	addi	a1,s0,228
+   10300:	00048513          	mv	a0,s1
+   10304:	484000ef          	jal	10788 <memcpy>
+    const volatile float c[9] = {NAN,NAN,+0.0f,NAN,NAN,NAN,0.25f,2.3841858E-6f,1.0f};
+   10308:	06c10993          	addi	s3,sp,108
+   1030c:	02400613          	li	a2,36
+   10310:	10840593          	addi	a1,s0,264
+   10314:	00098513          	mv	a0,s3
+   10318:	470000ef          	jal	10788 <memcpy>
+    for (int i = 0; i < 9; i++)
+   1031c:	00000713          	li	a4,0
+        sub_res[i] = a[i] - b[i];
+   10320:	00010913          	mv	s2,sp
+    for (int i = 0; i < 9; i++)
+   10324:	00900693          	li	a3,9
+        sub_res[i] = a[i] - b[i];
+   10328:	00271793          	slli	a5,a4,0x2
+   1032c:	00fa0633          	add	a2,s4,a5
+   10330:	00062787          	flw	fa5,0(a2)
+   10334:	00f48633          	add	a2,s1,a5
+   10338:	00062707          	flw	fa4,0(a2)
+   1033c:	012787b3          	add	a5,a5,s2
+    for (int i = 0; i < 9; i++)
+   10340:	00170713          	addi	a4,a4,1
+        sub_res[i] = a[i] - b[i];
+   10344:	08e7f7d3          	fsub.s	fa5,fa5,fa4
+   10348:	00f7a027          	fsw	fa5,0(a5)
+    for (int i = 0; i < 9; i++)
+   1034c:	fcd71ee3          	bne	a4,a3,10328 <sub+0x6c>
+   10350:	000084b7          	lui	s1,0x8
+   10354:	00000413          	li	s0,0
+   10358:	01048493          	addi	s1,s1,16 # 8010 <_start-0x7ff0>
+    for (int i = 0; i < 9; i++)
+   1035c:	02400a13          	li	s4,36
+        if(memcmp(&sub_res[i],&c[i],4) == 0) //Let's iteratively check each value, and see where it fails
+   10360:	008985b3          	add	a1,s3,s0
+   10364:	00890533          	add	a0,s2,s0
+   10368:	00400613          	li	a2,4
+   1036c:	3a8000ef          	jal	10714 <memcmp>
+   10370:	00153513          	seqz	a0,a0
+   10374:	00a48023          	sb	a0,0(s1)
+    for (int i = 0; i < 9; i++)
+   10378:	00440413          	addi	s0,s0,4
+   1037c:	ff4412e3          	bne	s0,s4,10360 <sub+0xa4>
+}
+   10380:	0ac12083          	lw	ra,172(sp)
+   10384:	0a812403          	lw	s0,168(sp)
+   10388:	0a412483          	lw	s1,164(sp)
+   1038c:	0a012903          	lw	s2,160(sp)
+   10390:	09c12983          	lw	s3,156(sp)
+   10394:	09812a03          	lw	s4,152(sp)
+   10398:	0b010113          	addi	sp,sp,176
+   1039c:	00008067          	ret
+
+000103a0 <add>:
+{
+   103a0:	f5010113          	addi	sp,sp,-176
+   103a4:	0a812423          	sw	s0,168(sp)
+    const volatile float a[9] = {INFINITY,-INFINITY,-0.0f,0.0f,0.0f,NAN,NAN,1.0f,2.0f};
+   103a8:	00011437          	lui	s0,0x11
+   103ac:	8b040413          	addi	s0,s0,-1872 # 108b0 <memcpy+0x128>
+{
+   103b0:	09412c23          	sw	s4,152(sp)
+    const volatile float a[9] = {INFINITY,-INFINITY,-0.0f,0.0f,0.0f,NAN,NAN,1.0f,2.0f};
+   103b4:	02410a13          	addi	s4,sp,36
+   103b8:	02400613          	li	a2,36
+   103bc:	12c40593          	addi	a1,s0,300
+   103c0:	000a0513          	mv	a0,s4
+{
+   103c4:	0a112623          	sw	ra,172(sp)
+   103c8:	0a912223          	sw	s1,164(sp)
+   103cc:	0b212023          	sw	s2,160(sp)
+   103d0:	09312e23          	sw	s3,156(sp)
+    const volatile float b[9] = {-INFINITY,INFINITY,0.0f,-0.0f,NAN,1.0f,NAN,1.0f,1.0f};
+   103d4:	04810493          	addi	s1,sp,72
+    const volatile float a[9] = {INFINITY,-INFINITY,-0.0f,0.0f,0.0f,NAN,NAN,1.0f,2.0f};
+   103d8:	3b0000ef          	jal	10788 <memcpy>
+    const volatile float b[9] = {-INFINITY,INFINITY,0.0f,-0.0f,NAN,1.0f,NAN,1.0f,1.0f};
+   103dc:	02400613          	li	a2,36
+   103e0:	15040593          	addi	a1,s0,336
+   103e4:	00048513          	mv	a0,s1
+   103e8:	3a0000ef          	jal	10788 <memcpy>
+    const volatile float c[9] = {NAN,NAN,+0.0f,0.0f,NAN,NAN,NAN,2.0f,3.0f};
+   103ec:	06c10993          	addi	s3,sp,108
+   103f0:	02400613          	li	a2,36
+   103f4:	17440593          	addi	a1,s0,372
+   103f8:	00098513          	mv	a0,s3
+   103fc:	38c000ef          	jal	10788 <memcpy>
+    for (int i = 0; i < 9; i++)
+   10400:	00000713          	li	a4,0
+        add_res[i] = a[i] + b[i];
+   10404:	00010913          	mv	s2,sp
+    for (int i = 0; i < 9; i++)
+   10408:	00900693          	li	a3,9
+        add_res[i] = a[i] + b[i];
+   1040c:	00271793          	slli	a5,a4,0x2
+   10410:	00fa0633          	add	a2,s4,a5
+   10414:	00062787          	flw	fa5,0(a2)
+   10418:	00f48633          	add	a2,s1,a5
+   1041c:	00062707          	flw	fa4,0(a2)
+   10420:	012787b3          	add	a5,a5,s2
+    for (int i = 0; i < 9; i++)
+   10424:	00170713          	addi	a4,a4,1
+        add_res[i] = a[i] + b[i];
+   10428:	00e7f7d3          	fadd.s	fa5,fa5,fa4
+   1042c:	00f7a027          	fsw	fa5,0(a5)
+    for (int i = 0; i < 9; i++)
+   10430:	fcd71ee3          	bne	a4,a3,1040c <add+0x6c>
+   10434:	000084b7          	lui	s1,0x8
+   10438:	00000413          	li	s0,0
+   1043c:	01048493          	addi	s1,s1,16 # 8010 <_start-0x7ff0>
+    for (int i = 0; i < 9; i++)
+   10440:	02400a13          	li	s4,36
+        if(memcmp(&add_res[i],&c[i],4) == 0) //Let's iteratively check each value, and see where it fails
+   10444:	008985b3          	add	a1,s3,s0
+   10448:	00890533          	add	a0,s2,s0
+   1044c:	00400613          	li	a2,4
+   10450:	2c4000ef          	jal	10714 <memcmp>
+   10454:	00153513          	seqz	a0,a0
+   10458:	00a48023          	sb	a0,0(s1)
+    for (int i = 0; i < 9; i++)
+   1045c:	00440413          	addi	s0,s0,4
+   10460:	ff4412e3          	bne	s0,s4,10444 <add+0xa4>
+}
+   10464:	0ac12083          	lw	ra,172(sp)
+   10468:	0a812403          	lw	s0,168(sp)
+   1046c:	0a412483          	lw	s1,164(sp)
+   10470:	0a012903          	lw	s2,160(sp)
+   10474:	09c12983          	lw	s3,156(sp)
+   10478:	09812a03          	lw	s4,152(sp)
+   1047c:	0b010113          	addi	sp,sp,176
+   10480:	00008067          	ret
+
+00010484 <sq>:
+{
+   10484:	fb010113          	addi	sp,sp,-80
+   10488:	04812423          	sw	s0,72(sp)
+    const volatile float a[4] = {-0.0f,-2.0f,NAN,INFINITY};
+   1048c:	00011437          	lui	s0,0x11
+{
+   10490:	04912223          	sw	s1,68(sp)
+    const volatile float a[4] = {-0.0f,-2.0f,NAN,INFINITY};
+   10494:	8b040413          	addi	s0,s0,-1872 # 108b0 <memcpy+0x128>
+   10498:	01010493          	addi	s1,sp,16
+   1049c:	01000613          	li	a2,16
+   104a0:	19840593          	addi	a1,s0,408
+   104a4:	00048513          	mv	a0,s1
+{
+   104a8:	04112623          	sw	ra,76(sp)
+   104ac:	05212023          	sw	s2,64(sp)
+   104b0:	03312e23          	sw	s3,60(sp)
+   104b4:	03412c23          	sw	s4,56(sp)
+    const volatile float b[4] = {-0.0f,NAN,NAN,INFINITY};
+   104b8:	02010993          	addi	s3,sp,32
+    const volatile float a[4] = {-0.0f,-2.0f,NAN,INFINITY};
+   104bc:	2cc000ef          	jal	10788 <memcpy>
+    const volatile float b[4] = {-0.0f,NAN,NAN,INFINITY};
+   104c0:	01000613          	li	a2,16
+   104c4:	1a840593          	addi	a1,s0,424
+   104c8:	00098513          	mv	a0,s3
+   104cc:	2bc000ef          	jal	10788 <memcpy>
+    for (int i = 0; i < 4; i++)
+   104d0:	00000793          	li	a5,0
+        sq_res[i] = sqrtf(a[i]);
+   104d4:	00010913          	mv	s2,sp
+    for (int i = 0; i < 4; i++)
+   104d8:	00400693          	li	a3,4
+        sq_res[i] = sqrtf(a[i]);
+   104dc:	00279713          	slli	a4,a5,0x2
+   104e0:	00e48633          	add	a2,s1,a4
+   104e4:	00062787          	flw	fa5,0(a2)
+   104e8:	01270733          	add	a4,a4,s2
+    for (int i = 0; i < 4; i++)
+   104ec:	00178793          	addi	a5,a5,1
+        sq_res[i] = sqrtf(a[i]);
+   104f0:	5807f7d3          	fsqrt.s	fa5,fa5
+   104f4:	00f72027          	fsw	fa5,0(a4)
+    for (int i = 0; i < 4; i++)
+   104f8:	fed792e3          	bne	a5,a3,104dc <sq+0x58>
+   104fc:	000084b7          	lui	s1,0x8
+   10500:	00000413          	li	s0,0
+   10504:	01048493          	addi	s1,s1,16 # 8010 <_start-0x7ff0>
+    for (int i = 0; i < 4; i++)
+   10508:	01000a13          	li	s4,16
+        if(memcmp(&sq_res[i],&b[i],4) == 0) //Let's iteratively check each value, and see where it fails
+   1050c:	008985b3          	add	a1,s3,s0
+   10510:	00890533          	add	a0,s2,s0
+   10514:	00400613          	li	a2,4
+   10518:	1fc000ef          	jal	10714 <memcmp>
+   1051c:	00153513          	seqz	a0,a0
+   10520:	00a48023          	sb	a0,0(s1)
+    for (int i = 0; i < 4; i++)
+   10524:	00440413          	addi	s0,s0,4
+   10528:	ff4412e3          	bne	s0,s4,1050c <sq+0x88>
+}
+   1052c:	04c12083          	lw	ra,76(sp)
+   10530:	04812403          	lw	s0,72(sp)
+   10534:	04412483          	lw	s1,68(sp)
+   10538:	04012903          	lw	s2,64(sp)
+   1053c:	03c12983          	lw	s3,60(sp)
+   10540:	03812a03          	lw	s4,56(sp)
+   10544:	05010113          	addi	sp,sp,80
+   10548:	00008067          	ret
+
+0001054c <lt>:
+{
+   1054c:	f5010113          	addi	sp,sp,-176
+   10550:	0a812423          	sw	s0,168(sp)
+    const volatile float a[9] = {INFINITY,-INFINITY,-0.0f,0.0f,-INFINITY, -0.5f, -1.0f, -1.5f, -1.25f};
+   10554:	00011437          	lui	s0,0x11
+   10558:	8b040413          	addi	s0,s0,-1872 # 108b0 <memcpy+0x128>
+{
+   1055c:	09412c23          	sw	s4,152(sp)
+    const volatile float a[9] = {INFINITY,-INFINITY,-0.0f,0.0f,-INFINITY, -0.5f, -1.0f, -1.5f, -1.25f};
+   10560:	02410a13          	addi	s4,sp,36
+   10564:	02400613          	li	a2,36
+   10568:	1b840593          	addi	a1,s0,440
+   1056c:	000a0513          	mv	a0,s4
+{
+   10570:	0a112623          	sw	ra,172(sp)
+   10574:	0a912223          	sw	s1,164(sp)
+   10578:	0b212023          	sw	s2,160(sp)
+   1057c:	09312e23          	sw	s3,156(sp)
+    const volatile float b[9] = {INFINITY,-INFINITY,0.0f,-0.0f,INFINITY, -1.0f, -0.5f, -1.25f, -1.5f};
+   10580:	04810493          	addi	s1,sp,72
+    const volatile float a[9] = {INFINITY,-INFINITY,-0.0f,0.0f,-INFINITY, -0.5f, -1.0f, -1.5f, -1.25f};
+   10584:	204000ef          	jal	10788 <memcpy>
+    const volatile float b[9] = {INFINITY,-INFINITY,0.0f,-0.0f,INFINITY, -1.0f, -0.5f, -1.25f, -1.5f};
+   10588:	02400613          	li	a2,36
+   1058c:	1dc40593          	addi	a1,s0,476
+   10590:	00048513          	mv	a0,s1
+   10594:	1f4000ef          	jal	10788 <memcpy>
+    const volatile int c[9] = {0,0,0,0,1,0,1,1,0};
+   10598:	06c10993          	addi	s3,sp,108
+   1059c:	02400613          	li	a2,36
+   105a0:	20040593          	addi	a1,s0,512
+   105a4:	00098513          	mv	a0,s3
+   105a8:	1e0000ef          	jal	10788 <memcpy>
+    for (int i = 0; i < 9; i++)
+   105ac:	00000713          	li	a4,0
+        lt_res[i] = (a[i] < b[i]);
+   105b0:	00010913          	mv	s2,sp
+    for (int i = 0; i < 9; i++)
+   105b4:	00900693          	li	a3,9
+        lt_res[i] = (a[i] < b[i]);
+   105b8:	00271793          	slli	a5,a4,0x2
+   105bc:	00fa0633          	add	a2,s4,a5
+   105c0:	00062707          	flw	fa4,0(a2)
+   105c4:	00f48633          	add	a2,s1,a5
+   105c8:	00062787          	flw	fa5,0(a2)
+   105cc:	012787b3          	add	a5,a5,s2
+    for (int i = 0; i < 9; i++)
+   105d0:	00170713          	addi	a4,a4,1
+        lt_res[i] = (a[i] < b[i]);
+   105d4:	a0f71653          	flt.s	a2,fa4,fa5
+   105d8:	00c7a023          	sw	a2,0(a5)
+    for (int i = 0; i < 9; i++)
+   105dc:	fcd71ee3          	bne	a4,a3,105b8 <lt+0x6c>
+   105e0:	000084b7          	lui	s1,0x8
+   105e4:	00000413          	li	s0,0
+   105e8:	01048493          	addi	s1,s1,16 # 8010 <_start-0x7ff0>
+    for (int i = 0; i < 9; i++)
+   105ec:	02400a13          	li	s4,36
+        if(memcmp(&lt_res[i],&c[i],4) == 0) //Let's iteratively check each value, and see where it fails
+   105f0:	008985b3          	add	a1,s3,s0
+   105f4:	00890533          	add	a0,s2,s0
+   105f8:	00400613          	li	a2,4
+   105fc:	118000ef          	jal	10714 <memcmp>
+   10600:	00153513          	seqz	a0,a0
+   10604:	00a48023          	sb	a0,0(s1)
+    for (int i = 0; i < 9; i++)
+   10608:	00440413          	addi	s0,s0,4
+   1060c:	ff4412e3          	bne	s0,s4,105f0 <lt+0xa4>
+}
+   10610:	0ac12083          	lw	ra,172(sp)
+   10614:	0a812403          	lw	s0,168(sp)
+   10618:	0a412483          	lw	s1,164(sp)
+   1061c:	0a012903          	lw	s2,160(sp)
+   10620:	09c12983          	lw	s3,156(sp)
+   10624:	09812a03          	lw	s4,152(sp)
+   10628:	0b010113          	addi	sp,sp,176
+   1062c:	00008067          	ret
+
+00010630 <lte>:
+{
+   10630:	fa010113          	addi	sp,sp,-96
+   10634:	04812c23          	sw	s0,88(sp)
+    const volatile float a[4] = {INFINITY,-INFINITY,-0.0f,0.0f};
+   10638:	00011437          	lui	s0,0x11
+   1063c:	8b040413          	addi	s0,s0,-1872 # 108b0 <memcpy+0x128>
+{
+   10640:	05412423          	sw	s4,72(sp)
+    const volatile float a[4] = {INFINITY,-INFINITY,-0.0f,0.0f};
+   10644:	01010a13          	addi	s4,sp,16
+   10648:	01000613          	li	a2,16
+   1064c:	22440593          	addi	a1,s0,548
+   10650:	000a0513          	mv	a0,s4
+{
+   10654:	04112e23          	sw	ra,92(sp)
+   10658:	04912a23          	sw	s1,84(sp)
+   1065c:	05212823          	sw	s2,80(sp)
+   10660:	05312623          	sw	s3,76(sp)
+    const volatile float b[4] = {INFINITY,-INFINITY,0.0f,-0.0f};
+   10664:	02010493          	addi	s1,sp,32
+    const volatile float a[4] = {INFINITY,-INFINITY,-0.0f,0.0f};
+   10668:	120000ef          	jal	10788 <memcpy>
+    const volatile float b[4] = {INFINITY,-INFINITY,0.0f,-0.0f};
+   1066c:	01000613          	li	a2,16
+   10670:	23440593          	addi	a1,s0,564
+   10674:	00048513          	mv	a0,s1
+   10678:	110000ef          	jal	10788 <memcpy>
+    const volatile int c[4] = {1,1,1,1};
+   1067c:	03010993          	addi	s3,sp,48
+   10680:	01000613          	li	a2,16
+   10684:	24440593          	addi	a1,s0,580
+   10688:	00098513          	mv	a0,s3
+   1068c:	0fc000ef          	jal	10788 <memcpy>
+    for (int i = 0; i < 4; i++)
+   10690:	00000713          	li	a4,0
+        lt_res[i] = (a[i] <= b[i]);
+   10694:	00010913          	mv	s2,sp
+    for (int i = 0; i < 4; i++)
+   10698:	00400693          	li	a3,4
+        lt_res[i] = (a[i] <= b[i]);
+   1069c:	00271793          	slli	a5,a4,0x2
+   106a0:	00fa0633          	add	a2,s4,a5
+   106a4:	00062707          	flw	fa4,0(a2)
+   106a8:	00f48633          	add	a2,s1,a5
+   106ac:	00062787          	flw	fa5,0(a2)
+   106b0:	012787b3          	add	a5,a5,s2
+    for (int i = 0; i < 4; i++)
+   106b4:	00170713          	addi	a4,a4,1
+        lt_res[i] = (a[i] <= b[i]);
+   106b8:	a0f70653          	fle.s	a2,fa4,fa5
+   106bc:	00c7a023          	sw	a2,0(a5)
+    for (int i = 0; i < 4; i++)
+   106c0:	fcd71ee3          	bne	a4,a3,1069c <lte+0x6c>
+   106c4:	000084b7          	lui	s1,0x8
+   106c8:	00000413          	li	s0,0
+   106cc:	01048493          	addi	s1,s1,16 # 8010 <_start-0x7ff0>
+    for (int i = 0; i < 4; i++)
+   106d0:	01000a13          	li	s4,16
+        if(memcmp(&lt_res[i],&c[i],4) == 0) //Let's iteratively check each value, and see where it fails
+   106d4:	008985b3          	add	a1,s3,s0
+   106d8:	00890533          	add	a0,s2,s0
+   106dc:	00400613          	li	a2,4
+   106e0:	034000ef          	jal	10714 <memcmp>
+   106e4:	00153513          	seqz	a0,a0
+   106e8:	00a48023          	sb	a0,0(s1)
+    for (int i = 0; i < 4; i++)
+   106ec:	00440413          	addi	s0,s0,4
+   106f0:	ff4412e3          	bne	s0,s4,106d4 <lte+0xa4>
+}
+   106f4:	05c12083          	lw	ra,92(sp)
+   106f8:	05812403          	lw	s0,88(sp)
+   106fc:	05412483          	lw	s1,84(sp)
+   10700:	05012903          	lw	s2,80(sp)
+   10704:	04c12983          	lw	s3,76(sp)
+   10708:	04812a03          	lw	s4,72(sp)
+   1070c:	06010113          	addi	sp,sp,96
+   10710:	00008067          	ret
+
+00010714 <memcmp>:
+   10714:	00300793          	li	a5,3
+   10718:	02c7f663          	bgeu	a5,a2,10744 <memcmp+0x30>
+   1071c:	00a5e733          	or	a4,a1,a0
+   10720:	00377713          	andi	a4,a4,3
+   10724:	04071e63          	bnez	a4,10780 <memcmp+0x6c>
+   10728:	00052683          	lw	a3,0(a0)
+   1072c:	0005a703          	lw	a4,0(a1)
+   10730:	04e69863          	bne	a3,a4,10780 <memcmp+0x6c>
+   10734:	ffc60613          	addi	a2,a2,-4
+   10738:	00450513          	addi	a0,a0,4
+   1073c:	00458593          	addi	a1,a1,4
+   10740:	fec7e4e3          	bltu	a5,a2,10728 <memcmp+0x14>
+   10744:	fff60693          	addi	a3,a2,-1
+   10748:	02060863          	beqz	a2,10778 <memcmp+0x64>
+   1074c:	00168693          	addi	a3,a3,1
+   10750:	00d506b3          	add	a3,a0,a3
+   10754:	0080006f          	j	1075c <memcmp+0x48>
+   10758:	02a68063          	beq	a3,a0,10778 <memcmp+0x64>
+   1075c:	00054783          	lbu	a5,0(a0)
+   10760:	0005c703          	lbu	a4,0(a1)
+   10764:	00150513          	addi	a0,a0,1
+   10768:	00158593          	addi	a1,a1,1
+   1076c:	fee786e3          	beq	a5,a4,10758 <memcmp+0x44>
+   10770:	40e78533          	sub	a0,a5,a4
+   10774:	00008067          	ret
+   10778:	00000513          	li	a0,0
+   1077c:	00008067          	ret
+   10780:	fff60693          	addi	a3,a2,-1
+   10784:	fc9ff06f          	j	1074c <memcmp+0x38>
+
+00010788 <memcpy>:
+   10788:	00a5c7b3          	xor	a5,a1,a0
+   1078c:	0037f793          	andi	a5,a5,3
+   10790:	00c508b3          	add	a7,a0,a2
+   10794:	06079663          	bnez	a5,10800 <memcpy+0x78>
+   10798:	00300793          	li	a5,3
+   1079c:	06c7f263          	bgeu	a5,a2,10800 <memcpy+0x78>
+   107a0:	00357793          	andi	a5,a0,3
+   107a4:	00050713          	mv	a4,a0
+   107a8:	0c079a63          	bnez	a5,1087c <memcpy+0xf4>
+   107ac:	ffc8f613          	andi	a2,a7,-4
+   107b0:	40e606b3          	sub	a3,a2,a4
+   107b4:	02000793          	li	a5,32
+   107b8:	06d7c463          	blt	a5,a3,10820 <memcpy+0x98>
+   107bc:	00058693          	mv	a3,a1
+   107c0:	00070793          	mv	a5,a4
+   107c4:	02c77a63          	bgeu	a4,a2,107f8 <memcpy+0x70>
+   107c8:	0006a803          	lw	a6,0(a3)
+   107cc:	00478793          	addi	a5,a5,4
+   107d0:	00468693          	addi	a3,a3,4
+   107d4:	ff07ae23          	sw	a6,-4(a5)
+   107d8:	fec7e8e3          	bltu	a5,a2,107c8 <memcpy+0x40>
+   107dc:	fff60613          	addi	a2,a2,-1
+   107e0:	40e60633          	sub	a2,a2,a4
+   107e4:	ffc67613          	andi	a2,a2,-4
+   107e8:	00458593          	addi	a1,a1,4
+   107ec:	00470713          	addi	a4,a4,4
+   107f0:	00c585b3          	add	a1,a1,a2
+   107f4:	00c70733          	add	a4,a4,a2
+   107f8:	01176863          	bltu	a4,a7,10808 <memcpy+0x80>
+   107fc:	00008067          	ret
+   10800:	00050713          	mv	a4,a0
+   10804:	ff157ce3          	bgeu	a0,a7,107fc <memcpy+0x74>
+   10808:	0005c783          	lbu	a5,0(a1)
+   1080c:	00170713          	addi	a4,a4,1
+   10810:	00158593          	addi	a1,a1,1
+   10814:	fef70fa3          	sb	a5,-1(a4)
+   10818:	fee898e3          	bne	a7,a4,10808 <memcpy+0x80>
+   1081c:	00008067          	ret
+   10820:	0205a683          	lw	a3,32(a1)
+   10824:	0005a383          	lw	t2,0(a1)
+   10828:	0045a283          	lw	t0,4(a1)
+   1082c:	0085af83          	lw	t6,8(a1)
+   10830:	00c5af03          	lw	t5,12(a1)
+   10834:	0105ae83          	lw	t4,16(a1)
+   10838:	0145ae03          	lw	t3,20(a1)
+   1083c:	0185a303          	lw	t1,24(a1)
+   10840:	01c5a803          	lw	a6,28(a1)
+   10844:	02470713          	addi	a4,a4,36
+   10848:	fed72e23          	sw	a3,-4(a4)
+   1084c:	fc772e23          	sw	t2,-36(a4)
+   10850:	40e606b3          	sub	a3,a2,a4
+   10854:	fe572023          	sw	t0,-32(a4)
+   10858:	fff72223          	sw	t6,-28(a4)
+   1085c:	ffe72423          	sw	t5,-24(a4)
+   10860:	ffd72623          	sw	t4,-20(a4)
+   10864:	ffc72823          	sw	t3,-16(a4)
+   10868:	fe672a23          	sw	t1,-12(a4)
+   1086c:	ff072c23          	sw	a6,-8(a4)
+   10870:	02458593          	addi	a1,a1,36
+   10874:	fad7c6e3          	blt	a5,a3,10820 <memcpy+0x98>
+   10878:	f45ff06f          	j	107bc <memcpy+0x34>
+   1087c:	0005c683          	lbu	a3,0(a1)
+   10880:	00170713          	addi	a4,a4,1
+   10884:	00377793          	andi	a5,a4,3
+   10888:	fed70fa3          	sb	a3,-1(a4)
+   1088c:	00158593          	addi	a1,a1,1
+   10890:	f0078ee3          	beqz	a5,107ac <memcpy+0x24>
+   10894:	0005c683          	lbu	a3,0(a1)
+   10898:	00170713          	addi	a4,a4,1
+   1089c:	00377793          	andi	a5,a4,3
+   108a0:	fed70fa3          	sb	a3,-1(a4)
+   108a4:	00158593          	addi	a1,a1,1
+   108a8:	fc079ae3          	bnez	a5,1087c <memcpy+0xf4>
+   108ac:	f01ff06f          	j	107ac <memcpy+0x24>

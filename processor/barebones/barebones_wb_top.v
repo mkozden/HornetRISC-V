@@ -161,7 +161,7 @@ assign data_wb_clk_i = clk_i;
 assign data_wb_rst_i = ~reset_i;
 
 //Tracer signals
-wire [31:0] tr_mem_data, tr_mem_addr, tr_reg_data, tr_pc, tr_instr;
+wire [31:0] tr_mem_data, tr_mem_addr, tr_reg_data, tr_pc, tr_instr, fflags;
 wire [4:0] tr_reg_addr;
 wire [1:0] tr_mem_len;
 wire tr_valid, tr_store, tr_load, tr_is_float;
@@ -213,7 +213,8 @@ core_wb #(.reset_vector(reset_vector)) core0  (.reset_i(reset_i),
                .tr_valid(tr_valid),
                .tr_load(tr_load),
                .tr_store(tr_store),
-               .tr_is_float(tr_is_float));
+               .tr_is_float(tr_is_float),
+               .fflags(fflags));
 
 
 tracer tracer(.clk_i(clk_i),
@@ -227,7 +228,8 @@ tracer tracer(.clk_i(clk_i),
                 .is_float(tr_is_float),
                 .mem_size(tr_mem_len),
                 .mem_addr(tr_mem_addr),
-                .mem_data(tr_mem_data));
+                .mem_data(tr_mem_data),
+                .fpu_flags(fflags));
 
 memory_2rw_wb #(.ADDR_WIDTH(13)) memory(.port0_wb_cyc_i(wb_cyc_i[0]),
                                         .port0_wb_stb_i(wb_stb_i[0]),
