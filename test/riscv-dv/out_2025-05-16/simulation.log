@@ -1,4 +1,4 @@
-Starting simulation at Fri May 16 20:21:24 +03 2025
+Starting simulation at Fri May 16 20:55:56 +03 2025
 ECHO is off.
 ECHO is off.
 
@@ -16,7 +16,7 @@ Finished scanning sources
 INFO: [IP_Flow 19-234] Refreshing IP repositories
 INFO: [IP_Flow 19-1704] No user IP repositories specified
 INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'E:/XILINX/Vivado/2023.2/data/ip'.
-open_project: Time (s): cpu = 00:00:05 ; elapsed = 00:00:06 . Memory (MB): peak = 467.445 ; gain = 192.988
+open_project: Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 466.473 ; gain = 190.637
 Command: launch_simulation 
 INFO: [Vivado 12-12493] Simulation top is 'barebones_top_tb'
 WARNING: [Vivado 12-13340] Unable to auto find GCC executables from simulator install path! (path not set)
@@ -39,7 +39,132 @@ INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in 'D:/Documents/RISCV_
 "xvlog --incr --relax -prj barebones_top_tb_vlog.prj"
 ECHO is off.
 ECHO is off.
-INFO: [USF-XSim-69] 'compile' step finished in '2' seconds
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/HornetRISCV-vivado/HornetRISCV-vivado.gen/sources_1/ip/clk_wiz_0/clk_wiz_0_clk_wiz.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module clk_wiz_0_clk_wiz
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/HornetRISCV-vivado/HornetRISCV-vivado.gen/sources_1/ip/clk_wiz_0/clk_wiz_0.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module clk_wiz_0
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/ALU.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ALU
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/muldiv/MULDIV_ctrl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module MULDIV_ctrl
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/muldiv/MULDIV_in.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module MULDIV_in
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/muldiv/MULDIV_top.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module MULDIV_top
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/muldiv/MUL_DIV_out.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module DIVout
+INFO: [VRFC 10-311] analyzing module MULout
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/control_unit.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module control_unit
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/core.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module core
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/core_wb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module core_wb
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/csr_unit.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module csr_unit
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/fpu/fpu_arithmetic/sub_modules/div_rounder.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module div_rounder
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/fpu/fpu_arithmetic/sub_modules/divider_24.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module sigDiv
+INFO: [VRFC 10-311] analyzing module fpu_div_array
+INFO: [VRFC 10-311] analyzing module fpu_div_block
+INFO: [VRFC 10-311] analyzing module fpu_div_control
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/muldiv/divider_32.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module divider_32
+INFO: [VRFC 10-311] analyzing module div_array
+INFO: [VRFC 10-311] analyzing module div_block
+INFO: [VRFC 10-311] analyzing module div_control
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/forwarding_unit.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module forwarding_unit
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/fpu/fpu_arithmetic/sub_modules/fpu_add_sub.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpu_add_sub
+INFO: [VRFC 10-311] analyzing module add_sub_normalizer
+INFO: [VRFC 10-311] analyzing module lzc4
+INFO: [VRFC 10-311] analyzing module lzc8
+INFO: [VRFC 10-311] analyzing module lzc27
+INFO: [VRFC 10-311] analyzing module lzc3
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/fpu/fpu_arithmetic/sub_modules/fpu_add_sub_fast.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpu_add_fast
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/fpu/fpu_arithmetic/sub_modules/fpu_add_sub_rounder.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpu_add_sub_rounder
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/fpu/fpu_arithmetic/fpu_arithmetic_top.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpu_arithmetic_top
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/fpu/fpu_arithmetic/sub_modules/fpu_classifier.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpu_classifier
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/fpu/fpu_arithmetic/sub_modules/fpu_compare.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpu_compare
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/fpu/fpu_arithmetic/sub_modules/fpu_cvt_to_float.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpu_cvt_to_float
+INFO: [VRFC 10-311] analyzing module lzc32
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/fpu/fpu_arithmetic/sub_modules/fpu_cvt_to_int.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpu_cvt_to_int
+INFO: [VRFC 10-311] analyzing module cvrt_rounder
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/fpu/fpu_arithmetic/sub_modules/fpu_decoder.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpu_decoder
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/fpu/fpu_arithmetic/sub_modules/fpu_div.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpu_div
+INFO: [VRFC 10-311] analyzing module divNormalizer
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/fpu/fpu_arithmetic/sub_modules/fpu_mds_ctrl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpu_mds_ctrl
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/fpu/fpu_arithmetic/sub_modules/fpu_mds_top.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpu_mds_top
+INFO: [VRFC 10-311] analyzing module preNorm_exp_handler
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/fpu/fpu_arithmetic/sub_modules/fpu_min_max.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpu_min_max
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/fpu/fpu_arithmetic/sub_modules/fpu_mul.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpu_mul
+INFO: [VRFC 10-311] analyzing module mulNormalizer
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/fpu/fpu_arithmetic/sub_modules/fpu_sign_inj.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpu_sign_inj
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/fpu/fpu_arithmetic/sub_modules/fpu_sqrt.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpu_sqrt
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/fpu/fpu_arithmetic/fpu_top.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpu_top
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/fpu/fpu_arithmetic/fpu_top_ctrl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpu_top_ctrl
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/hazard_detection_unit.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module hazard_detection_unit
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/imm_decoder.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module imm_decoder
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/load_store_unit.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module load_store_unit
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/fpu/fpu_arithmetic/sub_modules/mds_final_normalizer.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mds_final_normalizer
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/fpu/fpu_arithmetic/sub_modules/mul_rounder.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mul_rounder
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/fpu/fpu_arithmetic/sub_modules/multiplier_24.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module multiplier_24
+INFO: [VRFC 10-311] analyzing module multiplier_6
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/muldiv/multiplier_32.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module multiplier_32
+INFO: [VRFC 10-311] analyzing module multiplier_8
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/fpu/fpu_arithmetic/sub_modules/sqrt_24.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module sqrt_24
+INFO: [VRFC 10-311] analyzing module sqrt_control
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/core/fpu/fpu_arithmetic/sub_modules/sqrt_rounder.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module sqrt_rounder
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/peripherals/debug_interface_wb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module debug_interface_wb
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/peripherals/uart_wb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module uart_wb
+INFO: [VRFC 10-311] analyzing module UART_TX
+INFO: [VRFC 10-311] analyzing module UART_RX
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/peripherals/loader_wb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module loader_wb
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/peripherals/memory_2rw_wb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module memory_2rw_wb
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/peripherals/mtime_registers_wb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module mtime_registers_wb
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/processor/fpga_uart/fpga_top.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpga_top
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/processor/barebones/barebones_wb_top.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module barebones_wb_top
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/processor/barebones/barebones_top_tb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module barebones_top_tb
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/peripherals/tracer.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module tracer
+run_program: Time (s): cpu = 00:00:00 ; elapsed = 00:00:05 . Memory (MB): peak = 478.922 ; gain = 0.000
+INFO: [USF-XSim-69] 'compile' step finished in '5' seconds
 INFO: [USF-XSim-3] XSim::Elaborate design
 INFO: [USF-XSim-61] Executing 'ELABORATE' step in 'D:/Documents/RISCV_PROJE/Hornet_RISC-V/HornetRISCV-vivado/HornetRISCV-vivado.sim/sim_1/behav/xsim'
 "xelab --incr --debug typical --relax --mt 8 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip -L xpm --snapshot barebones_top_tb_behav xil_defaultlib.barebones_top_tb xil_defaultlib.glbl -log elaborate.log"
@@ -53,8 +178,79 @@ Using 8 slave threads.
 Starting static elaboration
 Pass Through NonSizing Optimizer
 Completed static elaboration
-INFO: [XSIM 43-4323] No Change in HDL. Linking previously generated obj files to create kernel
-INFO: [USF-XSim-69] 'elaborate' step finished in '2' seconds
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module xil_defaultlib.csr_unit(reset_vector=32'b010000...
+Compiling module xil_defaultlib.control_unit
+Compiling module xil_defaultlib.imm_decoder
+Compiling module xil_defaultlib.MULDIV_ctrl
+Compiling module xil_defaultlib.MULDIV_in
+Compiling module xil_defaultlib.multiplier_8
+Compiling module xil_defaultlib.multiplier_32
+Compiling module xil_defaultlib.div_control
+Compiling module xil_defaultlib.div_array
+Compiling module xil_defaultlib.div_block
+Compiling module xil_defaultlib.divider_32
+Compiling module xil_defaultlib.MULout
+Compiling module xil_defaultlib.DIVout
+Compiling module xil_defaultlib.MULDIV_top
+Compiling module xil_defaultlib.hazard_detection_unit
+Compiling module xil_defaultlib.forwarding_unit
+Compiling module xil_defaultlib.ALU
+Compiling module xil_defaultlib.fpu_decoder
+Compiling module xil_defaultlib.lzc4
+Compiling module xil_defaultlib.lzc8
+Compiling module xil_defaultlib.lzc3
+Compiling module xil_defaultlib.lzc27
+Compiling module xil_defaultlib.add_sub_normalizer
+Compiling module xil_defaultlib.fpu_add_sub_rounder
+Compiling module xil_defaultlib.fpu_add_fast
+Compiling module xil_defaultlib.fpu_add_sub
+Compiling module xil_defaultlib.preNorm_exp_handler
+Compiling module xil_defaultlib.multiplier_6
+Compiling module xil_defaultlib.multiplier_24
+Compiling module xil_defaultlib.mulNormalizer
+Compiling module xil_defaultlib.fpu_mul
+Compiling module xil_defaultlib.mul_rounder
+Compiling module xil_defaultlib.fpu_div_control
+Compiling module xil_defaultlib.fpu_div_array
+Compiling module xil_defaultlib.fpu_div_block
+Compiling module xil_defaultlib.sigDiv
+Compiling module xil_defaultlib.divNormalizer
+Compiling module xil_defaultlib.fpu_div
+Compiling module xil_defaultlib.div_rounder
+Compiling module xil_defaultlib.sqrt_control
+Compiling module xil_defaultlib.sqrt_24
+Compiling module xil_defaultlib.fpu_sqrt
+Compiling module xil_defaultlib.sqrt_rounder
+Compiling module xil_defaultlib.mds_final_normalizer
+Compiling module xil_defaultlib.fpu_mds_ctrl
+Compiling module xil_defaultlib.fpu_mds_top
+Compiling module xil_defaultlib.fpu_compare
+Compiling module xil_defaultlib.fpu_min_max
+Compiling module xil_defaultlib.fpu_sign_inj
+Compiling module xil_defaultlib.cvrt_rounder
+Compiling module xil_defaultlib.fpu_cvt_to_int
+Compiling module xil_defaultlib.lzc32
+Compiling module xil_defaultlib.fpu_cvt_to_float
+Compiling module xil_defaultlib.fpu_classifier
+Compiling module xil_defaultlib.fpu_arithmetic_top
+Compiling module xil_defaultlib.fpu_top_ctrl
+Compiling module xil_defaultlib.fpu_top
+Compiling module xil_defaultlib.load_store_unit
+Compiling module xil_defaultlib.core(reset_vector=32'b0100000000...
+Compiling module xil_defaultlib.core_wb(reset_vector=32'b0100000...
+Compiling module xil_defaultlib.tracer
+Compiling module xil_defaultlib.memory_2rw_wb(ADDR_WIDTH=13)
+Compiling module xil_defaultlib.mtime_registers_wb(mtime_adr=32'...
+Compiling module xil_defaultlib.debug_interface_wb
+Compiling module xil_defaultlib.barebones_wb_top_default
+Compiling module xil_defaultlib.barebones_top_tb
+Compiling module xil_defaultlib.glbl
+Built simulation snapshot barebones_top_tb_behav
+run_program: Time (s): cpu = 00:00:00 ; elapsed = 00:00:06 . Memory (MB): peak = 478.922 ; gain = 0.000
+INFO: [USF-XSim-69] 'elaborate' step finished in '7' seconds
 INFO: [USF-XSim-4] XSim::Simulate design
 INFO: [USF-XSim-61] Executing 'SIMULATE' step in 'D:/Documents/RISCV_PROJE/Hornet_RISC-V/HornetRISCV-vivado/HornetRISCV-vivado.sim/sim_1/behav/xsim'
 INFO: [USF-XSim-98] *** Running xsim
@@ -65,6 +261,6 @@ open_wave_config {D:/Documents/RISCV_PROJE/Hornet_RISC-V/HornetRISCV-vivado/Horn
 source barebones_top_tb.tcl
 INFO: [USF-XSim-96] XSim completed. Design snapshot 'barebones_top_tb_behav' loaded.
 INFO: [USF-XSim-97] XSim simulation ran for 1000ns
-launch_simulation: Time (s): cpu = 00:00:00 ; elapsed = 00:00:07 . Memory (MB): peak = 490.039 ; gain = 22.594
-INFO: [Common 17-206] Exiting Vivado at Fri May 16 20:21:42 2025...
+launch_simulation: Time (s): cpu = 00:00:01 ; elapsed = 00:00:15 . Memory (MB): peak = 489.188 ; gain = 22.715
+INFO: [Common 17-206] Exiting Vivado at Fri May 16 20:56:23 2025...
 Simulation completed successfully

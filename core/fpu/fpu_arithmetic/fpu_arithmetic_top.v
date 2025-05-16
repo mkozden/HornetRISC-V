@@ -180,7 +180,7 @@ assign done        = !start ? 1'b0 :
 
 assign fpu_arith_out = op == 5'b00000 | op == 5'b00001                    ? add_sub_out                      : // add, sub
                        op == 5'b00010 | op == 5'b00011  | op == 5'b01011  ? mds_out                          : // mul, div, sqrt
-                       op == 5'b00100                                     ? {sign_O_inj, exp_B, sig_B[22:0]} : // sign injection
+                       op == 5'b00100                                     ? {sign_O_inj, exp_A, sig_A[22:0]} : // sign injection
                        op == 5'b00101                                     ? min_max_out                      : // min, max
                        op == 5'b11000                                     ? cvt_to_int_out                   : // convert to int
                        op == 5'b11010                                     ? cvt_to_float_out                 : // convert to float
