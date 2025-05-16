@@ -1,0 +1,4 @@
+[console_scripts]
+cov = cov:main
+run = run:main
+
