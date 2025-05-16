@@ -76,10 +76,8 @@ echo "Simulation log saved to ${LOG_FILE}"
 cd ..
 
 python3 scripts/spike_log_to_trace_csv.py --log "out_$(date +%Y-%m-%d)"/spike_sim/riscv_floating_point_arithmetic_test_0.log --csv spike_deneme.csv -f
-python3 scripts/spike_csv_to_gpr.py -i spike_deneme.csv -o spike.csv
 python3 scripts/trace_to_csv.py -l ../../trace.log -o deneme.csv
-python3 scripts/compare.py
-python3 scripts/last_compare.py
+python3 scripts/compare.py deneme.csv spike_deneme.csv combined.csv
 
 
 

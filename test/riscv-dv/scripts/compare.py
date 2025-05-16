@@ -1,4 +1,5 @@
 import csv
+import argparse
 
 REGISTER_MAPPING = {
     # Integer registers
@@ -33,7 +34,10 @@ def normalize_hex(value):
     
     # Check if valid hex digits remain
     if all(c in '0123456789abcdef' for c in value):
-        return '0x' + value
+        if value != "":
+            return '0x' + value
+        else:
+            return value
     return ""
 
 def horizontal_merge_with_comparison(file1, file2, output_file):
@@ -48,12 +52,14 @@ def horizontal_merge_with_comparison(file1, file2, output_file):
             [f'file1_{f}' for f in reader1.fieldnames] +
             [f'file2_{f}' for f in reader2.fieldnames] +
             ['standardized_register', 'standardized_register_value', 
-             'register_match']
+             'register_match', 'value_match',"csr_match"]
         )
         
         writer = csv.DictWriter(out_file, fieldnames=fieldnames)
         writer.writeheader()
-        
+        soft_mismatch_cnt = 0
+        hard_mismatch_cnt = 0
+
         for row1, row2 in zip(reader1, reader2):
             new_row = {}
             
@@ -63,9 +69,16 @@ def horizontal_merge_with_comparison(file1, file2, output_file):
             for field in reader2.fieldnames:
                 new_row[f'file2_{field}'] = row2.get(field, '')
             
+            #Check PC
+            file1_pc = normalize_hex(row1.get('Address', ''))
+            file2_pc = normalize_hex(row2.get('pc', ''))
+
+            #Get instr string for debug output
+            file2_instr_str = row2.get('instr_str','')
+
             # Process registers
             file1_reg = row1.get('Register', '').lower()
-            file1_val = normalize_hex(row1.get('Register_Value', ''))
+            file1_val = normalize_hex(row1.get('Register Value', ''))
             
             # Process file2's gpr
             file2_gpr = row2.get('gpr', '')
@@ -77,24 +90,82 @@ def horizontal_merge_with_comparison(file1, file2, output_file):
                 standardized_reg = REGISTER_MAPPING.get(reg_name.lower(), '').lower()
                 standardized_val = normalize_hex(reg_value)
             
+            file1_csr_addr = row1.get('Flag','')
+            file1_csr_val = normalize_hex(row1.get('Flag Value', ''))
+
+            file2_csr = row2.get('csr','')
+            file2_csr_addr = ''
+            file2_csr_val = ''
+            if ':' in file2_csr:
+                file2_csr_addr, file2_csr_val = file2_csr.split(':', 1)
+                file2_csr_val = normalize_hex(file2_csr_val)
+
             # Perform exact string comparisons
-            reg_match = 'False'
-            val_match = 'False'
+            reg_match = 'No reg'
+            val_match = 'No reg'
+            csr_match = 'No CSR'
             
             if file1_reg and standardized_reg:
                 reg_match = str(file1_reg == standardized_reg)
-            
+
+
             if file1_val and standardized_val:
                 val_match = str(file1_val == standardized_val)
+
             
+            if file1_csr_val or file2_csr_val:
+                if (file1_csr_addr != file2_csr_addr):
+                    csr_match = "Mismatched CSR access!"
+                elif (file1_csr_val != file2_csr_val):
+                    csr_match = "Mismatched CSR Value!"
+                else:
+                    csr_match = "TRUE"
+
             # Add results
             new_row.update({
                 'standardized_register': standardized_reg,
                 'standardized_register_value': standardized_val,
-                'register_match': reg_match
+                'register_match': reg_match,
+                'value_match': val_match,
+                'csr_match': csr_match
             })
             
             writer.writerow(new_row)
 
+            #Terminal debug outputs
+            if (file1_pc != file2_pc):
+                print(f"ERROR: ADDRESS MISMATCH\nRTL:{file1_pc}\tISS:{file2_pc}")
+                hard_mismatch_cnt += 1
+            else:
+                if (file1_reg != standardized_reg):
+                    print(f"ERROR: Register Mismatch at {file1_pc}: {file2_instr_str}\nRTL:{file1_reg}\tISS:{standardized_reg}")
+                    hard_mismatch_cnt += 1
+                if (file1_val != standardized_val):
+                    print(f"ERROR: Output Mismatch at {file1_pc}: {file2_instr_str}\nRTL:{file1_val}\tISS:{standardized_val}")
+                    hard_mismatch_cnt += 1
+                if (csr_match == "Mismatched CSR Value!"):
+                    print(f"WARNING: CSR Flag Mismatch at {file1_pc}: {file2_instr_str}, CSR={file2_csr_addr}\nRTL:{file1_csr_val}\tISS:{file2_csr_val}")
+                    soft_mismatch_cnt += 1
+            
+        #Final Result
+        print("\n")
+        print("===========================================================")
+        if(hard_mismatch_cnt != 0):
+            print(" " * ((59 - len("FAIL")) // 2) + "FAIL") #To center the text
+        elif(soft_mismatch_cnt != 0):
+            print(" " * ((59 - len("PASS (With Warnings)")) // 2) + "PASS (With Warnings)")
+        else:
+            print(" " * ((59 - len("PASS")) // 2) + "PASS")
+        print("===========================================================")
+        print(f"ERROR:{hard_mismatch_cnt}\nWARNING:{soft_mismatch_cnt}")
+
 # Usage
-horizontal_merge_with_comparison('deneme.csv', 'spike_deneme.csv', 'combined.csv')
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser(description="Compare and merge two CSV files.")
+    parser.add_argument("file1", help="Path to the first input CSV file")
+    parser.add_argument("file2", help="Path to the second input CSV file")
+    parser.add_argument("output_file", help="Path to the output CSV file")
+    args = parser.parse_args()
+
+    horizontal_merge_with_comparison(args.file1, args.file2, args.output_file)
