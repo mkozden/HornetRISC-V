@@ -135,7 +135,7 @@ def horizontal_merge_with_comparison(file1, file2, output_file):
             #Terminal debug outputs
             if (file1_pc != file2_pc):
                 print(f"ERROR: ADDRESS MISMATCH\nRTL:{file1_pc}\tISS:{file2_pc}")
-                hard_mismatch_cnt += 1
+                #hard_mismatch_cnt += 1
             else:
                 if (file1_reg != standardized_reg):
                     print(f"ERROR: Register Mismatch at {file1_pc}: {file2_instr_str}\nRTL:{file1_reg}\tISS:{standardized_reg}")

@@ -1,4 +1,4 @@
-Starting simulation at Fri May 16 18:33:31 +03 2025
+Starting simulation at Fri May 16 20:21:24 +03 2025
 ECHO is off.
 ECHO is off.
 
@@ -16,7 +16,7 @@ Finished scanning sources
 INFO: [IP_Flow 19-234] Refreshing IP repositories
 INFO: [IP_Flow 19-1704] No user IP repositories specified
 INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'E:/XILINX/Vivado/2023.2/data/ip'.
-open_project: Time (s): cpu = 00:00:05 ; elapsed = 00:00:06 . Memory (MB): peak = 467.062 ; gain = 190.660
+open_project: Time (s): cpu = 00:00:05 ; elapsed = 00:00:06 . Memory (MB): peak = 467.445 ; gain = 192.988
 Command: launch_simulation 
 INFO: [Vivado 12-12493] Simulation top is 'barebones_top_tb'
 WARNING: [Vivado 12-13340] Unable to auto find GCC executables from simulator install path! (path not set)
@@ -65,6 +65,6 @@ open_wave_config {D:/Documents/RISCV_PROJE/Hornet_RISC-V/HornetRISCV-vivado/Horn
 source barebones_top_tb.tcl
 INFO: [USF-XSim-96] XSim completed. Design snapshot 'barebones_top_tb_behav' loaded.
 INFO: [USF-XSim-97] XSim simulation ran for 1000ns
-launch_simulation: Time (s): cpu = 00:00:00 ; elapsed = 00:00:07 . Memory (MB): peak = 489.168 ; gain = 22.105
-INFO: [Common 17-206] Exiting Vivado at Fri May 16 18:33:49 2025...
+launch_simulation: Time (s): cpu = 00:00:00 ; elapsed = 00:00:07 . Memory (MB): peak = 490.039 ; gain = 22.594
+INFO: [Common 17-206] Exiting Vivado at Fri May 16 20:21:42 2025...
 Simulation completed successfully

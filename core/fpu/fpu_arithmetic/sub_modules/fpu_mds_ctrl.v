@@ -329,10 +329,18 @@ begin
                 invalid_fast = 0;  
             end
             else if (isInfA) begin
-                fast_res = {sign_O, 8'd255, 23'd0};
-                mux_fastres_sel_temp = 1'b1;
-                overflow_fast = 1;
-                invalid_fast = 0;  
+                if (sign_A) begin
+                    fast_res = {1'b0, 8'd255, `qNaN_sig};
+                    mux_fastres_sel_temp = 1'b1;
+                    overflow_fast = 0;
+                    invalid_fast = 1;  
+                end
+                else begin
+                    fast_res = {sign_O, 8'd255, 23'd0};
+                    mux_fastres_sel_temp = 1'b1;
+                    overflow_fast = 1;
+                    invalid_fast = 0;
+                end  
             end
             else if (isNaNA) begin
                 fast_res = {sign_A, exp_A, 1'b1, sig_A};
