@@ -1,0 +1,26 @@
+#-----------------------------------------------------------
+# Vivado v2024.1 (64-bit)
+# SW Build 5076996 on Wed May 22 18:36:09 MDT 2024
+# IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
+# SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
+# Start of session at: Fri May 16 09:55:13 2025
+# Process ID: 712003
+# Current directory: /home/deniz/HornetRISC-V/test/riscv-dv/out_2025-05-16
+# Command line: vivado -mode batch -source run_sim.tcl -notrace
+# Log file: /home/deniz/HornetRISC-V/test/riscv-dv/out_2025-05-16/vivado.log
+# Journal file: /home/deniz/HornetRISC-V/test/riscv-dv/out_2025-05-16/vivado.jou
+# Running On        :deniz-monster
+# Platform          :Ubuntu
+# Operating System  :Ubuntu 20.04.6 LTS
+# Processor Detail  :Intel(R) Core(TM) i5-10300H CPU @ 2.50GHz
+# CPU Frequency     :2500.000 MHz
+# CPU Physical cores:4
+# CPU Logical cores :8
+# Host memory       :8152 MB
+# Swap memory       :8192 MB
+# Total Virtual     :16344 MB
+# Available Virtual :9274 MB
+#-----------------------------------------------------------
+source run_sim.tcl -notrace
+open_wave_config /home/deniz/HornetRISC-V/HornetRISCV-vivado/barebones_top_tb_behav.wcfg
+source barebones_top_tb.tcl

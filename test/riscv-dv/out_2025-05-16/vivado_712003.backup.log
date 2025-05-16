@@ -1,0 +1,72 @@
+#-----------------------------------------------------------
+# Vivado v2024.1 (64-bit)
+# SW Build 5076996 on Wed May 22 18:36:09 MDT 2024
+# IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
+# SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
+# Start of session at: Fri May 16 09:55:13 2025
+# Process ID: 712003
+# Current directory: /home/deniz/HornetRISC-V/test/riscv-dv/out_2025-05-16
+# Command line: vivado -mode batch -source run_sim.tcl -notrace
+# Log file: /home/deniz/HornetRISC-V/test/riscv-dv/out_2025-05-16/vivado.log
+# Journal file: /home/deniz/HornetRISC-V/test/riscv-dv/out_2025-05-16/vivado.jou
+# Running On        :deniz-monster
+# Platform          :Ubuntu
+# Operating System  :Ubuntu 20.04.6 LTS
+# Processor Detail  :Intel(R) Core(TM) i5-10300H CPU @ 2.50GHz
+# CPU Frequency     :2500.000 MHz
+# CPU Physical cores:4
+# CPU Logical cores :8
+# Host memory       :8152 MB
+# Swap memory       :8192 MB
+# Total Virtual     :16344 MB
+# Available Virtual :9274 MB
+#-----------------------------------------------------------
+source run_sim.tcl -notrace
+INFO: [filemgmt 56-3] Default IP Output Path : Could not find the directory '/home/deniz/Hornet_Tracer/Hornet_Tracer.gen/sources_1'.
+Scanning sources...
+Finished scanning sources
+open_project: Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 1376.656 ; gain = 50.805 ; free physical = 146 ; free virtual = 8621
+Command: launch_simulation 
+INFO: [Vivado 12-12493] Simulation top is 'barebones_top_tb'
+INFO: [Vivado 12-5682] Launching behavioral simulation in '/home/deniz/Hornet_Tracer/Hornet_Tracer.sim/sim_1/behav/xsim'
+INFO: [SIM-utils-51] Simulation object is 'sim_1'
+INFO: [SIM-utils-72] Using boost library from '/home/deniz/Vivado/Vivado/2024.1/tps/boost_1_72_0'
+INFO: [SIM-utils-54] Inspecting design source files for 'barebones_top_tb' in fileset 'sim_1'...
+INFO: [USF-XSim-97] Finding global include files...
+INFO: [USF-XSim-98] Fetching design files from 'sim_1'...
+INFO: [USF-XSim-2] XSim::Compile design
+INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in '/home/deniz/Hornet_Tracer/Hornet_Tracer.sim/sim_1/behav/xsim'
+xvlog --incr --relax -prj barebones_top_tb_vlog.prj
+Waiting for jobs to finish...
+No pending jobs, compilation finished.
+INFO: [USF-XSim-69] 'compile' step finished in '1' seconds
+INFO: [USF-XSim-3] XSim::Elaborate design
+INFO: [USF-XSim-61] Executing 'ELABORATE' step in '/home/deniz/Hornet_Tracer/Hornet_Tracer.sim/sim_1/behav/xsim'
+xelab --incr --debug typical --relax --mt 8 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot barebones_top_tb_behav xil_defaultlib.barebones_top_tb xil_defaultlib.glbl -log elaborate.log
+Vivado Simulator v2024.1
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+Running: /home/deniz/Vivado/Vivado/2024.1/bin/unwrapped/lnx64.o/xelab --incr --debug typical --relax --mt 8 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot barebones_top_tb_behav xil_defaultlib.barebones_top_tb xil_defaultlib.glbl -log elaborate.log 
+Using 8 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+INFO: [XSIM 43-4323] No Change in HDL. Linking previously generated obj files to create kernel
+INFO: [USF-XSim-69] 'elaborate' step finished in '2' seconds
+INFO: [USF-XSim-4] XSim::Simulate design
+INFO: [USF-XSim-61] Executing 'SIMULATE' step in '/home/deniz/Hornet_Tracer/Hornet_Tracer.sim/sim_1/behav/xsim'
+INFO: [USF-XSim-98] *** Running xsim
+   with args "barebones_top_tb_behav -key {Behavioral:sim_1:Functional:barebones_top_tb} -tclbatch {barebones_top_tb.tcl} -view {/home/deniz/HornetRISC-V/HornetRISCV-vivado/barebones_top_tb_behav.wcfg} -log {simulate.log}"
+INFO: [USF-XSim-8] Loading simulator feature
+Time resolution is 1 ps
+open_wave_config /home/deniz/HornetRISC-V/HornetRISCV-vivado/barebones_top_tb_behav.wcfg
+WARNING: Simulation object /barebones_top_tb/uut/core0/core0/FWD_UNIT/fpu_alu_bank_ex1 was not found in the design.
+WARNING: Simulation object /barebones_top_tb/uut/core0/core0/FWD_UNIT/fpu_alu_bank_ex2 was not found in the design.
+WARNING: Simulation object /barebones_top_tb/uut/core0/core0/FWD_UNIT/fpu_alu_bank_exmem_rd was not found in the design.
+WARNING: Simulation object /barebones_top_tb/uut/core0/core0/FWD_UNIT/fpu_alu_bank_memwb_rd was not found in the design.
+source barebones_top_tb.tcl
+WARNING: Too many words specified in data file /home/deniz/HornetRISC-V/test/memory_contents/riscv_floating_point_arithmetic_test_0.data
+INFO: [USF-XSim-96] XSim completed. Design snapshot 'barebones_top_tb_behav' loaded.
+INFO: [USF-XSim-97] XSim simulation ran for 1000ns
+launch_simulation: Time (s): cpu = 00:00:05 ; elapsed = 00:00:07 . Memory (MB): peak = 1457.695 ; gain = 81.039 ; free physical = 151 ; free virtual = 8619
+INFO: [Common 17-206] Exiting Vivado at Fri May 16 09:55:30 2025...
