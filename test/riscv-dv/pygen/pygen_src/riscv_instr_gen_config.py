@@ -34,7 +34,6 @@ class riscv_instr_gen_config:
         # ---------------------------------------------------------------------------
         # Random instruction generation settings
         # ---------------------------------------------------------------------------
-
         # Instruction count of the main program
         self.main_program_instr_cnt = vsc.rand_int32_t()
 
@@ -142,7 +141,7 @@ class riscv_instr_gen_config:
         # pmp_cfg = riscv_pmp_cfg  # TODO
 
         # Stack section word length
-        self.stack_len = 5000
+        self.stack_len = 500
 
         # -----------------------------------------------------------------------------
         # User space memory region and stack setting

@@ -26,7 +26,7 @@ for (i = 0; i < uut.memory.RAM_DEPTH; i = i + 1) begin
     uut.memory.mem[i] = {uut.memory.DATA_WIDTH{1'b0}};  // Initialize to 0
 end
 #200;
-$readmemh("/home/deniz/HornetRISC-V/test/memory_contents/riscv_floating_point_arithmetic_test_0.data",uut.memory.mem); //read data after reset, because reset initializes memory to 0
+$readmemh("instruction.data",uut.memory.mem); //read data after reset, because reset initializes memory to 0
 
 #25;
 reset_i = 1'b1; //Wait a cycle so that the instruction memory is ready

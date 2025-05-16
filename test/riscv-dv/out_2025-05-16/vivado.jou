@@ -1,26 +1,16 @@
 #-----------------------------------------------------------
-# Vivado v2024.1 (64-bit)
-# SW Build 5076996 on Wed May 22 18:36:09 MDT 2024
-# IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
-# SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
-# Start of session at: Fri May 16 10:05:22 2025
-# Process ID: 732281
-# Current directory: /home/deniz/HornetRISC-V/test/riscv-dv/out_2025-05-16
-# Command line: vivado -mode batch -source run_sim.tcl -notrace
-# Log file: /home/deniz/HornetRISC-V/test/riscv-dv/out_2025-05-16/vivado.log
-# Journal file: /home/deniz/HornetRISC-V/test/riscv-dv/out_2025-05-16/vivado.jou
-# Running On        :deniz-monster
-# Platform          :Ubuntu
-# Operating System  :Ubuntu 20.04.6 LTS
-# Processor Detail  :Intel(R) Core(TM) i5-10300H CPU @ 2.50GHz
-# CPU Frequency     :2500.000 MHz
-# CPU Physical cores:4
-# CPU Logical cores :8
-# Host memory       :8152 MB
-# Swap memory       :8192 MB
-# Total Virtual     :16344 MB
-# Available Virtual :9430 MB
+# Vivado v2023.2 (64-bit)
+# SW Build 4029153 on Fri Oct 13 20:14:34 MDT 2023
+# IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
+# SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
+# Start of session at: Fri May 16 15:49:50 2025
+# Process ID: 27080
+# Current directory: D:/Documents/RISCV_PROJE/Hornet_RISC-V/test/riscv-dv/out_2025-05-16
+# Command line: vivado.exe -mode batch -source run_sim.tcl -notrace
+# Log file: D:/Documents/RISCV_PROJE/Hornet_RISC-V/test/riscv-dv/out_2025-05-16/vivado.log
+# Journal file: D:/Documents/RISCV_PROJE/Hornet_RISC-V/test/riscv-dv/out_2025-05-16\vivado.jou
+# Running On: DESKTOP-SMT4I8Q, OS: Windows, CPU Frequency: 3500 MHz, CPU Physical cores: 12, Host memory: 17090 MB
 #-----------------------------------------------------------
 source run_sim.tcl -notrace
-open_wave_config /home/deniz/HornetRISC-V/HornetRISCV-vivado/barebones_top_tb_behav.wcfg
+open_wave_config {D:/Documents/RISCV_PROJE/Hornet_RISC-V/HornetRISCV-vivado/HornetRISCV-vivado.srcs/sim_1/imports/Hornet RISC-V/HornetRISCV-vivado/barebones_top_tb_behav.wcfg}
 source barebones_top_tb.tcl
