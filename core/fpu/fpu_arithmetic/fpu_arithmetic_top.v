@@ -6,6 +6,7 @@ module fpu_arithmetic_top
     input        start,
     input  [4:0] op,
     input  [2:0] rounding_mode,
+    input  [2:0] csr_dynamic_rounding_mode,
     input [31:0] A,
     input [31:0] B,
     input        rs2_lsb,
@@ -33,7 +34,14 @@ module fpu_arithmetic_top
    5'b10100 |      FEQ, FLT, FLE
 
 */
+reg [2:0] round_override;
 
+always @(*) begin
+    if(rounding_mode == 3'b111)
+        assign round_override = csr_dynamic_rounding_mode;
+    else
+        assign round_override = rounding_mode;
+end
 
 // decoder signals
 wire       sign_A, sign_B;
@@ -63,7 +71,7 @@ wire [31:0] add_sub_out;
 wire        sub_op;
 assign sub_op = op[0] ? 1'b1 : 1'b0;
 
-fpu_add_sub fas(sign_A, sign_B, exp_A, exp_B, sig_A, sig_B, isZeroA, isZeroB, isInfA, isInfB, isNaNA, isNaNB, isSignaling, sub_op, rounding_mode, overflow_add, underflow_add, invalid_add, inexact_add, add_sub_out);
+fpu_add_sub fas(sign_A, sign_B, exp_A, exp_B, sig_A, sig_B, isZeroA, isZeroB, isInfA, isInfB, isNaNA, isNaNB, isSignaling, sub_op, round_override, overflow_add, underflow_add, invalid_add, inexact_add, add_sub_out);
 
 
 // MUL-DIV-SQRT signals
@@ -84,15 +92,15 @@ assign mds_op = op[3:0] == 4'b1011 ? 2'b10 : // sqrt
 
 assign mds_start = start & (op == 5'b00010 | op == 5'b00011 | op == 5'b01011);
 
-fpu_mds_top fpu_mds_top(clk, mds_start, reset, rounding_mode, isSubnormalA, isZeroA, isZeroB, isInfA, isInfB, isNaNA, isNaNB, isSignaling, sign_A, sign_B, exp_A, exp_B, sig_A, sig_B, mds_op, mds_out, mds_done, overflow_mds, underflow_mds, invalid_mds, inexact_mds, div_by_zero_mds);
+fpu_mds_top fpu_mds_top(clk, mds_start, reset, round_override, isSubnormalA, isZeroA, isZeroB, isInfA, isInfB, isNaNA, isNaNB, isSignaling, sign_A, sign_B, exp_A, exp_B, sig_A, sig_B, mds_op, mds_out, mds_done, overflow_mds, underflow_mds, invalid_mds, inexact_mds, div_by_zero_mds);
 
 
 // FPU-COMPARE signals
 wire comp_out;
 wire invalid_comp;
-// rounding_mode[1:0] is used  for compare function
+// round_override[1:0] is used  for compare function
 
-fpu_compare fpu_compare(rounding_mode[1:0], sign_A, sign_B, exp_A, exp_B, sig_A, sig_B, isNaNA, isNaNB, isZeroA, isZeroB, isSignaling, comp_out, invalid_comp);
+fpu_compare fpu_compare(round_override[1:0], sign_A, sign_B, exp_A, exp_B, sig_A, sig_B, isNaNA, isNaNB, isZeroA, isZeroB, isSignaling, comp_out, invalid_comp);
 
 //FPU-MIN_MAX signals
 wire [31:0] min_max_out;
@@ -100,25 +108,25 @@ wire invalid_min_max;
 // rounding mode's lsb is determine min or max operatin
 
 
-fpu_min_max fpu_min_max(rounding_mode[0], sign_A, sign_B, exp_A, exp_B, sig_A, sig_B, isNaNA, isNaNB, isSignaling, min_max_out, invalid_min_max); 
+fpu_min_max fpu_min_max(round_override[0], sign_A, sign_B, exp_A, exp_B, sig_A, sig_B, isNaNA, isNaNB, isSignaling, min_max_out, invalid_min_max); 
 
 //FPU-SIGN INJECTION signals
 wire sign_O_inj;
 // rounding mode's lsb is determine injection operation
 
-fpu_sign_inj fpu_sign_inj(rounding_mode[1:0], sign_A, sign_B, sign_O_inj);
+fpu_sign_inj fpu_sign_inj(round_override[1:0], sign_A, sign_B, sign_O_inj);
 
 //FPU-CONVERT TO INTEGER signals
 wire is_exp_neg;
 wire [31:0] cvt_to_int_out;
 wire overflow_cvt_to_int;
 assign is_exp_neg = exp_A[7] ? 1'b0 : (&exp_A[6:0] ? 1'b0 : 1'b1);
-fpu_cvt_to_int fpu_cvt_to_int(rs2_lsb, is_exp_neg, rounding_mode, isNaNA, isInfA, sign_A, exp_A, sig_A, cvt_to_int_out, overflow_cvt_to_int);
+fpu_cvt_to_int fpu_cvt_to_int(rs2_lsb, is_exp_neg, round_override, isNaNA, isInfA, sign_A, exp_A, sig_A, cvt_to_int_out, overflow_cvt_to_int);
 
 
 //FPU-CONVERT TO FLOAT signals
 wire [31:0] cvt_to_float_out;
-fpu_cvt_to_float fpu_cvt_to_float(rs2_lsb, rounding_mode, A, cvt_to_float_out);
+fpu_cvt_to_float fpu_cvt_to_float(rs2_lsb, round_override, A, cvt_to_float_out);
 
 //FPU-CLASSIFIER signals
 wire[9:0] classifier_out;
@@ -185,8 +193,8 @@ assign fpu_arith_out = op == 5'b00000 | op == 5'b00001                    ? add_
                        op == 5'b11000                                     ? cvt_to_int_out                   : // convert to int
                        op == 5'b11010                                     ? cvt_to_float_out                 : // convert to float
                        op == 5'b10100                                     ? {31'b0,comp_out}                 : // equ, lt, le
-                       op == 5'b11100 & rounding_mode[0]                  ? {22'b0,classifier_out}           : // classifier out
-                    (op == 5'b11100 | op == 5'b11110) & !(|rounding_mode) ? A                                :
+                       op == 5'b11100 & round_override[0]                  ? {22'b0,classifier_out}           : // classifier out
+                    (op == 5'b11100 | op == 5'b11110) & !(|round_override) ? A                                :
                        32'b0;
 
 

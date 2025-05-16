@@ -6,6 +6,7 @@ module fpu_top
     input        start,
     input  [4:0] op,
     input  [2:0] rounding_mode,
+    input  [2:0] csr_dynamic_rounding_mode,
     input [31:0] A,
     input [31:0] B,
     input        rs2_lsb,
@@ -29,7 +30,7 @@ reg [31:0] reg_B;
 assign in_A = in_sel ? A : reg_A;
 assign in_B = in_sel ? B : reg_B;
 
-fpu_arithmetic_top fpu_arithmetic_top(clk, reset, start, op, rounding_mode, in_A, in_B, rs2_lsb, fpu_arith_out, done, overflow, underflow, invalid, inexact, div_by_zero);
+fpu_arithmetic_top fpu_arithmetic_top(clk, reset, start, op, rounding_mode, csr_dynamic_rounding_mode, in_A, in_B, rs2_lsb, fpu_arith_out, done, overflow, underflow, invalid, inexact, div_by_zero);
 
 
 fpu_top_ctrl fpu_top_ctrl(clk, reset, start, op, done, in_sel, reg_AB_en);

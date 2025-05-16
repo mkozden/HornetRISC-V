@@ -250,6 +250,7 @@ reg [31:0] csr_pc_input;
 wire [31:0] irq_addr; //interrupt handler address from CSR unit
 wire [31:0] mepc; //mepc from CSR unit
 wire [31:0] csr_reg_out;
+wire [2:0] csr_fpu_dyn_rm;
 
 //END CSR SIGNALS--------END CSR SIGNALS--------END CSR SIGNALS--------END CSR SIGNALS--------END CSR SIGNALS
 assign csr_pcin_mux1_o = csr_ex_flush ? pc_EX : pc_ID;
@@ -285,7 +286,9 @@ csr_unit #(.reset_vector(reset_vector)) CSR_UNIT
                   .misaligned_ex(IDEX_preg_misaligned),
                   .instr_access_fault_i(instr_access_fault_i),
                   .data_err_i(data_err_i),
+                  .wb_fflags_i(MEMWB_preg_fflags),
 
+                  .fpu_dyn_rm(csr_fpu_dyn_rm),
                   .csr_reg_o(csr_reg_out),
                   .mepc_o(mepc),
                   .irq_addr_o(irq_addr),
@@ -680,6 +683,7 @@ fpu_top fpu_top
     .start(fpu_start),
     .op(fpu_func),
     .rounding_mode(fpu_rm),
+    .csr_dynamic_rounding_mode(csr_fpu_dyn_rm),
     .A(mux2_o_EX),
     .B(mux4_o_EX),
     .rs2_lsb(rs2_EX[0]), // input for conversion type. 0 for signed, 1 for unsigned
@@ -693,7 +697,8 @@ fpu_top fpu_top
     .div_by_zero(fpu_div_by_zero)
     );
 
-assign csr_float_i = {24'b0,fpu_rm,fpu_invalid,fpu_div_by_zero,fpu_overflow,fpu_underflow,fpu_inexact} & {32{fpu_done_EX}};
+//assign csr_float_i = {24'b0,fpu_rm,fpu_invalid,fpu_div_by_zero,fpu_overflow,fpu_underflow,fpu_inexact} & {32{fpu_done_EX}};
+assign csr_float_i = {27'b0,fpu_invalid,fpu_div_by_zero,fpu_overflow,fpu_underflow,fpu_inexact} & {32{fpu_done_EX}}; //fpu_rm stored inside csr unit, as a register
 
 //branch logic and address calculation
 assign take_branch = J | (B & aluout_EX[0]);
@@ -764,7 +769,7 @@ begin
 		EXMEM_preg_mret <= IDEX_preg_mret;
 		EXMEM_preg_misaligned <= IDEX_preg_misaligned;
 		EXMEM_preg_addr_bits <= aluout_EX[1:0];
-        EXMEM_preg_fflags <= {27'b0,csr_float_i[4:0]};
+        EXMEM_preg_fflags <= {csr_float_i};
 	end
 end
 

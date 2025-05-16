@@ -3,8 +3,8 @@
 # SW Build 4029153 on Fri Oct 13 20:14:34 MDT 2023
 # IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
 # SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
-# Start of session at: Fri May 16 20:55:57 2025
-# Process ID: 1056
+# Start of session at: Fri May 16 22:51:45 2025
+# Process ID: 24508
 # Current directory: D:/Documents/RISCV_PROJE/Hornet_RISC-V/test/riscv-dv/out_2025-05-16
 # Command line: vivado.exe -mode batch -source run_sim.tcl -notrace
 # Log file: D:/Documents/RISCV_PROJE/Hornet_RISC-V/test/riscv-dv/out_2025-05-16/vivado.log
@@ -18,7 +18,7 @@ Finished scanning sources
 INFO: [IP_Flow 19-234] Refreshing IP repositories
 INFO: [IP_Flow 19-1704] No user IP repositories specified
 INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'E:/XILINX/Vivado/2023.2/data/ip'.
-open_project: Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 466.473 ; gain = 190.637
+open_project: Time (s): cpu = 00:00:05 ; elapsed = 00:00:06 . Memory (MB): peak = 466.461 ; gain = 190.496
 Command: launch_simulation 
 INFO: [Vivado 12-12493] Simulation top is 'barebones_top_tb'
 WARNING: [Vivado 12-13340] Unable to auto find GCC executables from simulator install path! (path not set)
@@ -165,7 +165,7 @@ INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RIS
 INFO: [VRFC 10-311] analyzing module barebones_top_tb
 INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Documents/RISCV_PROJE/Hornet_RISC-V/peripherals/tracer.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module tracer
-run_program: Time (s): cpu = 00:00:00 ; elapsed = 00:00:05 . Memory (MB): peak = 478.922 ; gain = 0.000
+run_program: Time (s): cpu = 00:00:00 ; elapsed = 00:00:05 . Memory (MB): peak = 481.410 ; gain = 0.000
 INFO: [USF-XSim-69] 'compile' step finished in '5' seconds
 INFO: [USF-XSim-3] XSim::Elaborate design
 INFO: [USF-XSim-61] Executing 'ELABORATE' step in 'D:/Documents/RISCV_PROJE/Hornet_RISC-V/HornetRISCV-vivado/HornetRISCV-vivado.sim/sim_1/behav/xsim'
@@ -251,8 +251,8 @@ Compiling module xil_defaultlib.barebones_wb_top_default
 Compiling module xil_defaultlib.barebones_top_tb
 Compiling module xil_defaultlib.glbl
 Built simulation snapshot barebones_top_tb_behav
-run_program: Time (s): cpu = 00:00:00 ; elapsed = 00:00:06 . Memory (MB): peak = 478.922 ; gain = 0.000
-INFO: [USF-XSim-69] 'elaborate' step finished in '7' seconds
+run_program: Time (s): cpu = 00:00:00 ; elapsed = 00:00:05 . Memory (MB): peak = 481.410 ; gain = 0.000
+INFO: [USF-XSim-69] 'elaborate' step finished in '5' seconds
 INFO: [USF-XSim-4] XSim::Simulate design
 INFO: [USF-XSim-61] Executing 'SIMULATE' step in 'D:/Documents/RISCV_PROJE/Hornet_RISC-V/HornetRISCV-vivado/HornetRISCV-vivado.sim/sim_1/behav/xsim'
 INFO: [USF-XSim-98] *** Running xsim
@@ -263,5 +263,5 @@ open_wave_config {D:/Documents/RISCV_PROJE/Hornet_RISC-V/HornetRISCV-vivado/Horn
 source barebones_top_tb.tcl
 INFO: [USF-XSim-96] XSim completed. Design snapshot 'barebones_top_tb_behav' loaded.
 INFO: [USF-XSim-97] XSim simulation ran for 1000ns
-launch_simulation: Time (s): cpu = 00:00:01 ; elapsed = 00:00:15 . Memory (MB): peak = 489.188 ; gain = 22.715
-INFO: [Common 17-206] Exiting Vivado at Fri May 16 20:56:23 2025...
+launch_simulation: Time (s): cpu = 00:00:01 ; elapsed = 00:00:14 . Memory (MB): peak = 489.633 ; gain = 23.172
+INFO: [Common 17-206] Exiting Vivado at Fri May 16 22:52:08 2025...

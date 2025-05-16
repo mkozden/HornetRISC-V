@@ -444,11 +444,12 @@ begin
 			fpu_func = funct7[6:2];
 			
 			case(funct3)
-				3'b000,3'b111: fpu_rm = 3'b000;
+				3'b000: fpu_rm = 3'b000;
 				3'b001: fpu_rm = 3'b001;
 				3'b010: fpu_rm = 3'b010;
 				3'b011: fpu_rm = 3'b011;
 				3'b100: fpu_rm = 3'b100;
+				3'b111: fpu_rm = 3'b111;
 				default : fpu_rm = 3'b000;
 			endcase
 
