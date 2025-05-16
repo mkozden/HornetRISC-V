@@ -56,9 +56,20 @@ close_project
 exit
 EOF
 
+# Detect if running under WSL
+if uname -r | grep -qi "microsoft"; then
+    WSL=1
+else
+    WSL=0
+fi
+
 # Run simulation
 echo "Starting simulation at $(date)" | tee ${LOG_FILE}
-vivado -mode batch -source run_sim.tcl -notrace | tee -a ${LOG_FILE}
+if [ "$WSL" -eq 0 ]; then
+    vivado -mode batch -source run_sim.tcl -notrace | tee -a ${LOG_FILE}
+else
+    cmd.exe /C vivado -mode batch -source run_sim.tcl -notrace | tee -a ${LOG_FILE}
+fi
 
 
 # Check exit status
