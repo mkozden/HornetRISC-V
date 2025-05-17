@@ -6,7 +6,8 @@ module fpu_decoder(input wire [31:0]  in,
                  output wire         isZero,
                  output wire         isInf,
                  output wire         isNaN,
-                 output wire         isSignaling
+                 output wire         isSignaling,
+                 output wire  [7:0]  exp_o_for_sgninj
                  );
 // Exp = 1111_1111 & Significand != 0  -> qNaN or sNaN
 // Exp = 1111_1111 & Significand == 0  -> signed infinity 
@@ -35,6 +36,7 @@ assign isSignaling      = isMaxExp  & !isZeroFrac & !fract[22];
 assign sign_o = sign;
 assign exp_o  = isSubnormal ? 8'd1 : exp;
 assign sig_o  = {!isSubnormal && !isZero, fract}; //Hidden bit is 1 when the number is not a Subnormal or Zero
+assign exp_o_for_sgninj = exp;
 
 endmodule
 
