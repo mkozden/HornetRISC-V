@@ -3,8 +3,8 @@
 # SW Build 5076996 on Wed May 22 18:36:09 MDT 2024
 # IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
 # SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
-# Start of session at: Sat May 17 15:35:38 2025
-# Process ID: 1074085
+# Start of session at: Sat May 17 16:44:57 2025
+# Process ID: 1183741
 # Current directory: /home/deniz/HornetRISC-V/test/riscv-dv/out_2025-05-17
 # Command line: vivado -mode batch -source run_sim.tcl -notrace
 # Log file: /home/deniz/HornetRISC-V/test/riscv-dv/out_2025-05-17/vivado.log
@@ -13,19 +13,19 @@
 # Platform          :Ubuntu
 # Operating System  :Ubuntu 20.04.6 LTS
 # Processor Detail  :Intel(R) Core(TM) i5-10300H CPU @ 2.50GHz
-# CPU Frequency     :1065.548 MHz
+# CPU Frequency     :2500.000 MHz
 # CPU Physical cores:4
 # CPU Logical cores :8
 # Host memory       :8152 MB
 # Swap memory       :8192 MB
 # Total Virtual     :16344 MB
-# Available Virtual :8924 MB
+# Available Virtual :8260 MB
 #-----------------------------------------------------------
 source run_sim.tcl -notrace
 INFO: [filemgmt 56-3] Default IP Output Path : Could not find the directory '/home/deniz/Hornet_Tracer/Hornet_Tracer.gen/sources_1'.
 Scanning sources...
 Finished scanning sources
-open_project: Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 1416.332 ; gain = 0.023 ; free physical = 244 ; free virtual = 8198
+open_project: Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 1417.332 ; gain = 0.023 ; free physical = 267 ; free virtual = 7488
 Command: launch_simulation 
 INFO: [Vivado 12-12493] Simulation top is 'barebones_top_tb'
 INFO: [Vivado 12-5682] Launching behavioral simulation in '/home/deniz/Hornet_Tracer/Hornet_Tracer.sim/sim_1/behav/xsim'
@@ -254,7 +254,7 @@ Compiling module xil_defaultlib.barebones_wb_top_default
 Compiling module xil_defaultlib.barebones_top_tb
 Compiling module xil_defaultlib.glbl
 Built simulation snapshot barebones_top_tb_behav
-INFO: [USF-XSim-69] 'elaborate' step finished in '5' seconds
+INFO: [USF-XSim-69] 'elaborate' step finished in '4' seconds
 INFO: [USF-XSim-4] XSim::Simulate design
 INFO: [USF-XSim-61] Executing 'SIMULATE' step in '/home/deniz/Hornet_Tracer/Hornet_Tracer.sim/sim_1/behav/xsim'
 INFO: [USF-XSim-98] *** Running xsim
@@ -269,5 +269,5 @@ WARNING: Simulation object /barebones_top_tb/uut/core0/core0/FWD_UNIT/fpu_alu_ba
 source barebones_top_tb.tcl
 INFO: [USF-XSim-96] XSim completed. Design snapshot 'barebones_top_tb_behav' loaded.
 INFO: [USF-XSim-97] XSim simulation ran for 1000ns
-launch_simulation: Time (s): cpu = 00:00:11 ; elapsed = 00:00:10 . Memory (MB): peak = 1477.684 ; gain = 61.352 ; free physical = 300 ; free virtual = 8195
-INFO: [Common 17-206] Exiting Vivado at Sat May 17 15:35:56 2025...
+launch_simulation: Time (s): cpu = 00:00:10 ; elapsed = 00:00:09 . Memory (MB): peak = 1478.684 ; gain = 61.352 ; free physical = 310 ; free virtual = 7479
+INFO: [Common 17-206] Exiting Vivado at Sat May 17 16:45:16 2025...
