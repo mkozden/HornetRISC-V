@@ -1157,13 +1157,13 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x0001120c,0x00d7beb3,,,x29,0x00000000,0001120c,sltu,t4:00000000,,00d7beb3,3,"sltu    t4, a5, a3","t4,a5,a3",,x29,0x00000000,True,True,No CSR
 0x00011210,0x41945933,,,x18,0x00000000,00011210,sra,s2:00000000,,41945933,3,"sra     s2, s0, s9","s2,s0,s9",,x18,0x00000000,True,True,No CSR
 0x00011214,0x032bed33,,,x26,0x00000000,00011214,rem,s10:00000000,,032bed33,3,"rem     s10, s7, s2","s10,s7,s2",,x26,0x00000000,True,True,No CSR
-0x00011218,0x291301d3,,,f3,0xd4800002,00011218,fmin.s,ft3:f119fa46,,291301d3,3,"fmin.s  ft3, ft6, fa7","ft3,ft6,fa7",,f3,0xf119fa46,True,False,No CSR
+0x00011218,0x291301d3,,,f3,0xf119fa46,00011218,fmin.s,ft3:f119fa46,,291301d3,3,"fmin.s  ft3, ft6, fa7","ft3,ft6,fa7",,f3,0xf119fa46,True,True,No CSR
 0x0001121c,0xc0177cd3,,,x25,0xffffffff,0001121c,fcvt.wu.s,s9:ffffffff,c1_fflags:0000001f,c0177cd3,3,"fcvt.wu.s s9, fa4","s9,fa4",,x25,0xffffffff,True,True,Mismatched CSR access!
 0x00011220,0xd009ff53,,,f30,0x40000001,00011220,fcvt.s.w,ft10:40000000,,d009ff53,3,"fcvt.s.w ft10, s3","ft10,s3",,f30,0x40000000,True,False,No CSR
 0x00011224,0x01702533,,,x10,0x00000000,00011224,slt,a0:00000000,,01702533,3,"slt     a0, zero, s7","a0,zero,s7",,x10,0x00000000,True,True,No CSR
 0x00011228,0x001a3933,,,x18,0x00000001,00011228,sltu,s2:00000001,,001a3933,3,"sltu    s2, s4, ra","s2,s4,ra",,x18,0x00000001,True,True,No CSR
 0x0001122c,0xa46e3293,,,x5,0x00000001,0001122c,sltiu,t0:00000001,,a46e3293,3,"sltiu   t0, t3, -1466","t0,t3,-1466",,x5,0x00000001,True,True,No CSR
-0x00011230,0x29b18fd3,,,f31,0xd4800002,00011230,fmin.s,ft11:f119fa46,,29b18fd3,3,"fmin.s  ft11, ft3, fs11","ft11,ft3,fs11",,f31,0xf119fa46,True,False,No CSR
+0x00011230,0x29b18fd3,,,f31,0xf119fa46,00011230,fmin.s,ft11:f119fa46,,29b18fd3,3,"fmin.s  ft11, ft3, fs11","ft11,ft3,fs11",,f31,0xf119fa46,True,True,No CSR
 0x00011234,0x4050d9b3,,,x19,0x00000020,00011234,sra,s3:00000020,,4050d9b3,3,"sra     s3, ra, t0","s3,ra,t0",,x19,0x00000020,True,True,No CSR
 0x00011238,0x01e69993,,,x19,0x40000000,00011238,slli,s3:40000000,,01e69993,3,"slli    s3, a3, 30","s3,a3,30",,x19,0x40000000,True,True,No CSR
 0x0001123c,0xced3ba93,,,x21,0x00000001,0001123c,sltiu,s5:00000001,,ced3ba93,3,"sltiu   s5, t2, -787","s5,t2,-787",,x21,0x00000001,True,True,No CSR
