@@ -1,10 +1,10 @@
-Starting simulation at Cts 17 May 2025 16:44:56 +03
+Starting simulation at Cts 17 May 2025 17:26:24 +03
 
 ****** Vivado v2024.1 (64-bit)
   **** SW Build 5076996 on Wed May 22 18:36:09 MDT 2024
   **** IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
   **** SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
-  **** Start of session at: Sat May 17 16:44:57 2025
+  **** Start of session at: Sat May 17 17:26:26 2025
     ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
     ** Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 
@@ -12,7 +12,7 @@ source run_sim.tcl -notrace
 INFO: [filemgmt 56-3] Default IP Output Path : Could not find the directory '/home/deniz/Hornet_Tracer/Hornet_Tracer.gen/sources_1'.
 Scanning sources...
 Finished scanning sources
-open_project: Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 1417.332 ; gain = 0.023 ; free physical = 267 ; free virtual = 7488
+open_project: Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 1376.730 ; gain = 23.805 ; free physical = 223 ; free virtual = 7119
 Command: launch_simulation 
 INFO: [Vivado 12-12493] Simulation top is 'barebones_top_tb'
 INFO: [Vivado 12-5682] Launching behavioral simulation in '/home/deniz/Hornet_Tracer/Hornet_Tracer.sim/sim_1/behav/xsim'
@@ -256,6 +256,6 @@ WARNING: Simulation object /barebones_top_tb/uut/core0/core0/FWD_UNIT/fpu_alu_ba
 source barebones_top_tb.tcl
 INFO: [USF-XSim-96] XSim completed. Design snapshot 'barebones_top_tb_behav' loaded.
 INFO: [USF-XSim-97] XSim simulation ran for 1000ns
-launch_simulation: Time (s): cpu = 00:00:10 ; elapsed = 00:00:09 . Memory (MB): peak = 1478.684 ; gain = 61.352 ; free physical = 310 ; free virtual = 7479
-INFO: [Common 17-206] Exiting Vivado at Sat May 17 16:45:16 2025...
+launch_simulation: Time (s): cpu = 00:00:11 ; elapsed = 00:00:09 . Memory (MB): peak = 1457.895 ; gain = 81.164 ; free physical = 293 ; free virtual = 7092
+INFO: [Common 17-206] Exiting Vivado at Sat May 17 17:26:45 2025...
 Simulation completed successfully

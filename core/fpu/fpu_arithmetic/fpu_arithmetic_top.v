@@ -112,7 +112,7 @@ wire invalid_min_max;
 // rounding mode's lsb is determine min or max operatin
 
 
-fpu_min_max fpu_min_max(round_override[0], sign_A, sign_B, exp_A, exp_B, sig_A, sig_B, isNaNA, isNaNB, isSignaling, min_max_out, invalid_min_max); 
+fpu_min_max fpu_min_max(round_override[0], sign_A, sign_B, exp_A, exp_B, sig_A, sig_B, isInfA, isInfB, isNaNA, isNaNB, isSignaling, min_max_out, invalid_min_max); 
 
 //FPU-SIGN INJECTION signals
 wire sign_O_inj;
