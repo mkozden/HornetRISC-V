@@ -36,9 +36,15 @@ assign final_out = is_unsigned ? int_after_round : (sign_A ? ~int_after_round + 
 
 assign cvt_to_int_out =  isNaNA ? (is_unsigned ? 32'hFFFF_FFFF : 32'h7FFF_FFFF)   :
                          isInfA ? (is_unsigned ? (sign_A ? 32'h0 : 32'hFFFF_FFFF) : (sign_A ? 32'h8000_0000  : 32'h7FFF_FFFF)) :
-                         is_exp_neg ? 32'h0 : 
+                         is_exp_neg ? (final_out) : // This is changed since if the number is between -1.0 and 1.0 it goes to 0 but this is not the case for everytime.
                          is_overflow ? (is_unsigned ? (sign_A ? 32'h0 : 32'hFFFF_FFFF) : (sign_A ? 32'h8000_0000 : 32'h7FFF_FFFF)): final_out;
-
+// This change might cause other problems but it reduced total error count
+/*
+assign cvt_to_int_out =  isNaNA ? (is_unsigned ? 32'hFFFF_FFFF : 32'h7FFF_FFFF)   :
+                         isInfA ? (is_unsigned ? (sign_A ? 32'h0 : 32'hFFFF_FFFF) : (sign_A ? 32'h8000_0000  : 32'h7FFF_FFFF)) :
+                         is_exp_neg ? (32'h0) : 
+                         is_overflow ? (is_unsigned ? (sign_A ? 32'h0 : 32'hFFFF_FFFF) : (sign_A ? 32'h8000_0000 : 32'h7FFF_FFFF)): final_out;
+*/
 endmodule
 
 

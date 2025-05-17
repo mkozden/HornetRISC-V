@@ -2,8 +2,8 @@
 
 # Configuration
 VIVADO_VERSION="2024.1"
-PROJECT_NAME="HornetRISCV-vivado"
-PROJECT_DIR="../../../${PROJECT_NAME}" # 3 directories up relative to the "out" folder
+PROJECT_NAME="Hornet_Tracer"
+PROJECT_DIR="/home/deniz/${PROJECT_NAME}" # 3 directories up relative to the "out" folder
 SIM_TOP="barebones_top_tb.v"
 LOG_FILE="simulation.log"
 WAVE_CONFIG="barebones_top_tb_behav.wcfg"  # Optional waveform config
@@ -27,8 +27,7 @@ fi
 
 # riscv32-unknown-elf-ld -T ../../linksc-10000.ld hornet.o main-clean.o -o final.elf
 
-
-riscv32-unknown-elf-objcopy -O binary -j .init -j .text -j .rodata -j .sdata asm_test/riscv_floating_point_arithmetic_test_0.o final.bin
+$RISCV_OBJCOPY -O binary -j .init -j .text -j .rodata -j .sdata asm_test/riscv_floating_point_arithmetic_test_0.o final.bin
 ../../rom_generator final.bin
 cp final.data ../../memory_contents/instruction.data #Always writing on the same file simplifies the vivado simulation
 
@@ -87,7 +86,7 @@ echo "Simulation log saved to ${LOG_FILE}"
 cd ..
 
 python3 scripts/spike_log_to_trace_csv.py --log "out_$(date +%Y-%m-%d)"/spike_sim/riscv_floating_point_arithmetic_test_0.log --csv spike_deneme.csv -f
-python3 scripts/trace_to_csv.py -l ../../trace.log -o deneme.csv
+python3 scripts/trace_to_csv.py -l ~/trace.log -o deneme.csv
 python3 scripts/compare.py deneme.csv spike_deneme.csv combined.csv
 
 

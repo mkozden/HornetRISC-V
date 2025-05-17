@@ -45,15 +45,19 @@ end
 
 // decoder signals
 wire       sign_A, sign_B;
-wire [7:0] exp_A, exp_B;
+wire [7:0] exp_A, exp_B, exp_A_tmp, exp_B_tmp, exp_A_for_sgninj, exp_B_for_sgninj;
 wire[23:0] sig_A, sig_B;
 wire       isSubnormalA, isSubnormalB;
 wire       isZeroA, isZeroB;
 wire       isInfA, isInfB, isSignalingA;
 wire       isNaNA, isNaNB, isSignalingB;
 
-fpu_decoder  decA(.in(A), .sign_o(sign_A), .exp_o(exp_A), .sig_o(sig_A), .isSubnormal(isSubnormalA), .isZero(isZeroA), .isInf(isInfA), .isNaN(isNaNA), .isSignaling(isSignalingA));          
-fpu_decoder  decB(.in(B), .sign_o(sign_B), .exp_o(exp_B), .sig_o(sig_B), .isSubnormal(isSubnormalB), .isZero(isZeroB), .isInf(isInfB), .isNaN(isNaNB), .isSignaling(isSignalingB)); 
+fpu_decoder  decA(.in(A), .sign_o(sign_A), .exp_o(exp_A_tmp), .sig_o(sig_A), .isSubnormal(isSubnormalA), .isZero(isZeroA), .isInf(isInfA), .isNaN(isNaNA), .isSignaling(isSignalingA), .exp_o_for_sgninj(exp_A_for_sgninj));         
+fpu_decoder  decB(.in(B), .sign_o(sign_B), .exp_o(exp_B_tmp), .sig_o(sig_B), .isSubnormal(isSubnormalB), .isZero(isZeroB), .isInf(isInfB), .isNaN(isNaNB), .isSignaling(isSignalingB), .exp_o_for_sgninj(exp_B_for_sgninj)); 
+
+// Add logic for sign injection
+assign exp_A  = op == 5'b00100 ? exp_A_for_sgninj : exp_A_tmp;
+assign exp_B  = op == 5'b00100 ? exp_B_for_sgninj : exp_B_tmp;
 
 wire       isSignaling;
 wire       isBothSubnorm;
@@ -108,7 +112,7 @@ wire invalid_min_max;
 // rounding mode's lsb is determine min or max operatin
 
 
-fpu_min_max fpu_min_max(round_override[0], sign_A, sign_B, exp_A, exp_B, sig_A, sig_B, isNaNA, isNaNB, isSignaling, min_max_out, invalid_min_max); 
+fpu_min_max fpu_min_max(round_override[0], sign_A, sign_B, exp_A, exp_B, sig_A, sig_B, isInfA, isInfB, isNaNA, isNaNB, isSignaling, min_max_out, invalid_min_max); 
 
 //FPU-SIGN INJECTION signals
 wire sign_O_inj;
