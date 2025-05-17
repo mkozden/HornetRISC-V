@@ -3,8 +3,8 @@
 # SW Build 5076996 on Wed May 22 18:36:09 MDT 2024
 # IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
 # SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
-# Start of session at: Sat May 17 17:26:26 2025
-# Process ID: 1251504
+# Start of session at: Sat May 17 18:25:10 2025
+# Process ID: 1267186
 # Current directory: /home/deniz/HornetRISC-V/test/riscv-dv/out_2025-05-17
 # Command line: vivado -mode batch -source run_sim.tcl -notrace
 # Log file: /home/deniz/HornetRISC-V/test/riscv-dv/out_2025-05-17/vivado.log
@@ -13,14 +13,12 @@
 # Platform          :Ubuntu
 # Operating System  :Ubuntu 20.04.6 LTS
 # Processor Detail  :Intel(R) Core(TM) i5-10300H CPU @ 2.50GHz
-# CPU Frequency     :4324.689 MHz
+# CPU Frequency     :1148.922 MHz
 # CPU Physical cores:4
 # CPU Logical cores :8
 # Host memory       :8152 MB
 # Swap memory       :8192 MB
 # Total Virtual     :16344 MB
-# Available Virtual :7799 MB
+# Available Virtual :7733 MB
 #-----------------------------------------------------------
 source run_sim.tcl -notrace
-open_wave_config /home/deniz/HornetRISC-V/HornetRISCV-vivado/barebones_top_tb_behav.wcfg
-source barebones_top_tb.tcl
