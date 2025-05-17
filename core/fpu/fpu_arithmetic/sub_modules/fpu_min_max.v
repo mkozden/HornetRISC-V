@@ -7,6 +7,7 @@ module fpu_min_max
     input  [7:0] exp_B,
     input [23:0] sig_A,
     input [23:0] sig_B,
+    input        isInfA, isInfB,
     input        isNaNA, isNaNB,
     input        isSignaling,
     output [31:0]min_max_out,
@@ -29,9 +30,8 @@ assign is_exp_equal  = !(exp_A ^ exp_B);
 assign is_sig_equal  = !(sig_A ^ sig_B);
 
 assign A_big = !is_sign_equal ? !sign_A       : // if sign of A is 0, meaning positive
-               !is_exp_equal  ? exp_A > exp_B : 
-               !is_sig_equal  ? sig_A > sig_B :
-               1'b1; // if numbers are equal
+               sign_A         ?  (!is_exp_equal  ? exp_B > exp_A : !is_sig_equal  ? sig_B > sig_A : 1'b1) : // if numbers are equal
+               (!is_exp_equal  ? exp_A > exp_B : !is_sig_equal  ? sig_A > sig_B : 1'b1);
 
 assign min_max_out = is_both_NaN  ? 32'h7fc00000   :
                      isNaNA       ? B              :

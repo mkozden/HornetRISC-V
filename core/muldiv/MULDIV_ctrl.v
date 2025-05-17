@@ -28,7 +28,8 @@ module MULDIV_ctrl (
     reg [2:0] current_state , next_state;
     reg mux_fastres_sel_temp;
 
-    assign {Bm1, B0, B1, Am1, A0, A1} = AB_status;
+    //assign {Bm1, B0, B1, Am1, A0, A1} = AB_status; //The order doesn't match with the values below!!
+    assign {Bm1, B1, B0, Am1, A1, A0} = AB_status;
 
 always @ (posedge clk or negedge reset) begin
     if(!reset)
@@ -45,15 +46,25 @@ begin
     casez(AB_status)
         // A = 0 cases
         6'b???001: begin
+        	// if(AB_status[5:3] == 3'b000 ||
+        	//    AB_status[5:3] == 3'b001 ||
+        	//    AB_status[5:3] == 3'b010 ||
+        	//    AB_status[5:3] == 3'b100) begin
+
+            // 0/0 edge case is missing, let's add it here
         	if(AB_status[5:3] == 3'b000 ||
-        	   AB_status[5:3] == 3'b001 ||
         	   AB_status[5:3] == 3'b010 ||
         	   AB_status[5:3] == 3'b100) begin
 
             	fastres = 32'd0;
            		mux_fastres_sel_temp = 1'b1;
        		end
+            else if(AB_status[5:3] == 3'b001) begin
+                mux_fastres_sel_temp = 1'b1;
 
+                if(muldiv_sel == 1'b0) fastres = 32'd0; //0*0=0 still holds
+                else fastres = 32'hFFFFFFFF; // 0/0=-1
+            end
            	else begin
 		       	fastres = 32'd0;
 		        mux_fastres_sel_temp = 1'b1;
@@ -81,10 +92,12 @@ begin
         // A = -1 cases
         6'b000100: begin
             if(muldiv_sel == 1'b0) begin
-				if(op_mul == 2'b00)
+				if(op_mul == 2'b00) //00: MUL, 01:MULH, 10:MULHSU, 11:MULHU
                     fastres = B_2C;
+                else if(op_mul == 2'b01) //For MULH, result is the sign bit of the 2's comp of B, repeated.
+                    fastres = {32{B_2C[31]}};
                 else
-                    fastres = 32'hffffffff;
+                    fastres = 32'hffffffff; //Not used for MULHU, but used for MULHSU
 			end
 			else begin
 				if (op_div1 == 1'b0)
@@ -92,7 +105,11 @@ begin
 				else
 					fastres = 32'hffffffff;
 			end
-			mux_fastres_sel_temp = 1'b1;
+            //If operation is MULHU, this case can't be skipped with a fastres
+            if(muldiv_sel == 1'b0 && op_mul == 2'b11)
+			    mux_fastres_sel_temp = 1'b0;
+            else
+			    mux_fastres_sel_temp = 1'b1;
 
         end
 
