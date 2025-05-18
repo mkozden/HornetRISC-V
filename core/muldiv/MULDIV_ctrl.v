@@ -59,11 +59,16 @@ begin
             	fastres = 32'd0;
            		mux_fastres_sel_temp = 1'b1;
        		end
-            else if(AB_status[5:3] == 3'b001) begin
+            else if(AB_status[5:3] == 3'b001) begin //A=0 AND B=0 cases
                 mux_fastres_sel_temp = 1'b1;
 
                 if(muldiv_sel == 1'b0) fastres = 32'd0; //0*0=0 still holds
-                else fastres = 32'hFFFFFFFF; // 0/0=-1
+                else begin
+                    if(op_div1)
+                    fastres = 32'h0; // REM(x/0) = x, so REM(0/0) = 0
+                    else
+                    fastres = 32'hFFFFFFFF; // 0/0=-1
+                end
             end
            	else begin
 		       	fastres = 32'd0;
