@@ -6,7 +6,7 @@ module MULDIV_ctrl (
     input [5:0] AB_status,
     input div_rdy,
     input [1:0] op_mul,
-    input op_div1,
+    input [1:0] op_div,
     input [31:0] A,
     input [31:0] B,
     input [31:0] A_2C,
@@ -64,7 +64,7 @@ begin
 
                 if(muldiv_sel == 1'b0) fastres = 32'd0; //0*0=0 still holds
                 else begin
-                    if(op_div1)
+                    if(op_div[1])
                     fastres = 32'h0; // REM(x/0) = x, so REM(0/0) = 0
                     else
                     fastres = 32'hFFFFFFFF; // 0/0=-1
@@ -82,11 +82,13 @@ begin
             if(muldiv_sel == 1'b0) begin
                 if(op_mul == 2'b00)
                     fastres = B;
+                else if(op_mul == 2'b01) //For MULH, result is the sign bit of B, repeated.
+                    fastres = {32{B[31]}};
                 else
                     fastres = 32'd0;
             end
             else begin
-                if (op_div1 == 1'b0)
+                if (op_div[1] == 1'b0)
                     fastres = 32'd0;
                 else
                     fastres = 32'd1;
@@ -105,13 +107,13 @@ begin
                     fastres = 32'hffffffff; //Not used for MULHU, but used for MULHSU
 			end
 			else begin
-				if (op_div1 == 1'b0)
+				if (op_div[1] == 1'b0)
 					fastres = 32'd0;
 				else
 					fastres = 32'hffffffff;
 			end
-            //If operation is MULHU, this case can't be skipped with a fastres
-            if(muldiv_sel == 1'b0 && op_mul == 2'b11)
+            //If operation is MULHU, or DIVU, this case can't be skipped with a fastres
+            if((muldiv_sel == 1'b0 && op_mul == 2'b11) || (muldiv_sel == 1'b1 && op_div[0] == 1'b1))
 			    mux_fastres_sel_temp = 1'b0;
             else
 			    mux_fastres_sel_temp = 1'b1;
@@ -127,7 +129,7 @@ begin
                     fastres = 32'd0;
             end
             else begin
-                if (op_div1 == 1'b0)
+                if (op_div[1] == 1'b0)
                     fastres = 32'd1;
                 else
                     fastres = 32'd0;
@@ -141,7 +143,7 @@ begin
 				fastres = 32'hffffffff;
 			end
 			else begin
-				if (op_div1 == 1'b0)
+				if (op_div[1] == 1'b0)
 					fastres = 32'hffffffff;
 				else
 					fastres = 32'd0;
@@ -155,7 +157,7 @@ begin
 				fastres = 32'hffffffff;
 			end
 			else begin
-				if (op_div1 == 1'b0)
+				if (op_div[1] == 1'b0)
 					fastres = 32'hffffffff;
 				else
 					fastres = 32'd0;
@@ -172,7 +174,7 @@ begin
                     fastres = 32'd0;
 			end
 			else begin
-				if (op_div1 == 1'b0)
+				if (op_div[1] == 1'b0)
 					fastres = 32'd1;
 				else
 					fastres = 32'd0;
@@ -185,11 +187,14 @@ begin
             if(muldiv_sel == 1'b0) begin
                 if(op_mul == 2'b00)
                     fastres = A;
+                else if((op_mul == 2'b01) || (op_mul == 2'b10))
+                    //For MULH, result is the sign bit of A, repeated.
+                    fastres = {32{A[31]}}; //For MULHSU operations, carry the sign bit to the result, but only since A is signed, so we don't repeat this for A=1 case
                 else
                     fastres = 32'd0;
             end
             else begin
-                if (op_div1 == 1'b0)
+                if (op_div[1] == 1'b0)
                     fastres = A;
                 else
                     fastres = 32'd0;
@@ -199,19 +204,26 @@ begin
 
         // B = -1 case
         6'b100000: begin
-			if(muldiv_sel == 1'b0) begin
-				if(op_mul == 2'b00)
+            if(muldiv_sel == 1'b0) begin
+				if(op_mul == 2'b00) //00: MUL, 01:MULH, 10:MULHSU, 11:MULHU
                     fastres = A_2C;
+                else if(op_mul == 2'b01) //For MULH, result is the sign bit of the 2's comp of B, repeated.
+                    fastres = {32{A_2C[31]}};
                 else
-                    fastres = 32'hffffffff;
+                    fastres = 32'hffffffff; //Not used for MULHU, but used for MULHSU
 			end
 			else begin
-				if (op_div1 == 1'b0)
+				if (op_div[1] == 1'b0)
 					fastres = A_2C;
 				else
 					fastres = 32'd0;
 			end
-			mux_fastres_sel_temp = 1'b1;
+            //If operation is MULHU, or DIVU, this case can't be skipped with a fastres
+            if((muldiv_sel == 1'b0 && op_mul == 2'b11) || (muldiv_sel == 1'b1 && op_div[0] == 1'b1))
+			    mux_fastres_sel_temp = 1'b0;
+            else
+			    mux_fastres_sel_temp = 1'b1;
+
         end
 
         // B = 0 cases
@@ -221,7 +233,7 @@ begin
 		        if(muldiv_sel == 1'b0)
 		            fastres = 32'd0;
 		        else begin
-		            if (op_div1 == 1'b0)
+		            if (op_div[1] == 1'b0)
 		                fastres = 32'hffffffff;
 		            else
 		                fastres = A;

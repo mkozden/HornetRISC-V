@@ -7,8 +7,13 @@ PROJECT_DIR="/home/deniz/${PROJECT_NAME}" # 3 directories up relative to the "ou
 SIM_TOP="barebones_top_tb.v"
 LOG_FILE="simulation.log"
 WAVE_CONFIG="barebones_top_tb_behav.wcfg"  # Optional waveform config
+TEST="riscv_floating_point_arithmetic_test"
 
+<<<<<<< HEAD
 #python3 run.py --verbose --test riscv_floating_point_arithmetic_test --simulator pyflow --isa rv32imf --mabi ilp32f --sim_opts=""
+=======
+python3 run.py --verbose --test ${TEST} --simulator pyflow --isa rv32imf --mabi ilp32f --sim_opts=""
+>>>>>>> 3d7fc3f84211dc3fae16d440c9af80a2700f59de
 
 if [ -d "out_$(date +%Y-%m-%d)" ]; then
     cd "out_$(date +%Y-%m-%d)"
@@ -17,6 +22,7 @@ else
     exit 1
 fi
 
+<<<<<<< HEAD
 
 # riscv32-unknown-elf-as ../../crt0.s -o hornet.o #Compile the entry-exit functions of hornet
 
@@ -28,6 +34,9 @@ fi
 # riscv32-unknown-elf-ld -T ../../linksc-10000.ld hornet.o main-clean.o -o final.elf
 
 $RISCV_OBJCOPY -O binary -j .init -j .text -j .rodata -j .sdata asm_test/riscv_floating_point_arithmetic_test_0.o final.bin
+=======
+riscv32-unknown-elf-objcopy -O binary -j .init -j .text -j .rodata -j .sdata asm_test/${TEST}_0.o final.bin
+>>>>>>> 3d7fc3f84211dc3fae16d440c9af80a2700f59de
 ../../rom_generator final.bin
 cp final.data ../../memory_contents/instruction.data #Always writing on the same file simplifies the vivado simulation
 
@@ -85,6 +94,19 @@ fi
 echo "Simulation log saved to ${LOG_FILE}"
 cd ..
 
+<<<<<<< HEAD
 python3 scripts/spike_log_to_trace_csv.py --log "out_$(date +%Y-%m-%d)"/spike_sim/riscv_floating_point_arithmetic_test_0.log --csv spike_deneme.csv -f
 python3 scripts/trace_to_csv.py -l ~/trace.log -o deneme.csv
 python3 scripts/compare.py deneme.csv spike_deneme.csv combined.csv
+=======
+python3 scripts/spike_log_to_trace_csv.py --log "out_$(date +%Y-%m-%d)"/spike_sim/${TEST}_0.log --csv spike_deneme.csv -f
+python3 scripts/trace_to_csv.py -l ../../trace.log -o deneme.csv
+python3 scripts/compare.py deneme.csv spike_deneme.csv combined.csv
+
+
+
+
+
+
+
+>>>>>>> 3d7fc3f84211dc3fae16d440c9af80a2700f59de
