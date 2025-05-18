@@ -23,7 +23,7 @@ wire is_overflow;
 wire[54:0] int_before_round;
 wire[31:0] int_after_round;
 wire[31:0] final_out;
-assign is_overflow = actual_exp > 31;
+assign is_overflow = is_unsigned ? actual_exp > 31 : actual_exp >= 31;
 assign overflow = is_overflow;
 
 wire [3:0] lgrs;
@@ -32,7 +32,7 @@ assign int_before_round = (adjusted_sig >> (31-actual_exp)) ;
 assign lgrs = {int_before_round[23:21], |int_before_round[20:0]};
 cvrt_rounder cvrt_rounder_to_int(lgrs, rounding_mode, sign_A, round_out);
 assign int_after_round = int_before_round[54:23] + round_out;
-assign final_out = is_unsigned ? int_after_round : (sign_A ? ~int_after_round + 1 : int_after_round);
+assign final_out = is_unsigned ? (sign_A ? 32'h0 : int_after_round) : (sign_A ? ~int_after_round + 1 : int_after_round);
 
 assign cvt_to_int_out =  isNaNA ? (is_unsigned ? 32'hFFFF_FFFF : 32'h7FFF_FFFF)   :
                          isInfA ? (is_unsigned ? (sign_A ? 32'h0 : 32'hFFFF_FFFF) : (sign_A ? 32'h8000_0000  : 32'h7FFF_FFFF)) :
