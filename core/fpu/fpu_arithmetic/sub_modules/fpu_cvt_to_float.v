@@ -26,7 +26,6 @@ assign int_after_shift = int_before_shift >> shamt;
 wire [3:0] lgrs;
 assign lgrs = {int_after_shift[8:6], |int_after_shift[5:0]}; 
 wire round_out_temp, round_out;
-cvrt_rounder cvrt_rounder_to_float(lgrs, rounding_mode, A[31], round_out_temp);
 
 wire final_sign;
 wire[7:0] final_exp;
@@ -34,7 +33,9 @@ wire[22:0] final_sig;
 
 wire [24:0] after_round;
 
-assign round_out = (int_after_shift[0] | int_after_shift[1] | int_after_shift[2] | int_after_shift[3] | int_after_shift[4] | int_after_shift[5] | int_after_shift[6] | int_after_shift[7]) ? round_out_temp : 1'b0;
+cvrt_rounder cvrt_rounder_to_float(lgrs, rounding_mode, final_sign, round_out_temp);
+
+assign round_out = |int_after_shift[7:0] ? round_out_temp : 1'b0;
 
 
 assign after_round = int_after_shift[31:8] + round_out;

@@ -28,10 +28,14 @@ assign is_overflow = is_unsigned ? actual_exp > 31 : actual_exp >= 31;
 assign overflow = is_overflow;
 
 wire [3:0] lgrs;
-wire round_out;
+wire round_out, round_out_temp;
 assign int_before_round = (adjusted_sig >> (31-actual_exp)) ;
 assign lgrs = {int_before_round[23:21], |int_before_round[20:0]};
-cvrt_rounder cvrt_rounder_to_int(lgrs, rounding_mode, sign_A, round_out);
+cvrt_rounder cvrt_rounder_to_int(lgrs, rounding_mode, sign_A, round_out_temp);
+
+assign round_out = |sig_A[22:0] ? round_out_temp : 1'b0; //NOT SURE
+//assign round_out =  round_out_temp;
+
 assign int_after_round = int_before_round[54:23] + round_out;
 assign final_out = is_unsigned ? (sign_A ? 32'h0 : int_after_round) : (sign_A ? ~int_after_round + 1 : int_after_round);
 
