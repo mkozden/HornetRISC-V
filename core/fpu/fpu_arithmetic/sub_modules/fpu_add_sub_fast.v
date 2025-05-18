@@ -64,7 +64,7 @@ begin
                 // A = 0 & B = NAN
                 else if (isNaNB) begin
 //                  fast_res = {sign_B, exp_B, 1'b1, sig_B[21:0]}; //The spec dictates to always output 0x7fc00000, this can cause that to fail if A is a signalling NaN (mantissa != 0)
-                    fast_res = {sign_B, exp_B, 1'b1, 22'b0}; 
+                    fast_res = {1'b0, exp_B, 1'b1, 22'b0};  //Since the spec dictates 0x7fc00000, sign bit is always 0
                     if(isSignaling)
                         invalid_fast = 1; //These may need further investigation
                     else
@@ -106,7 +106,7 @@ begin
                 // A = INF & B = NAN
                 else if (isNaNB) begin
 //                  fast_res = {sign_B, exp_B, 1'b1, sig_B[21:0]};
-                    fast_res = {sign_B, exp_B, 1'b1, 22'b0};
+                    fast_res = {1'b0, exp_B, 1'b1, 22'b0};
                     overflow_fast = 0;
                     if(isSignaling)
                         invalid_fast = 1;
@@ -127,7 +127,7 @@ begin
             // A is NaN
             else if (isNaNA) begin
 //              fast_res = {sign_A, exp_A, 1'b1, sig_A[21:0]};
-                fast_res = {sign_A, exp_A, 1'b1, 22'b0};
+                fast_res = {1'b0, exp_A, 1'b1, 22'b0};
                 overflow_fast = 0;
                 if(isSignaling)
                     invalid_fast = 1;
@@ -158,7 +158,7 @@ begin
                 // A = (SUB)NORMAL & B = NAN
                 else if (isNaNB) begin
 //                  fast_res = {sign_B, exp_B, 1'b1, sig_B[21:0]};
-                    fast_res = {sign_B, exp_B, 1'b1, 22'b0};
+                    fast_res = {1'b0, exp_B, 1'b1, 22'b0};
                     overflow_fast = 0;
                     if(isSignaling)
                         invalid_fast = 1;
@@ -215,7 +215,7 @@ begin
                 // A = 0 & B = NAN
                 else if (isNaNB) begin
 //                  fast_res = {sign_B, exp_B, 1'b1, sig_B[21:0]};
-                    fast_res = {sign_B, exp_B, 1'b1, 22'b0};
+                    fast_res = {1'b0, exp_B, 1'b1, 22'b0};
                     if(isSignaling)
                         invalid_fast = 1;
                     else
@@ -257,7 +257,7 @@ begin
                 // A = INF & B = NAN
                 else if (isNaNB) begin
 //                  fast_res = {sign_B, exp_B, 1'b1, sig_B[21:0]};
-                    fast_res = {sign_B, exp_B, 1'b1, 22'b0};
+                    fast_res = {1'b0, exp_B, 1'b1, 22'b0};
                     overflow_fast = 0;
                     if(isSignaling)
                         invalid_fast = 1;
@@ -278,7 +278,7 @@ begin
             // A is NaN
             else if (isNaNA) begin
 //              fast_res = {sign_A, exp_A, 1'b1, sig_A[21:0]};
-                fast_res = {sign_A, exp_A, 1'b1, 22'b0};
+                fast_res = {1'b0, exp_A, 1'b1, 22'b0};
                 overflow_fast = 0;
                 if(isSignaling)
                     invalid_fast = 1;
@@ -300,7 +300,7 @@ begin
 
                 // A = (SUB)NORMAL & B = INF
                 else if(isInfB) begin
-                    fast_res = {sign_B, exp_B, sig_B[22:0]};
+                    fast_res = {!sign_B, exp_B, sig_B[22:0]}; //Forgot to invert sign of B
                     overflow_fast = 1;
                     invalid_fast = 0;                    
                     mux_fastres_sel = 1'b1;
@@ -309,7 +309,7 @@ begin
                 // A = (SUB)NORMAL & B = NAN
                 else if (isNaNB) begin
 //                  fast_res = {sign_B, exp_B, 1'b1, sig_B[21:0]};
-                    fast_res = {sign_B, exp_B, 1'b1, 22'b0};
+                    fast_res = {1'b0, exp_B, 1'b1, 22'b0};
                     overflow_fast = 0;
                     if(isSignaling)
                         invalid_fast = 1;

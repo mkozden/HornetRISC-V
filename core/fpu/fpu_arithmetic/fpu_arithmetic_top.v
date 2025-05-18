@@ -75,7 +75,7 @@ wire [31:0] add_sub_out;
 wire        sub_op;
 assign sub_op = op[0] ? 1'b1 : 1'b0;
 
-fpu_add_sub fas(sign_A, sign_B, exp_A, exp_B, sig_A, sig_B, isZeroA, isZeroB, isInfA, isInfB, isNaNA, isNaNB, isSignaling, sub_op, round_override, overflow_add, underflow_add, invalid_add, inexact_add, add_sub_out);
+fpu_add_sub fas(sign_A, sign_B, exp_A_for_sgninj, exp_B_for_sgninj, sig_A, sig_B, isZeroA, isZeroB, isInfA, isInfB, isNaNA, isNaNB, isSignaling, sub_op, round_override, overflow_add, underflow_add, invalid_add, inexact_add, add_sub_out);
 
 
 // MUL-DIV-SQRT signals
@@ -112,7 +112,7 @@ wire invalid_min_max;
 // rounding mode's lsb is determine min or max operatin
 
 
-fpu_min_max fpu_min_max(round_override[0], sign_A, sign_B, exp_A, exp_B, sig_A, sig_B, isInfA, isInfB, isNaNA, isNaNB, isSignaling, min_max_out, invalid_min_max); 
+fpu_min_max fpu_min_max(round_override[0], sign_A, sign_B, exp_A_for_sgninj, exp_B_for_sgninj, sig_A, sig_B, isInfA, isInfB, isNaNA, isNaNB, isSignaling, min_max_out, invalid_min_max); 
 
 //FPU-SIGN INJECTION signals
 wire sign_O_inj;

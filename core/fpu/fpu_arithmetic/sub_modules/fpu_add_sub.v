@@ -168,7 +168,9 @@ wire overflow_fast;
 fpu_add_fast fpu_add_fast(rounding_mode, isZeroA, isZeroB,isInfA, isInfB, isNaNA, isNaNB, isSignaling, sub_op, sign_A, sign_B, exp_A, exp_B,sig_A[22:0], sig_B[22:0], mux_fastres_sel, fast_res, overflow_fast, invalid_fast);
 
 assign OUT       = mux_fastres_sel ? fast_res : {sign_O, final_exp, final_sig};
-assign inexact   = |LRS[1:0] | of | uf;
+
+//Since inexact depends on of and uf, we can also add an inexact output for the fast module, which only consists of overflow_fast:
+assign inexact   = mux_fastres_sel ? overflow_fast : |LRS[1:0] | of | uf;
 assign invalid   = invalid_fast;
 assign overflow  = mux_fastres_sel ? overflow_fast : of;
 assign underflow = uf;
