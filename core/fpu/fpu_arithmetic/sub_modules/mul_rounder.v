@@ -28,12 +28,14 @@ begin
             if(sign_O == 1'b0)
                 round_out = 1'b0; 
             else
-                round_out = 1'b1;
+                if(|LRS[1:0]) round_out = 2'b01; //Round only if R or S bit is set
+                else round_out = 2'b00;
             end
             
     3'b011:begin
            if(sign_O == 1'b0)
-                round_out = 1'b1; 
+                if(|LRS[1:0]) round_out = 2'b01; //Round only if R or S bit is set
+                else round_out = 2'b00;
            else
                 round_out = 1'b0;
             end

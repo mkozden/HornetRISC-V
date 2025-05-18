@@ -50,7 +50,7 @@ reg  [27:0] first_operand;
 reg  [27:0] second_operand;
 wire  [7:0] pro_normal_exp;
 wire [26:0] pro_normal_sig;
-wire        round_out;
+wire [1:0]  round_out;
 
 
 
@@ -140,7 +140,7 @@ end
 
 //assign inexact   = |LRS[1:0] | of | uf; //Repeated below
 
-assign final_sum         = pro_normal_sig[26:2] + round_out;
+assign final_sum         = round_out[1] ? pro_normal_sig[26:2] - round_out[0] : pro_normal_sig[26:2] + round_out[0];
 assign final_exp         = final_sum[24] ? (of ? `maxExp : pro_normal_exp + 1) : pro_normal_exp;
 assign final_sig         = final_sum[24] ? (of ? 23'd0  : final_sum[23:1]) : final_sum[22:0];
 assign ofAfterRound      = (final_sum[24] && pro_normal_exp+1 == `maxExp);
@@ -156,9 +156,18 @@ assign out_sig_abs       = isout_sigNeg  ? ~out_sig+1 : out_sig;
 assign sign_O            = (exp_A_adjusted == exp_B_adjusted) ? (sig_A_adjusted >= sig_B_adjusted ? sign_A : eff_sign_B) : //if both significands and exponents are equal, the sign should be sign_A -> positive, since result should be 0 or a positive number 
                            (exp_A_adjusted >  exp_B_adjusted) ? sign_A : eff_sign_B;  
 
+wire second_operand_zero;
+
+//These can also output 1 if one of the inputs is zero, but that's going to be overwritten by fast output so doesn't matter
+assign second_operand_zero = (second_operand == 27'b0);
 
 add_sub_normalizer add_sub_normalizer(.inSig(out_sig_abs), .inExp(exp_O), .LGRS(LGRS), .outExp(pro_normal_exp), .of(ofFromProNorm), .uf(ufFromProNorm), .out_sig(pro_normal_sig));
-fpu_add_sub_rounder fpu_add_sub_rounder(.LRS(LRS), .rounding_mode(rounding_mode), .sign_O(sign_O), .round_out(round_out));
+fpu_add_sub_rounder fpu_add_sub_rounder( .LRS(LRS),
+                                         .rounding_mode(rounding_mode),
+                                         .second_operand_zero(second_operand_zero),
+                                         .eff_sign_B(eff_sign_B), 
+                                         .sign_O(sign_O), 
+                                         .round_out(round_out));
 
 
 wire invalid_fast;
