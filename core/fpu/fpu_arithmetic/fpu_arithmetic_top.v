@@ -125,7 +125,7 @@ wire is_exp_neg;
 wire [31:0] cvt_to_int_out;
 wire overflow_cvt_to_int;
 assign is_exp_neg = exp_A[7] ? 1'b0 : (&exp_A[6:0] ? 1'b0 : 1'b1);
-fpu_cvt_to_int fpu_cvt_to_int(rs2_lsb, is_exp_neg, round_override, isNaNA, isInfA, sign_A, exp_A, sig_A, cvt_to_int_out, overflow_cvt_to_int);
+fpu_cvt_to_int fpu_cvt_to_int(rs2_lsb, is_exp_neg, round_override, isNaNA, isInfA, isZeroA, sign_A, exp_A, sig_A, cvt_to_int_out, overflow_cvt_to_int);
 
 
 //FPU-CONVERT TO FLOAT signals
