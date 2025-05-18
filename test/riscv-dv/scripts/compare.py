@@ -21,6 +21,17 @@ REGISTER_MAPPING = {
     'ft10': 'f30', 'ft11': 'f31'
 }
 
+class bcolors: #For colored output (may not work on all terminals)
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 def normalize_hex(value):
     """Ensure consistent hex string format with 0x prefix and lowercase"""
     if not isinstance(value, str):
@@ -113,7 +124,7 @@ def horizontal_merge_with_comparison(file1, file2, output_file):
                 val_match = str(file1_val == standardized_val)
 
             
-            if file1_csr_val or file2_csr_val:
+            if file1_csr_val:
                 if (file1_csr_addr != file2_csr_addr):
                     csr_match = "Mismatched CSR access!"
                 elif (file1_csr_val != file2_csr_val):
@@ -134,21 +145,21 @@ def horizontal_merge_with_comparison(file1, file2, output_file):
 
             #Terminal debug outputs
             if (file1_pc != file2_pc):
-                print(f"ERROR: ADDRESS MISMATCH\nRTL:{file1_pc}\tISS:{file2_pc}")
+                print(f"{bcolors.FAIL}ERROR: ADDRESS MISMATCH\nRTL:{file1_pc}\tISS:{file2_pc}")
                 #hard_mismatch_cnt += 1
             else:
                 if (file1_reg != standardized_reg):
-                    print(f"ERROR: Register Mismatch at {file1_pc}: {file2_instr_str}\nRTL:{file1_reg}\tISS:{standardized_reg}")
+                    print(f"{bcolors.FAIL}ERROR: Register Mismatch at {file1_pc}: {file2_instr_str}\nRTL:{file1_reg}\tISS:{standardized_reg}")
                     hard_mismatch_cnt += 1
                 if (file1_val != standardized_val):
-                    print(f"ERROR: Output Mismatch at {file1_pc}: {file2_instr_str}\nRTL:{file1_val}\tISS:{standardized_val}")
+                    print(f"{bcolors.FAIL}ERROR: Output Mismatch at {file1_pc}: {file2_instr_str}\nRTL:{file1_val}\tISS:{standardized_val}")
                     hard_mismatch_cnt += 1
-                if (csr_match == "Mismatched CSR Value!"):
-                    print(f"WARNING: CSR Flag Mismatch at {file1_pc}: {file2_instr_str}, CSR={file2_csr_addr}\nRTL:{file1_csr_val}\tISS:{file2_csr_val}")
+                if ((csr_match == "Mismatched CSR access!") or (csr_match == "Mismatched CSR Value!")):
+                    print(f"{bcolors.WARNING}WARNING: CSR Flag Mismatch at {file1_pc}: {file2_instr_str}, CSR={file1_csr_addr}\nRTL:{file1_csr_val}\tISS:{file2_csr_val}")
                     soft_mismatch_cnt += 1
             
         #Final Result
-        print("\n")
+        print(bcolors.ENDC + "\n")
         print("===========================================================")
         if(hard_mismatch_cnt != 0):
             print(" " * ((59 - len("FAIL")) // 2) + "FAIL") #To center the text

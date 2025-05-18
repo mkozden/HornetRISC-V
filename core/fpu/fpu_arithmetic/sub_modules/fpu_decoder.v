@@ -39,7 +39,3 @@ assign sig_o  = {!isSubnormal && !isZero, fract}; //Hidden bit is 1 when the num
 assign exp_o_for_sgninj = exp;
 
 endmodule
-
-
-
-

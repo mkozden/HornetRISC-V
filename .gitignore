@@ -3,3 +3,4 @@
 trace.log
 **/__pycache__
 **.backup.**
+**out_**

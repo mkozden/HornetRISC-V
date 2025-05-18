@@ -55,7 +55,8 @@ begin
                 overflow_fast = 0;
                 // A = 0 & B = 0
                 if(isZeroB) begin
-                    fast_res = 0;
+                    // Not sure if negative zeros have an effect for 0*0, let's add it for now
+                    fast_res = {sign_O, 31'b0}; //If either one is negative, result is negative 0, if both neg or pos then it's positive.
                     invalid_fast = 0;
 
                 end
@@ -80,7 +81,7 @@ begin
                 end
                 // A = 0 & B = (SUB)NORMAL
                 else begin
-                    fast_res = 0;
+                    fast_res = {sign_O,31'b0};
                     invalid_fast = 0;                    
                 end
             mux_fastres_sel_temp = 1'b1;
@@ -141,7 +142,7 @@ begin
 
                 // A = (SUB)NORMAL & B = 0
                 if(isZeroB) begin 
-                    fast_res = 0;
+                    fast_res = {sign_O, 31'b0};
                     overflow_fast = 0;
                     invalid_fast = 0;  
                     mux_fastres_sel_temp = 1'b1;
@@ -196,7 +197,7 @@ begin
                 end 
                 // A = 0 & B = INF
                 else if(isInfB) begin
-                    fast_res = 0;
+                    fast_res = {sign_O,31'b0}; //Not sure
                     invalid_fast = 0;
                     divByZero_fast = 0;                                       
                 end 
@@ -212,7 +213,7 @@ begin
                 end 
                 // A = 0 & B = (SUB)NORMAL
                 else begin
-                    fast_res = 0;
+                    fast_res = {sign_O,31'b0}; //Not sure
                     invalid_fast = 0; 
                     divByZero_fast = 0;                                       
                 end 
@@ -284,7 +285,7 @@ begin
 
                 // A = (SUB)NORMAL & B = 0
                 if(isZeroB) begin 
-                    fast_res = {sign_A, 8'd255, 23'd0}; //For negative A, the output is negative infinity
+                    fast_res = {sign_O, 8'd255, 23'd0}; //For negative A, the output is negative infinity //Doesn't the sign of B matter too?
                     overflow_fast = 1;
                     invalid_fast = 0;                     
                     divByZero_fast = 1; 
@@ -293,7 +294,7 @@ begin
                 
                 // A = (SUB)NORMAL & B = INF
                 else if(isInfB) begin
-                    fast_res = 0;
+                    fast_res = {sign_O,31'b0}; //Not sure
                     overflow_fast = 0;
                     invalid_fast = 0;                     
                     divByZero_fast = 0;                    
@@ -316,7 +317,7 @@ begin
                 
                 // A = (SUB)NORMAL & B = (SUB)NORMAL
                 else begin
-                    fast_res = 0;
+                    fast_res = {sign_O,31'b0}; //Not sure
                     overflow_fast = 0;
                     invalid_fast = 0;                     
                     divByZero_fast = 0;                    
