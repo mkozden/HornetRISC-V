@@ -8,7 +8,7 @@ SIM_TOP="barebones_top_tb.v"
 LOG_FILE="simulation.log"
 WAVE_CONFIG="barebones_top_tb_behav.wcfg"  # Optional waveform config
 
-#python3 run.py --verbose --test riscv_floating_point_arithmetic_test --simulator pyflow --isa rv32imf --mabi ilp32f --sim_opts=""
+python3 run.py --verbose --test riscv_floating_point_arithmetic_test --simulator pyflow --isa rv32imf --mabi ilp32f --sim_opts=""
 
 if [ -d "out_$(date +%Y-%m-%d)" ]; then
     cd "out_$(date +%Y-%m-%d)"
