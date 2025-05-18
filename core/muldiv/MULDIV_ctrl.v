@@ -82,6 +82,8 @@ begin
             if(muldiv_sel == 1'b0) begin
                 if(op_mul == 2'b00)
                     fastres = B;
+                else if(op_mul == 2'b01) //For MULH, result is the sign bit of B, repeated.
+                    fastres = {32{B[31]}};
                 else
                     fastres = 32'd0;
             end
@@ -185,7 +187,8 @@ begin
             if(muldiv_sel == 1'b0) begin
                 if(op_mul == 2'b00)
                     fastres = A;
-                else if((op_mul == 2'b10))
+                else if((op_mul == 2'b01) || (op_mul == 2'b10))
+                    //For MULH, result is the sign bit of A, repeated.
                     fastres = {32{A[31]}}; //For MULHSU operations, carry the sign bit to the result, but only since A is signed, so we don't repeat this for A=1 case
                 else
                     fastres = 32'd0;
