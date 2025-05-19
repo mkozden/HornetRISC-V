@@ -2,7 +2,7 @@ module fpu_add_sub_rounder
 (
     input wire[2:0] LRS,
     input wire[2:0] rounding_mode,
-    input wire      second_operand_zero, eff_sign_B, //Using eff_sign_B generalizes addition and subtraction of positive/negative values
+    input wire      second_operand_zero, sign_less, //Using sign_less generalizes addition and subtraction of positive/negative values
     input wire      sign_O,
     output reg[1:0] round_out
 );
@@ -29,17 +29,16 @@ begin
            endcase
            end
     3'b001:
-        if(eff_sign_B == 1'b0) begin //In addition, adding a very small amount to a negative number will round it up if mode is RTZ
-            if(sign_O == 1'b1 && second_operand_zero) round_out = 2'b01;
+        if(second_operand_zero) begin
+            if(sign_less == 1'b0 && sign_O == 1'b1) round_out = 2'b11; //In addition, adding a very small amount to a negative number will round it up if mode is RTZ
+            else if(sign_less == 1'b1 && sign_O == 1'b0) round_out = 2'b11; //In subtraction, subtracting a very small amount from a positive number will round it down if mode is RTZ
             else round_out = 2'b00;
         end
-        else if(eff_sign_B == 1'b1) begin //In subtraction, subtracting a very small amount from a positive number will round it down if mode is RTZ
-            if(sign_O == 1'b0 && second_operand_zero) round_out = 2'b11; //round_out = -1
-            else round_out = 2'b00;
-        end
+        else round_out = 2'b00;
+
     3'b010:begin
         if(sign_O == 1'b0) //For positive numbers
-            if(eff_sign_B == 1'b1 && second_operand_zero) round_out = 2'b11;//If we subtract a very small amount from a positive number, RDN will pull it down
+            if(sign_less == 1'b1 && second_operand_zero) round_out = 2'b11;//If we subtract a very small amount from a positive number, RDN will pull it down
             else round_out = 2'b0; 
         else //For negative numbers, always round towards negative so we add 1 to the significand
             if(|LRS[1:0]) round_out = 2'b01; //Round only if R or S bit is set

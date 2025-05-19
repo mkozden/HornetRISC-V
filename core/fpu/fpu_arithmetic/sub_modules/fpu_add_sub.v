@@ -165,7 +165,7 @@ add_sub_normalizer add_sub_normalizer(.inSig(out_sig_abs), .inExp(exp_O), .LGRS(
 fpu_add_sub_rounder fpu_add_sub_rounder( .LRS(LRS),
                                          .rounding_mode(rounding_mode),
                                          .second_operand_zero(second_operand_zero),
-                                         .eff_sign_B(eff_sign_B), 
+                                         .sign_less(sign_less), 
                                          .sign_O(sign_O), 
                                          .round_out(round_out));
 

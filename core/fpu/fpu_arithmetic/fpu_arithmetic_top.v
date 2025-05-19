@@ -38,9 +38,9 @@ reg [2:0] round_override;
 
 always @(*) begin
     if(rounding_mode == 3'b111)
-        assign round_override = csr_dynamic_rounding_mode;
+        round_override = csr_dynamic_rounding_mode;
     else
-        assign round_override = rounding_mode;
+        round_override = rounding_mode;
 end
 
 // decoder signals
