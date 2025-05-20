@@ -33,10 +33,7 @@ wire[22:0] final_sig;
 
 wire [24:0] after_round;
 
-cvrt_rounder cvrt_rounder_to_float(lgrs, rounding_mode, final_sign, round_out_temp);
-
-assign round_out = |int_after_shift[7:0] ? round_out_temp : 1'b0;
-
+cvrt_rounder cvrt_rounder_to_float(lgrs, rounding_mode, final_sign, round_out);
 
 assign after_round = int_after_shift[31:8] + round_out;
 

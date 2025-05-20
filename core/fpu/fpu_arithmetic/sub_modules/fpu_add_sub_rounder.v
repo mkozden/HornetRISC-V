@@ -28,30 +28,37 @@ begin
            2'b11: round_out = 2'b1;
            endcase
            end
-    3'b001:
-        if(second_operand_zero) begin
-            if(sign_less == 1'b0 && sign_O == 1'b1) round_out = 2'b11; //In addition, adding a very small amount to a negative number will round it up if mode is RTZ
-            else if(sign_less == 1'b1 && sign_O == 1'b0) round_out = 2'b11; //In subtraction, subtracting a very small amount from a positive number will round it down if mode is RTZ
+    3'b001:begin
+            if(second_operand_zero) begin
+                if(sign_less == 1'b0 && sign_O == 1'b1) round_out = 2'b11; //In addition, adding a very small amount to a negative number will round it up if mode is RTZ
+                else if(sign_less == 1'b1 && sign_O == 1'b0) round_out = 2'b11; //In subtraction, subtracting a very small amount from a positive number will round it down if mode is RTZ
+                else round_out = 2'b00;
+            end
             else round_out = 2'b00;
         end
-        else round_out = 2'b00;
 
     3'b010:begin
-        if(sign_O == 1'b0) //For positive numbers
-            if(sign_less == 1'b1 && second_operand_zero) round_out = 2'b11;//If we subtract a very small amount from a positive number, RDN will pull it down
-            else round_out = 2'b0; 
-        else //For negative numbers, always round towards negative so we add 1 to the significand
-            if(|LRS[1:0]) round_out = 2'b01; //Round only if R or S bit is set
-            else round_out = 2'b00;
+            if(sign_O == 1'b0) //For positive numbers
+                if(sign_less == 1'b1 && second_operand_zero) round_out = 2'b11;//If we subtract a very small amount from a positive number, RDN will pull it down (so magnitude decreases)
+                else round_out = 2'b0; 
+            else begin
+                if(sign_less == 1'b1 && second_operand_zero) round_out = 2'b01; //If we subtract a very small amount from a negative number, RDN will pull it down (so magnitude increases)
+                if(|LRS[1:0]) round_out = 2'b01; //Round only if R or S bit is set
+                else round_out = 2'b00;
+            end
         end
             
     3'b011:begin
-           if(sign_O == 1'b0) //For positive numbers
-                if(|LRS[1:0]) round_out = 2'b01; //Round only if R or S bit is set
+           if(sign_O == 1'b0) begin//For positive numbers
+                if(sign_less == 1'b0 && second_operand_zero) round_out = 2'b01; //If we add a very small amount to a positive number, RUP will pull it up (so magnitude increases)
+                else if(|LRS[1:0]) round_out = 2'b01; //Round only if R or S bit is set
                 else round_out = 2'b00; 
-           else
-                round_out = 2'b00;
-            end
+           end
+           else begin
+                if(sign_less == 1'b0 && second_operand_zero) round_out = 2'b11; //If we add a very small amount to a negative number, RUP will pull it up (so magnitude decreases)
+                else round_out = 2'b00;
+           end
+        end
     3'b100:begin
            casez(LRS[1:0]) //Seems wrong idk
                3'b0??: round_out = 2'b0;

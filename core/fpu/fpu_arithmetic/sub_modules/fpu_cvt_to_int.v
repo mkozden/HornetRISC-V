@@ -31,18 +31,32 @@ wire [3:0] lgrs;
 wire round_out, round_out_temp;
 assign int_before_round = (adjusted_sig >> (31-actual_exp)) ;
 assign lgrs = {int_before_round[23:21], |int_before_round[20:0]};
-cvrt_rounder cvrt_rounder_to_int(lgrs, rounding_mode, sign_A, round_out_temp);
-
-assign round_out = |sig_A[22:0] ? round_out_temp : 1'b0; //NOT SURE
-//assign round_out =  round_out_temp;
+cvrt_rounder cvrt_rounder_to_int(lgrs, rounding_mode, sign_A, round_out);
 
 assign int_after_round = int_before_round[54:23] + round_out;
 assign final_out = is_unsigned ? (sign_A ? 32'h0 : int_after_round) : (sign_A ? ~int_after_round + 1 : int_after_round);
 
+reg [31:0] exp_neg_out;
+always @(*) begin //Edge cases involving various outcomes due to is_exp_neg around 0, with various rounding modes (TENTATIVE)
+    if(final_out == 32'h0)begin
+        if(rounding_mode == 3'b001) exp_neg_out = 32'h0; //RTZ
+        else if(rounding_mode == 3'b010) begin //RDN
+            if(sign_A) exp_neg_out = 32'hFFFFFFFF; //For negative values, round down to -1
+            else exp_neg_out = 32'h0; //Else 0
+        end
+        else if(rounding_mode == 3'b011) begin//RUP
+            if(sign_A) exp_neg_out = 32'h0; //For negative values, round up to 0
+            else exp_neg_out = 32'h00000001; //For positive values, round up to 1
+        end
+        else exp_neg_out = 32'h0; //Match final_out
+    end
+    else exp_neg_out = final_out;
+end
+
 assign cvt_to_int_out =  isNaNA ? (is_unsigned ? 32'hFFFF_FFFF : 32'h7FFF_FFFF)   :
                          isInfA ? (is_unsigned ? (sign_A ? 32'h0 : 32'hFFFF_FFFF) : (sign_A ? 32'h8000_0000  : 32'h7FFF_FFFF)) :
                          isZeroA ? 32'h0 :
-                         is_exp_neg ? (final_out) : // This is changed since if the number is between -1.0 and 1.0 it goes to 0 but this is not the case for everytime.
+                         is_exp_neg ? (exp_neg_out) : // This is changed since if the number is between -1.0 and 1.0 it goes to 0 but this is not the case for everytime.
                          is_overflow ? (is_unsigned ? (sign_A ? 32'h0 : 32'hFFFF_FFFF) : (sign_A ? 32'h8000_0000 : 32'h7FFF_FFFF)): final_out;
 // This change might cause other problems but it reduced total error count
 /*
@@ -92,16 +106,20 @@ begin
     3'b010:begin
             if(sign_O == 1'b0)
                 round_out = 1'b0; 
-            else
-                round_out = 1'b1;
+            else begin
+                if(|LGRS[2:0]) round_out = 1'b1;
+                else round_out = 1'b0;
             end
+        end
             
     3'b011:begin
-           if(sign_O == 1'b0)
-                round_out = 1'b1; 
+           if(sign_O == 1'b0) begin
+                if(|LGRS[2:0]) round_out = 1'b1;
+                else round_out = 1'b0;
+           end
            else
                 round_out = 1'b0;
-            end
+        end
     3'b100:begin
            casez(LGRS[2:0])
                3'b0??: round_out = 1'b0;

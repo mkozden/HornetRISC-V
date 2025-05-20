@@ -170,10 +170,6 @@ fpu_add_sub_rounder fpu_add_sub_rounder( .LRS(LRS),
                                          .sign_O(sign_O), 
                                          .round_out(round_out));
 
-wire [31:0] OUT_round;
-
-//Doing the rounding on the final number may help some edge cases?
-assign OUT_round = round_out[1] ? {sign_O, final_exp, final_sig} - round_out[0] : {sign_O, final_exp, final_sig} + round_out[0];
 
 wire invalid_fast;
 wire mux_fastres_sel;
@@ -181,13 +177,32 @@ wire [31:0] fast_res;
 wire overflow_fast;
 fpu_add_fast fpu_add_fast(rounding_mode, isZeroA, isZeroB,isInfA, isInfB, isNaNA, isNaNB, isSignaling, sub_op, sign_A, sign_B, exp_A, exp_B,sig_A[22:0], sig_B[22:0], mux_fastres_sel, fast_res, overflow_fast, invalid_fast);
 
-assign OUT       = mux_fastres_sel ? fast_res : OUT_round;
-
 //Since inexact depends on of and uf, we can also add an inexact output for the fast module, which only consists of overflow_fast:
 assign inexact   = mux_fastres_sel ? overflow_fast : |LRS[1:0] | of | uf;
 assign invalid   = invalid_fast;
 assign overflow  = mux_fastres_sel ? overflow_fast : of;
 assign underflow = uf;
+
+reg [31:0] OUT_round;
+//Doing the rounding on the final number may help some edge cases?
+always @(*) begin
+    if(overflow) begin //Overflow edge cases
+        if(sign_O) begin //For negative numbers
+            if((rounding_mode == 3'b001) || (rounding_mode == 3'b011))
+                OUT_round = 32'hff7fffff; //For RTZ or RUP, -Inf rounds down to largest mag. negative number
+            else OUT_round = round_out[1] ? {sign_O, final_exp, final_sig} - round_out[0] : {sign_O, final_exp, final_sig} + round_out[0];
+        end
+        else begin //For positive numbers
+            if((rounding_mode == 3'b001) || (rounding_mode == 3'b010))
+                OUT_round = 32'h7f7fffff; //For RTZ or RDN, +Inf rounds down to largest mag. positive number
+            else OUT_round = round_out[1] ? {sign_O, final_exp, final_sig} - round_out[0] : {sign_O, final_exp, final_sig} + round_out[0];
+        end
+    end
+    else OUT_round = round_out[1] ? {sign_O, final_exp, final_sig} - round_out[0] : {sign_O, final_exp, final_sig} + round_out[0];
+end
+
+
+assign OUT       = mux_fastres_sel ? fast_res : OUT_round;
 
 
 endmodule
