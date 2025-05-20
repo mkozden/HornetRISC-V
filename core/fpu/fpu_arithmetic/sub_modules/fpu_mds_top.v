@@ -132,7 +132,7 @@ module fpu_mds_top(
         // assignment of exceptions
 
     assign overflow    = mux_fastres_sel ? overflow_fast : of_final_norm;
-    assign underflow   = uf_temp;
+    assign underflow   = mux_fastres_sel ? 1'b0 : uf_temp;
     assign invalid     = invalid_fast;
     assign inexact     = mux_fastres_sel ? overflow_fast : uf_temp ? 1'b1 :
                          mds_op == 2'b00 ? mul_round_out :

@@ -100,7 +100,7 @@ begin
                 // A = INF & B = INF
                 else if(isInfB) begin
                     fast_res = {sign_O, 8'd255, 23'd0};
-                    overflow_fast = 1;
+                    overflow_fast = 0;
                     invalid_fast = 0;                       
                 end 
 
@@ -119,7 +119,7 @@ begin
                 // A = INF & B = (SUB)NORMAL   
                 else begin
                     fast_res = {sign_O, 8'd255, 23'd0};
-                    overflow_fast = 1;
+                    overflow_fast = 0;
                     invalid_fast = 0;                     
                 end
             mux_fastres_sel_temp = 1'b1;
@@ -151,7 +151,7 @@ begin
                 // A = (SUB)NORMAL & B = INF
                 else if(isInfB) begin
                     fast_res = {sign_O, 8'd255, 23'd0};
-                    overflow_fast = 1;
+                    overflow_fast = 0;
                     invalid_fast = 0;                    
                     mux_fastres_sel_temp = 1'b1;
                 end
@@ -227,7 +227,7 @@ begin
 
                 if(isZeroB) begin
                     fast_res = {sign_O, 8'd255, 23'd0};
-                    overflow_fast = 1;
+                    overflow_fast = 0;
                     invalid_fast = 0;                     
                     divByZero_fast = 1;                                       
                 end 
@@ -258,7 +258,7 @@ begin
 
                 else begin
                     fast_res = {sign_O, 8'd255, 23'd0};
-                    overflow_fast = 1;
+                    overflow_fast = 0;
                     invalid_fast = 0;                     
                     divByZero_fast = 0;                                       
                 end 
@@ -286,7 +286,7 @@ begin
                 // A = (SUB)NORMAL & B = 0
                 if(isZeroB) begin 
                     fast_res = {sign_O, 8'd255, 23'd0}; //For negative A, the output is negative infinity //Doesn't the sign of B matter too?
-                    overflow_fast = 1;
+                    overflow_fast = 0;
                     invalid_fast = 0;                     
                     divByZero_fast = 1; 
                     mux_fastres_sel_temp = 1'b1;
@@ -347,7 +347,7 @@ begin
                 else begin
                     fast_res = {sign_O, 8'd255, 23'd0};
                     mux_fastres_sel_temp = 1'b1;
-                    overflow_fast = 1;
+                    overflow_fast = 0;
                     invalid_fast = 0;
                 end  
             end

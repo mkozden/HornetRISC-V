@@ -100,7 +100,7 @@ begin
                         fast_res = {1'b0, 8'd255, 1'b1, 22'b0}; 
                         invalid_fast = 1;
                     end
-                    overflow_fast = 1;
+                    overflow_fast = 0; //Not sure
                 end 
 
                 // A = INF & B = NAN
@@ -118,7 +118,7 @@ begin
                 // A = INF & B = (SUB)NORMAL   
                 else begin
                     fast_res = {sign_A, exp_A, sig_A[22:0]};
-                    overflow_fast = 1;
+                    overflow_fast = 0; //Not sure
                     invalid_fast = 0;                     
                 end
             mux_fastres_sel = 1'b1;
@@ -150,7 +150,7 @@ begin
                 // A = (SUB)NORMAL & B = INF
                 else if(isInfB) begin
                     fast_res = {sign_B, exp_B, sig_B[22:0]};
-                    overflow_fast = 1;
+                    overflow_fast = 0; //Not sure
                     invalid_fast = 0;                    
                     mux_fastres_sel = 1'b1;
                 end
@@ -251,7 +251,7 @@ begin
                         fast_res = {1'b0, 8'd255, 1'b1, 22'b0}; //QNaN
                         invalid_fast = 1;
                     end
-                    overflow_fast = 1;
+                    overflow_fast = 0; //Not sure
                 end 
 
                 // A = INF & B = NAN
@@ -269,7 +269,7 @@ begin
                 // A = INF & B = (SUB)NORMAL   
                 else begin
                     fast_res = {sign_A, exp_A, sig_A[22:0]};
-                    overflow_fast = 1;
+                    overflow_fast = 0; //Not sure
                     invalid_fast = 0;                     
                 end
             mux_fastres_sel = 1'b1;
@@ -301,7 +301,7 @@ begin
                 // A = (SUB)NORMAL & B = INF
                 else if(isInfB) begin
                     fast_res = {!sign_B, exp_B, sig_B[22:0]}; //Forgot to invert sign of B
-                    overflow_fast = 1;
+                    overflow_fast = 0; //Not sure
                     invalid_fast = 0;                    
                     mux_fastres_sel = 1'b1;
                 end

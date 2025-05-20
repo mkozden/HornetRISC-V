@@ -60,13 +60,13 @@ begin
            end
         end
     3'b100:begin
-           casez(LRS[1:0]) //Seems wrong idk
-               3'b0??: round_out = 2'b0;
-               default: round_out = 2'b1;
+           case(LRS[1:0]) //Seems wrong idk
+               2'b00: round_out = 2'b00;
+               2'b01: round_out = 2'b00;
+               2'b10, 2'b11: round_out = 2'b01; //Round away from 0, increase magnitude
            endcase
-           
            end 
-    default: round_out = 2'b0;       
+    default: round_out = 2'b0;
     endcase
 end
 
