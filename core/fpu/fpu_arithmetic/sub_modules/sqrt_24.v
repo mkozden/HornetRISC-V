@@ -5,19 +5,19 @@ module sqrt_24
         input is_exp_odd,
         input [23:0] significand,   
         output done,     
-        output reg [26:0] sq_root 
+        output reg [35:0] sq_root 
     );
 
  
  
-    wire [28:0] first_op, second_op;
-    wire signed [28:0] result;
-    reg [53:0] reg_adjusted_input;
-    reg [28:0] reg_remainder;
-    reg [26:0] reg_partial_root;
-    assign first_op = { reg_remainder[26:0], reg_adjusted_input[53:52]};
-    assign second_op = { reg_partial_root, reg_remainder[28], 1'b1};
-    assign result = reg_remainder[28] ? first_op + second_op : first_op - second_op;
+    wire [37:0] first_op, second_op; //From 28
+    wire signed [37:0] result; //From 28
+    reg [71:0] reg_adjusted_input; //From 53
+    reg [37:0] reg_remainder; //From 28
+    reg [35:0] reg_partial_root; //From 26
+    assign first_op = { reg_remainder[35:0], reg_adjusted_input[71:70]};
+    assign second_op = { reg_partial_root, reg_remainder[37], 1'b1};
+    assign result = reg_remainder[37] ? first_op + second_op : first_op - second_op;
    
     wire shiftSig, shiftQ, load;
 
@@ -35,20 +35,20 @@ module sqrt_24
 	   else begin
             if (load) begin
                 sq_root <= 0;
-                reg_adjusted_input <= is_exp_odd ? {significand, 30'b0} : {1'b0, significand, 29'b0};
+                reg_adjusted_input <= is_exp_odd ? {significand, 48'b0} : {1'b0, significand, 47'b0};
                 reg_remainder <= 0;
                 reg_partial_root <= 0;
             end
 
             else begin
                 if (shiftSig) 
-                    reg_adjusted_input <= {reg_adjusted_input[51:0], 2'b00};
+                    reg_adjusted_input <= {reg_adjusted_input[69:0], 2'b00};
                 else 
                     reg_adjusted_input <= reg_adjusted_input;
 
 
                 if (shiftQ)
-                    reg_partial_root <= {reg_partial_root[25:0], !result[28]};
+                    reg_partial_root <= {reg_partial_root[34:0], !result[37]};
                 else
                     reg_partial_root <= reg_partial_root;
                 
@@ -80,7 +80,7 @@ module sqrt_control
 
     parameter IDLE = 2'b00, LOAD = 2'b01, ITR = 2'b10;
     reg [1:0]current_state, next_state;
-    reg [4:0] itr;
+    reg [5:0] itr;
     reg       incr_itr;
     reg       done_b4_delay;
     always @ (posedge clk or negedge reset) begin
@@ -146,7 +146,7 @@ module sqrt_control
             ITR: begin
               
                 load = 1'b0;
-                if(itr != 27) begin
+                if(itr != 36) begin
                     shiftSig = 1'b1;
                     shiftQ = 1'b1;
 
