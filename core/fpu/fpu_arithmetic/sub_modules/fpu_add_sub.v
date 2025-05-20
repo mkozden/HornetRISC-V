@@ -150,11 +150,31 @@ assign ufAfterRound      = of ? 1'b0 :  !(|final_sum[24:23])  | (!(|final_exp) &
 
 wire isout_sigNeg        = (sign_A && eff_sign_B) || (sign_A && out_sig[27] || (eff_sign_B && out_sig[27]));
 
+reg sign_O_equal;
+
+always @(*) begin //Sign of the output when |A|=|B| according to which operation or rounding mode is used.
+    if(sub_op) begin //If subtraction, result is 0 if signs are the same.
+        if(!(sign_A ^ sign_B)) begin
+            if(rounding_mode == 3'b010) sign_O_equal = 1'b1; //Result is -0.0 if rounding mode is RDN, +0.0 otherwise.
+            else sign_O_equal = 1'b0;
+        end
+        else //Otherwise the result will be a non-zero number, with the sign equal to the sign of A (if A is negative, B is positive, result is thus negative; vice versa)
+            sign_O_equal = sign_A;
+    end
+    else begin//If addition, result is 0 if signs are opposite
+        if((sign_A ^ sign_B)) begin
+            if(rounding_mode == 3'b010) sign_O_equal = 1'b1; //Result is -0.0 if rounding mode is RDN, +0.0 otherwise.
+            else sign_O_equal = 1'b0;
+        end
+        else //Otherwise the result will be a non-zero number, with the sign equal to the sign of A (if A is negative, B is negative, result is thus negative; vice versa)
+            sign_O_equal = sign_A;
+    end
+end
 
 assign exp_O             = (exp_A_adjusted >= exp_B_adjusted) ? exp_A_adjusted : exp_B_adjusted;
 assign out_sig           = first_operand + second_operand;
 assign out_sig_abs       = isout_sigNeg  ? ~out_sig+1 : out_sig; 
-assign sign_O            = (exp_A_adjusted == exp_B_adjusted) ? (sig_A_adjusted >= sig_B_adjusted ? sign_A : eff_sign_B) : //if both significands and exponents are equal, the sign should be sign_A -> positive, since result should be 0 or a positive number 
+assign sign_O            = (exp_A_adjusted == exp_B_adjusted) ? (sig_A_adjusted >= sig_B_adjusted ? sign_O_equal : eff_sign_B) : //if both significands and exponents are equal, the sign should be sign_A -> positive, since result should be 0 or a positive number 
                            (exp_A_adjusted >  exp_B_adjusted) ? sign_A : eff_sign_B;  
 
 wire second_operand_zero;
