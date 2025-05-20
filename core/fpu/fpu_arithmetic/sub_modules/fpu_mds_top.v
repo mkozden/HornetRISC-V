@@ -153,7 +153,19 @@ module fpu_mds_top(
 
         else begin 
                 if(reg_muldiv_sqrt_en)
-                    OUT_reg <= muldiv_sqrt;
+                    if(overflow) begin //Overflow edge cases
+                        if(sign_O) begin //For negative numbers
+                            if((rounding_mode == 3'b001) || (rounding_mode == 3'b011))
+                                OUT_reg <= 32'hff7fffff; //For RTZ or RUP, -Inf rounds down to largest mag. negative number
+                            else OUT_reg <= muldiv_sqrt;
+                        end
+                        else begin //For positive numbers
+                            if((rounding_mode == 3'b001) || (rounding_mode == 3'b010))
+                                OUT_reg <= 32'h7f7fffff; //For RTZ or RDN, +Inf rounds down to largest mag. positive number
+                            else OUT_reg <= muldiv_sqrt;
+                        end
+                    end
+                    else OUT_reg <= muldiv_sqrt;
            
         end
     end

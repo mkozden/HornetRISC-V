@@ -140,7 +140,8 @@ end
 
 //assign inexact   = |LRS[1:0] | of | uf; //Repeated below
 
-assign final_sum         = round_out[1] ? pro_normal_sig[26:2] - round_out[0] : pro_normal_sig[26:2] + round_out[0];
+//assign final_sum         = round_out[1] ? pro_normal_sig[26:2] - round_out[0] : pro_normal_sig[26:2] + round_out[0];
+assign final_sum         = pro_normal_sig[26:2];
 assign final_exp         = final_sum[24] ? (of ? `maxExp : pro_normal_exp + 1) : pro_normal_exp;
 assign final_sig         = final_sum[24] ? (of ? 23'd0  : final_sum[23:1]) : final_sum[22:0];
 assign ofAfterRound      = (final_sum[24] && pro_normal_exp+1 == `maxExp);
@@ -169,6 +170,10 @@ fpu_add_sub_rounder fpu_add_sub_rounder( .LRS(LRS),
                                          .sign_O(sign_O), 
                                          .round_out(round_out));
 
+wire [31:0] OUT_round;
+
+//Doing the rounding on the final number may help some edge cases?
+assign OUT_round = round_out[1] ? {sign_O, final_exp, final_sig} - round_out[0] : {sign_O, final_exp, final_sig} + round_out[0];
 
 wire invalid_fast;
 wire mux_fastres_sel;
@@ -176,7 +181,7 @@ wire [31:0] fast_res;
 wire overflow_fast;
 fpu_add_fast fpu_add_fast(rounding_mode, isZeroA, isZeroB,isInfA, isInfB, isNaNA, isNaNB, isSignaling, sub_op, sign_A, sign_B, exp_A, exp_B,sig_A[22:0], sig_B[22:0], mux_fastres_sel, fast_res, overflow_fast, invalid_fast);
 
-assign OUT       = mux_fastres_sel ? fast_res : {sign_O, final_exp, final_sig};
+assign OUT       = mux_fastres_sel ? fast_res : OUT_round;
 
 //Since inexact depends on of and uf, we can also add an inexact output for the fast module, which only consists of overflow_fast:
 assign inexact   = mux_fastres_sel ? overflow_fast : |LRS[1:0] | of | uf;

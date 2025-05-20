@@ -307,7 +307,7 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x000104c4,0x009e9013,,,,,000104c4,slli,,,009e9013,3,"slli    zero, t4, 9","zero,t4,9",,,,No reg,No reg,No CSR
 0x000104c8,0x0129cb33,,,x22,0x00000000,000104c8,xor,s6:00000000,,0129cb33,3,"xor     s6, s3, s2","s6,s3,s2",,x22,0x00000000,True,True,No CSR
 0x000104cc,0xa0f71053,,,,,000104cc,flt.s,,,a0f71053,3,"flt.s   zero, fa4, fa5","zero,fa4,fa5",,,,No reg,No reg,No CSR
-0x000104d0,0x013bf953,c1_fflags,0x00000002,f18,0x3f800000,000104d0,fadd.s,fs2:3f800000,,013bf953,3,"fadd.s  fs2, fs7, fs3","fs2,fs7,fs3",,f18,0x3f800000,True,True,Mismatched CSR access!
+0x000104d0,0x013bf953,,,f18,0x3f800000,000104d0,fadd.s,fs2:3f800000,,013bf953,3,"fadd.s  fs2, fs7, fs3","fs2,fs7,fs3",,f18,0x3f800000,True,True,No CSR
 0x000104d4,0xc0047253,,,x4,0x7fffffff,000104d4,fcvt.w.s,tp:7fffffff,c1_fflags:00000019,c0047253,3,"fcvt.w.s tp, fs0","tp,fs0",,x4,0x7fffffff,True,True,No CSR
 0x000104d8,0xd005f5d3,,,f11,0xcea313ba,000104d8,fcvt.s.w,fa1:cea313ba,c1_fflags:00000019,d005f5d3,3,"fcvt.s.w fa1, a1","fa1,a1",,f11,0xcea313ba,True,True,No CSR
 0x000104dc,0x02bd56b3,,,x13,0x00000001,000104dc,divu,a3:00000001,,02bd56b3,3,"divu    a3, s10, a1","a3,s10,a1",,x13,0x00000001,True,True,No CSR
@@ -452,7 +452,7 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x00010708,0x67604c13,,,x24,0x00000676,00010708,xori,s8:00000676,,67604c13,3,"xori    s8, zero, 1654","s8,zero,1654",,x24,0x00000676,True,True,No CSR
 0x0001070c,0x019d3c33,,,x24,0x00000001,0001070c,sltu,s8:00000001,,019d3c33,3,"sltu    s8, s10, s9","s8,s10,s9",,x24,0x00000001,True,True,No CSR
 0x00010710,0xc017f0d3,,,x1,0x00000000,00010710,fcvt.wu.s,ra:00000000,c1_fflags:00000019,c017f0d3,3,"fcvt.wu.s ra, fa5","ra,fa5",,x1,0x00000000,True,True,No CSR
-0x00010714,0x09e975d3,c1_fflags,0x00000003,f11,0x3fffffff,00010714,fsub.s,fa1:3f7fffff,c1_fflags:00000019,09e975d3,3,"fsub.s  fa1, fs2, ft10","fa1,fs2,ft10",,f11,0x3f7fffff,True,False,Mismatched CSR Value!
+0x00010714,0x09e975d3,,,f11,0x3f7fffff,00010714,fsub.s,fa1:3f7fffff,c1_fflags:00000019,09e975d3,3,"fsub.s  fa1, fs2, ft10","fa1,fs2,ft10",,f11,0x3f7fffff,True,True,No CSR
 0x00010718,0x9d7247b7,,,x15,0x9d724000,00010718,lui,a5:9d724000,,9d7247b7,3,"lui     a5, 0x9d724","a5,0x9d724",,x15,0x9d724000,True,True,No CSR
 0x0001071c,0x019cc9b3,,,x19,0x00000000,0001071c,xor,s3:00000000,,019cc9b3,3,"xor     s3, s9, s9","s3,s9,s9",,x19,0x00000000,True,True,No CSR
 0x00010720,0x216a97d3,,,f15,0x9e61770f,00010720,fsgnjn.s,fa5:9e61770f,,216a97d3,3,"fsgnjn.s fa5, fs5, fs6","fa5,fs5,fs6",,f15,0x9e61770f,True,True,No CSR
@@ -726,7 +726,7 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x00010b50,0x039fdb33,,,x22,0x00000000,00010b50,divu,s6:00000000,,039fdb33,3,"divu    s6, t6, s9","s6,t6,s9",,x22,0x00000000,True,True,No CSR
 0x00010b54,0xd8bd18b7,,,x17,0xd8bd1000,00010b54,lui,a7:d8bd1000,,d8bd18b7,3,"lui     a7, 0xd8bd1","a7,0xd8bd1",,x17,0xd8bd1000,True,True,No CSR
 0x00010b58,0x02449033,,,,,00010b58,mulh,,,02449033,3,"mulh    zero, s1, tp","zero,s1,tp",,,,No reg,No reg,No CSR
-0x00010b5c,0x09b4f2d3,c1_fflags,0x00000007,f5,0xff800000,00010b5c,fsub.s,ft5:ff800000,,09b4f2d3,3,"fsub.s  ft5, fs1, fs11","ft5,fs1,fs11",,f5,0xff800000,True,True,Mismatched CSR access!
+0x00010b5c,0x09b4f2d3,c1_fflags,0x00000005,f5,0xff800000,00010b5c,fsub.s,ft5:ff800000,,09b4f2d3,3,"fsub.s  ft5, fs1, fs11","ft5,fs1,fs11",,f5,0xff800000,True,True,Mismatched CSR access!
 0x00010b60,0xd006fed3,,,f29,0x00000000,00010b60,fcvt.s.w,ft9:00000000,,d006fed3,3,"fcvt.s.w ft9, a3","ft9,a3",,f29,0x00000000,True,True,No CSR
 0x00010b64,0xf0088053,,,f0,0xd8bd1000,00010b64,fmv.w.x,ft0:d8bd1000,,f0088053,3,"fmv.w.x ft0, a7","ft0,a7",,f0,0xd8bd1000,True,True,No CSR
 0x00010b68,0x4dbcb513,,,x10,0x00000000,00010b68,sltiu,a0:00000000,,4dbcb513,3,"sltiu   a0, s9, 1243","a0,s9,1243",,x10,0x00000000,True,True,No CSR
@@ -756,7 +756,7 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x00010bc8,0xa8bba093,,,x1,0x00000000,00010bc8,slti,ra:00000000,,a8bba093,3,"slti    ra, s7, -1397","ra,s7,-1397",,x1,0x00000000,True,True,No CSR
 0x00010bcc,0x004905b3,,,x11,0x00000001,00010bcc,add,a1:00000001,,004905b3,3,"add     a1, s2, tp","a1,s2,tp",,x11,0x00000001,True,True,No CSR
 0x00010bd0,0x01e66033,,,,,00010bd0,or,,,01e66033,3,"or      zero, a2, t5","zero,a2,t5",,,,No reg,No reg,No CSR
-0x00010bd4,0x100c7753,c1_fflags,0x00000004,f14,0x7f800000,00010bd4,fmul.s,fa4:7f7fffff,c1_fflags:0000001d,100c7753,3,"fmul.s  fa4, fs8, ft0","fa4,fs8,ft0",,f14,0x7f7fffff,True,False,Mismatched CSR Value!
+0x00010bd4,0x100c7753,c1_fflags,0x00000004,f14,0x7f7fffff,00010bd4,fmul.s,fa4:7f7fffff,c1_fflags:0000001d,100c7753,3,"fmul.s  fa4, fs8, ft0","fa4,fs8,ft0",,f14,0x7f7fffff,True,True,Mismatched CSR Value!
 0x00010bd8,0x014bfad3,,,f21,0x7fc00000,00010bd8,fadd.s,fs5:7fc00000,,014bfad3,3,"fadd.s  fs5, fs7, fs4","fs5,fs7,fs4",,f21,0x7fc00000,True,True,No CSR
 0x00010bdc,0x7998c597,,,x11,0x7999cbdc,00010bdc,auipc,a1:7999cbdc,,7998c597,3,"auipc   a1, 0x7998c","a1,0x7998c",,x11,0x7999cbdc,True,True,No CSR
 0x00010be0,0x651e4c93,,,x25,0xfcb79ced,00010be0,xori,s9:fcb79ced,,651e4c93,3,"xori    s9, t3, 1617","s9,t3,1617",,x25,0xfcb79ced,True,True,No CSR
@@ -820,7 +820,7 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x00010cc8,0x081af2d3,c1_fflags,0x00000002,f5,0x7fc00000,00010cc8,fsub.s,ft5:7fc00000,,081af2d3,3,"fsub.s  ft5, fs5, ft1","ft5,fs5,ft1",,f5,0x7fc00000,True,True,Mismatched CSR access!
 0x00010ccc,0x0369ccb3,,,x25,0x3b138000,00010ccc,div,s9:3b138000,,0369ccb3,3,"div     s9, s3, s6","s9,s3,s6",,x25,0x3b138000,True,True,No CSR
 0x00010cd0,0x00000013,,,,,00010cd0,addi,,,00000013,3,nop,"zero,zero,0",,,,No reg,No reg,No CSR
-0x00010cd4,0x21271b53,,,f22,0xff800000,00010cd4,fsgnjn.s,fs6:ff7fffff,,21271b53,3,"fsgnjn.s fs6, fa4, fs2","fs6,fa4,fs2",,f22,0xff7fffff,True,False,No CSR
+0x00010cd4,0x21271b53,,,f22,0xff7fffff,00010cd4,fsgnjn.s,fs6:ff7fffff,,21271b53,3,"fsgnjn.s fs6, fa4, fs2","fs6,fa4,fs2",,f22,0xff7fffff,True,True,No CSR
 0x00010cd8,0x5aab0713,,,x14,0x000005ab,00010cd8,addi,a4:000005ab,,5aab0713,3,"addi    a4, s6, 1450","a4,s6,1450",,x14,0x000005ab,True,True,No CSR
 0x00010cdc,0x298596d3,,,f13,0x3f800000,00010cdc,fmax.s,fa3:3f800000,,298596d3,3,"fmax.s  fa3, fa1, fs8","fa3,fa1,fs8",,f13,0x3f800000,True,True,No CSR
 0x00010ce0,0x311c4f13,,,x30,0x00000311,00010ce0,xori,t5:00000311,,311c4f13,3,"xori    t5, s8, 785","t5,s8,785",,x30,0x00000311,True,True,No CSR
@@ -933,7 +933,7 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x00010e8c,0xc0067ad3,,,x21,0x00000000,00010e8c,fcvt.w.s,s5:00000000,c1_fflags:0000001d,c0067ad3,3,"fcvt.w.s s5, fa2","s5,fa2",,x21,0x00000000,True,True,No CSR
 0x00010e90,0x021c90b3,,,x1,0x00000000,00010e90,mulh,ra:00000000,,021c90b3,3,"mulh    ra, s9, ra","ra,s9,ra",,x1,0x00000000,True,True,No CSR
 0x00010e94,0x29da1ad3,,,f21,0x44614000,00010e94,fmax.s,fs5:44614000,,29da1ad3,3,"fmax.s  fs5, fs4, ft9","fs5,fs4,ft9",,f21,0x44614000,True,True,No CSR
-0x00010e98,0x28ee1b53,,,f22,0x7f800000,00010e98,fmax.s,fs6:7f7fffff,,28ee1b53,3,"fmax.s  fs6, ft8, fa4","fs6,ft8,fa4",,f22,0x7f7fffff,True,False,No CSR
+0x00010e98,0x28ee1b53,,,f22,0x7f7fffff,00010e98,fmax.s,fs6:7f7fffff,,28ee1b53,3,"fmax.s  fs6, ft8, fa4","fs6,ft8,fa4",,f22,0x7f7fffff,True,True,No CSR
 0x00010e9c,0x01340c33,,,x24,0x00000000,00010e9c,add,s8:00000000,,01340c33,3,"add     s8, s0, s3","s8,s0,s3",,x24,0x00000000,True,True,No CSR
 0x00010ea0,0x4a024593,,,x11,0x000004a0,00010ea0,xori,a1:000004a0,,4a024593,3,"xori    a1, tp, 1184","a1,tp,1184",,x11,0x000004a0,True,True,No CSR
 0x00010ea4,0x00000013,,,,,00010ea4,addi,,,00000013,3,nop,"zero,zero,0",,,,No reg,No reg,No CSR
@@ -981,7 +981,7 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x00010f4c,0xe00a8853,,,x16,0x44614000,00010f4c,fmv.x.w,a6:44614000,,e00a8853,3,"fmv.x.w a6, fs5","a6,fs5",,x16,0x44614000,True,True,No CSR
 0x00010f50,0xa19d2853,,,x16,0x00000000,00010f50,feq.s,a6:00000000,,a19d2853,3,"feq.s   a6, fs10, fs9","a6,fs10,fs9",,x16,0x00000000,True,True,No CSR
 0x00010f54,0xe00d8bd3,,,x23,0xffc00000,00010f54,fmv.x.w,s7:ffc00000,,e00d8bd3,3,"fmv.x.w s7, fs11","s7,fs11",,x23,0xffc00000,True,True,No CSR
-0x00010f58,0x284b14d3,,,f9,0x7f800000,00010f58,fmax.s,fs1:7f7fffff,,284b14d3,3,"fmax.s  fs1, fs6, ft4","fs1,fs6,ft4",,f9,0x7f7fffff,True,False,No CSR
+0x00010f58,0x284b14d3,,,f9,0x7f7fffff,00010f58,fmax.s,fs1:7f7fffff,,284b14d3,3,"fmax.s  fs1, fs6, ft4","fs1,fs6,ft4",,f9,0x7f7fffff,True,True,No CSR
 0x00010f5c,0xc001fd53,,,x26,0x00000000,00010f5c,fcvt.w.s,s10:00000000,,c001fd53,3,"fcvt.w.s s10, ft3","s10,ft3",,x26,0x00000000,True,True,No CSR
 0x00010f60,0x20a92253,,,f4,0x7fc00000,00010f60,fsgnjx.s,ft4:7fc00000,,20a92253,3,"fsgnjx.s ft4, fs2, fa0","ft4,fs2,fa0",,f4,0x7fc00000,True,True,No CSR
 0x00010f64,0x0118bd33,,,x26,0x00000000,00010f64,sltu,s10:00000000,,0118bd33,3,"sltu    s10, a7, a7","s10,a7,a7",,x26,0x00000000,True,True,No CSR
@@ -1024,7 +1024,7 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x00010ff8,0x07bbbf37,,,x30,0x07bbb000,00010ff8,lui,t5:07bbb000,,07bbbf37,3,"lui     t5, 0x7bbb","t5,0x7bbb",,x30,0x07bbb000,True,True,No CSR
 0x00010ffc,0x1995f853,c1_fflags,0x00000002,f16,0x7fc00000,00010ffc,fdiv.s,fa6:7fc00000,,1995f853,3,"fdiv.s  fa6, fa1, fs9","fa6,fa1,fs9",,f16,0x7fc00000,True,True,Mismatched CSR access!
 0x00011000,0x0037dc93,,,x25,0x00000000,00011000,srli,s9:00000000,,0037dc93,3,"srli    s9, a5, 3","s9,a5,3",,x25,0x00000000,True,True,No CSR
-0x00011004,0x109378d3,c1_fflags,0x00000012,f17,0x7fc00000,00011004,fmul.s,fa7:00000000,,109378d3,3,"fmul.s  fa7, ft6, fs1","fa7,ft6,fs1",,f17,0x00000000,True,False,Mismatched CSR access!
+0x00011004,0x109378d3,c1_fflags,0x00000002,f17,0x00000000,00011004,fmul.s,fa7:00000000,,109378d3,3,"fmul.s  fa7, ft6, fs1","fa7,ft6,fs1",,f17,0x00000000,True,True,Mismatched CSR access!
 0x00011008,0x291a1453,,,f8,0x44614000,00011008,fmax.s,fs0:44614000,,291a1453,3,"fmax.s  fs0, fs4, fa7","fs0,fs4,fa7",,f8,0x44614000,True,True,No CSR
 0x0001100c,0x01b1f5b3,,,x11,0x00000000,0001100c,and,a1:00000000,,01b1f5b3,3,"and     a1, gp, s11","a1,gp,s11",,x11,0x00000000,True,True,No CSR
 0x00011010,0x1835fbd3,c1_fflags,0x00000018,f23,0x7fc00000,00011010,fdiv.s,fs7:7fc00000,c1_fflags:0000001d,1835fbd3,3,"fdiv.s  fs7, fa1, ft3","fs7,fa1,ft3",,f23,0x7fc00000,True,True,Mismatched CSR Value!
@@ -1062,14 +1062,14 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x00011090,0xd008f3d3,,,f7,0x00000000,00011090,fcvt.s.w,ft7:00000000,,d008f3d3,3,"fcvt.s.w ft7, a7","ft7,a7",,f7,0x00000000,True,True,No CSR
 0x00011094,0x20ec9453,,,f8,0xffc00000,00011094,fsgnjn.s,fs0:ffc00000,,20ec9453,3,"fsgnjn.s fs0, fs9, fa4","fs0,fs9,fa4",,f8,0xffc00000,True,True,No CSR
 0x00011098,0x01b79893,,,x17,0x00000000,00011098,slli,a7:00000000,,01b79893,3,"slli    a7, a5, 27","a7,a5,27",,x17,0x00000000,True,True,No CSR
-0x0001109c,0x289117d3,,,f15,0x7f800000,0001109c,fmax.s,fa5:7f7fffff,,289117d3,3,"fmax.s  fa5, ft2, fs1","fa5,ft2,fs1",,f15,0x7f7fffff,True,False,No CSR
+0x0001109c,0x289117d3,,,f15,0x7f7fffff,0001109c,fmax.s,fa5:7f7fffff,,289117d3,3,"fmax.s  fa5, ft2, fs1","fa5,ft2,fs1",,f15,0x7f7fffff,True,True,No CSR
 0x000110a0,0x41830233,,,x4,0x00000000,000110a0,sub,tp:00000000,,41830233,3,"sub     tp, t1, s8","tp,t1,s8",,x4,0x00000000,True,True,No CSR
 0x000110a4,0x01d14d33,,,x26,0x664fc351,000110a4,xor,s10:664fc351,,01d14d33,3,"xor     s10, sp, t4","s10,sp,t4",,x26,0x664fc351,True,True,No CSR
 0x000110a8,0x03cbdab3,,,x21,0xffffffff,000110a8,divu,s5:ffffffff,,03cbdab3,3,"divu    s5, s7, t3","s5,s7,t3",,x21,0xffffffff,True,True,No CSR
 0x000110ac,0x4d0eb513,,,x10,0x00000000,000110ac,sltiu,a0:00000000,,4d0eb513,3,"sltiu   a0, t4, 1232","a0,t4,1232",,x10,0x00000000,True,True,No CSR
 0x000110b0,0x00f75d13,,,x26,0x00000000,000110b0,srli,s10:00000000,,00f75d13,3,"srli    s10, a4, 15","s10,a4,15",,x26,0x00000000,True,True,No CSR
 0x000110b4,0x007e43b3,,,x7,0xfffffeb6,000110b4,xor,t2:fffffeb6,,007e43b3,3,"xor     t2, t3, t2","t2,t3,t2",,x7,0xfffffeb6,True,True,No CSR
-0x000110b8,0x580770d3,c1_fflags,0x00000005,f1,0x7f800000,000110b8,fsqrt.s,ft1:5f7fffff,c1_fflags:0000001d,580770d3,3,"fsqrt.s ft1, fa4","ft1,fa4",,f1,0x5f7fffff,True,False,Mismatched CSR Value!
+0x000110b8,0x580770d3,,,f1,0x5f7fffff,000110b8,fsqrt.s,ft1:5f7fffff,c1_fflags:0000001d,580770d3,3,"fsqrt.s ft1, fa4","ft1,fa4",,f1,0x5f7fffff,True,True,No CSR
 0x000110bc,0x00000013,,,,,000110bc,addi,,,00000013,3,nop,"zero,zero,0",,,,No reg,No reg,No CSR
 0x000110c0,0x4075db93,,,x23,0xffffffc0,000110c0,srai,s7:ffffffc0,,4075db93,3,"srai    s7, a1, 7","s7,a1,7",,x23,0xffffffc0,True,True,No CSR
 0x000110c4,0x102377d3,,,f15,0x7fc00000,000110c4,fmul.s,fa5:7fc00000,,102377d3,3,"fmul.s  fa5, ft6, ft2","fa5,ft6,ft2",,f15,0x7fc00000,True,True,No CSR
@@ -1083,11 +1083,11 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x000110e4,0xc00cf5d3,,,x11,0x7fffffff,000110e4,fcvt.w.s,a1:7fffffff,c1_fflags:0000001d,c00cf5d3,3,"fcvt.w.s a1, fs9","a1,fs9",,x11,0x7fffffff,True,True,No CSR
 0x000110e8,0xe00d1a53,,,x20,0x00000010,000110e8,fclass.s,s4:00000010,,e00d1a53,3,"fclass.s s4, fs10","s4,fs10",,x20,0x00000010,True,True,No CSR
 0x000110ec,0xc000fbd3,,,x23,0x7fffffff,000110ec,fcvt.w.s,s7:7fffffff,c1_fflags:0000001d,c000fbd3,3,"fcvt.w.s s7, ft1","s7,ft1",,x23,0x7fffffff,True,True,No CSR
-0x000110f0,0xe0070bd3,,,x23,0x7f800000,000110f0,fmv.x.w,s7:7f7fffff,,e0070bd3,3,"fmv.x.w s7, fa4","s7,fa4",,x23,0x7f7fffff,True,False,No CSR
+0x000110f0,0xe0070bd3,,,x23,0x7f7fffff,000110f0,fmv.x.w,s7:7f7fffff,,e0070bd3,3,"fmv.x.w s7, fa4","s7,fa4",,x23,0x7f7fffff,True,True,No CSR
 0x000110f4,0x4036d813,,,x16,0x00000000,000110f4,srai,a6:00000000,,4036d813,3,"srai    a6, a3, 3","a6,a3,3",,x16,0x00000000,True,True,No CSR
 0x000110f8,0x018b6033,,,,,000110f8,or,,,018b6033,3,"or      zero, s6, s8","zero,s6,s8",,,,No reg,No reg,No CSR
 0x000110fc,0xf0018cd3,,,f25,0x799cc000,000110fc,fmv.w.x,fs9:799cc000,,f0018cd3,3,"fmv.w.x fs9, gp","fs9,gp",,f25,0x799cc000,True,True,No CSR
-0x00011100,0x017868b3,,,x17,0x7f800000,00011100,or,a7:7f7fffff,,017868b3,3,"or      a7, a6, s7","a7,a6,s7",,x17,0x7f7fffff,True,False,No CSR
+0x00011100,0x017868b3,,,x17,0x7f7fffff,00011100,or,a7:7f7fffff,,017868b3,3,"or      a7, a6, s7","a7,a6,s7",,x17,0x7f7fffff,True,True,No CSR
 0x00011104,0x00000013,,,,,00011104,addi,,,00000013,3,nop,"zero,zero,0",,,,No reg,No reg,No CSR
 0x00011108,0x9a516993,,,x19,0xffffffb5,00011108,ori,s3:ffffffb5,,9a516993,3,"ori     s3, sp, -1627","s3,sp,-1627",,x19,0xffffffb5,True,True,No CSR
 0x0001110c,0x0056d133,,,x2,0x00000000,0001110c,srl,sp:00000000,,0056d133,3,"srl     sp, a3, t0","sp,a3,t0",,x2,0x00000000,True,True,No CSR
@@ -1095,7 +1095,7 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x00011114,0x036852b3,,,x5,0x00000000,00011114,divu,t0:00000000,,036852b3,3,"divu    t0, a6, s6","t0,a6,s6",,x5,0x00000000,True,True,No CSR
 0x00011118,0x18c619b7,,,x19,0x18c61000,00011118,lui,s3:18c61000,,18c619b7,3,"lui     s3, 0x18c61","s3,0x18c61",,x19,0x18c61000,True,True,No CSR
 0x0001111c,0xc005f053,,,,,0001111c,fcvt.w.s,,,c005f053,3,"fcvt.w.s zero, fa1","zero,fa1",,,,No reg,No reg,No CSR
-0x00011120,0x01118cb3,,,x25,0xf91cc000,00011120,add,s9:f91cbfff,,01118cb3,3,"add     s9, gp, a7","s9,gp,a7",,x25,0xf91cbfff,True,False,No CSR
+0x00011120,0x01118cb3,,,x25,0xf91cbfff,00011120,add,s9:f91cbfff,,01118cb3,3,"add     s9, gp, a7","s9,gp,a7",,x25,0xf91cbfff,True,True,No CSR
 0x00011124,0x21ba8153,,,f2,0xc4614000,00011124,fsgnj.s,ft2:c4614000,,21ba8153,3,"fsgnj.s ft2, fs5, fs11","ft2,fs5,fs11",,f2,0xc4614000,True,True,No CSR
 0x00011128,0x1d79c113,,,x2,0x18c611d7,00011128,xori,sp:18c611d7,,1d79c113,3,"xori    sp, s3, 471","sp,s3,471",,x2,0x18c611d7,True,True,No CSR
 0x0001112c,0x03ddb733,,,x14,0x0000df83,0001112c,mulhu,a4:0000df83,,03ddb733,3,"mulhu   a4, s11, t4","a4,s11,t4",,x14,0x0000df83,True,True,No CSR
@@ -1135,7 +1135,7 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x000111b4,0x00c0a9b3,,,x19,0x00000000,000111b4,slt,s3:00000000,,00c0a9b3,3,"slt     s3, ra, a2","s3,ra,a2",,x19,0x00000000,True,True,No CSR
 0x000111b8,0x40fdd193,,,x3,0x00000002,000111b8,srai,gp:00000002,,40fdd193,3,"srai    gp, s11, 15","gp,s11,15",,x3,0x00000002,True,True,No CSR
 0x000111bc,0x002d2033,,,,,000111bc,slt,,,002d2033,3,"slt     zero, s10, sp","zero,s10,sp",,,,No reg,No reg,No CSR
-0x000111c0,0x5808fdd3,,,f27,0x7fc00000,000111c0,fsqrt.s,fs11:00000000,,5808fdd3,3,"fsqrt.s fs11, fa7","fs11,fa7",,f27,0x00000000,True,False,No CSR
+0x000111c0,0x5808fdd3,,,f27,0x00000000,000111c0,fsqrt.s,fs11:00000000,,5808fdd3,3,"fsqrt.s fs11, fa7","fs11,fa7",,f27,0x00000000,True,True,No CSR
 0x000111c4,0x03c9ce33,,,x28,0xffffffff,000111c4,div,t3:ffffffff,,03c9ce33,3,"div     t3, s3, t3","t3,s3,t3",,x28,0xffffffff,True,True,No CSR
 0x000111c8,0x03b52a33,,,x20,0x00000000,000111c8,mulhsu,s4:00000000,,03b52a33,3,"mulhsu  s4, a0, s11","s4,a0,s11",,x20,0x00000000,True,True,No CSR
 0x000111cc,0x00a69133,,,x2,0x00000000,000111cc,sll,sp:00000000,,00a69133,3,"sll     sp, a3, a0","sp,a3,a0",,x2,0x00000000,True,True,No CSR
@@ -1219,7 +1219,7 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x00011304,0x00636033,,,,,00011304,or,,,00636033,3,"or      zero, t1, t1","zero,t1,t1",,,,No reg,No reg,No CSR
 0x00011308,0x28ac1bd3,,,f23,0x7fc00000,00011308,fmax.s,fs7:7fc00000,,28ac1bd3,3,"fmax.s  fs7, fs8, fa0","fs7,fs8,fa0",,f23,0x7fc00000,True,True,No CSR
 0x0001130c,0x020510b3,,,x1,0x00000000,0001130c,mulh,ra:00000000,,020510b3,3,"mulh    ra, a0, zero","ra,a0,zero",,x1,0x00000000,True,True,No CSR
-0x00011310,0xa0b8aad3,,,x21,0x00000000,00011310,feq.s,s5:00000001,,a0b8aad3,3,"feq.s   s5, fa7, fa1","s5,fa7,fa1",,x21,0x00000001,True,False,No CSR
+0x00011310,0xa0b8aad3,,,x21,0x00000001,00011310,feq.s,s5:00000001,,a0b8aad3,3,"feq.s   s5, fa7, fa1","s5,fa7,fa1",,x21,0x00000001,True,True,No CSR
 0x00011314,0x02f3b433,,,x8,0x00000000,00011314,mulhu,s0:00000000,,02f3b433,3,"mulhu   s0, t2, a5","s0,t2,a5",,x8,0x00000000,True,True,No CSR
 0x00011318,0x21d60453,,,f8,0x7fc00000,00011318,fsgnj.s,fs0:7fc00000,,21d60453,3,"fsgnj.s fs0, fa2, ft9","fs0,fa2,ft9",,f8,0x7fc00000,True,True,No CSR
 0x0001131c,0x40a50533,,,x10,0x00000000,0001131c,sub,a0:00000000,,40a50533,3,"sub     a0, a0, a0","a0,a0,a0",,x10,0x00000000,True,True,No CSR
@@ -1296,7 +1296,7 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x00011438,0x20912753,,,f14,0x7fc00000,00011438,fsgnjx.s,fa4:7fc00000,,20912753,3,"fsgnjx.s fa4, ft2, fs1","fa4,ft2,fs1",,f14,0x7fc00000,True,True,No CSR
 0x0001143c,0x2a1feb13,,,x22,0x00017fe5,0001143c,ori,s6:00017fe5,,2a1feb13,3,"ori     s6, t6, 673","s6,t6,673",,x22,0x00017fe5,True,True,No CSR
 0x00011440,0x028623b3,,,x7,0x00000398,00011440,mulhsu,t2:00000398,,028623b3,3,"mulhsu  t2, a2, s0","t2,a2,s0",,x7,0x00000398,True,True,No CSR
-0x00011444,0x203897d3,,,f15,0xffc00000,00011444,fsgnjn.s,fa5:80000000,,203897d3,3,"fsgnjn.s fa5, fa7, ft3","fa5,fa7,ft3",,f15,0x80000000,True,False,No CSR
+0x00011444,0x203897d3,,,f15,0x80000000,00011444,fsgnjn.s,fa5:80000000,,203897d3,3,"fsgnjn.s fa5, fa7, ft3","fa5,fa7,ft3",,f15,0x80000000,True,True,No CSR
 0x00011448,0xe00d8053,,,,,00011448,fmv.x.w,,,e00d8053,3,"fmv.x.w zero, fs11","zero,fs11",,,,No reg,No reg,No CSR
 0x0001144c,0x6df6b013,,,,,0001144c,sltiu,,,6df6b013,3,"sltiu   zero, a3, 1759","zero,a3,1759",,,,No reg,No reg,No CSR
 0x00011450,0x03759033,,,,,00011450,mulh,,,03759033,3,"mulh    zero, a1, s7","zero,a1,s7",,,,No reg,No reg,No CSR
@@ -1320,7 +1320,7 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x00011498,0xbf9d7b13,,,x22,0x00017818,00011498,andi,s6:00017818,,bf9d7b13,3,"andi    s6, s10, -1031","s6,s10,-1031",,x22,0x00017818,True,True,No CSR
 0x0001149c,0xc01df5d3,,,x11,0x00000000,0001149c,fcvt.wu.s,a1:00000000,,c01df5d3,3,"fcvt.wu.s a1, fs11","a1,fs11",,x11,0x00000000,True,True,No CSR
 0x000114a0,0xd010f4d3,,,f9,0x4f7fffff,000114a0,fcvt.s.wu,fs1:4f7fffff,c1_fflags:0000001d,d010f4d3,3,"fcvt.s.wu fs1, ra","fs1,ra",,f9,0x4f7fffff,True,True,No CSR
-0x000114a4,0x29130153,,,f2,0x7fc00000,000114a4,fmin.s,ft2:00000000,,29130153,3,"fmin.s  ft2, ft6, fa7","ft2,ft6,fa7",,f2,0x00000000,True,False,No CSR
+0x000114a4,0x29130153,,,f2,0x00000000,000114a4,fmin.s,ft2:00000000,,29130153,3,"fmin.s  ft2, ft6, fa7","ft2,ft6,fa7",,f2,0x00000000,True,True,No CSR
 0x000114a8,0x0052dc93,,,x25,0x009a0000,000114a8,srli,s9:009a0000,,0052dc93,3,"srli    s9, t0, 5","s9,t0,5",,x25,0x009a0000,True,True,No CSR
 0x000114ac,0x1b866893,,,x17,0xa59647fd,000114ac,ori,a7:a59647fd,,1b866893,3,"ori     a7, a2, 440","a7,a2,440",,x17,0xa59647fd,True,True,No CSR
 0x000114b0,0x204e0f53,,,f30,0x58bd1000,000114b0,fsgnj.s,ft10:58bd1000,,204e0f53,3,"fsgnj.s ft10, ft8, ft4","ft10,ft8,ft4",,f30,0x58bd1000,True,True,No CSR
@@ -1338,7 +1338,7 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x000114e0,0x914b7e13,,,x28,0x00017810,000114e0,andi,t3:00017810,,914b7e13,3,"andi    t3, s6, -1772","t3,s6,-1772",,x28,0x00017810,True,True,No CSR
 0x000114e4,0x0350c833,,,x16,0x00000000,000114e4,div,a6:00000000,,0350c833,3,"div     a6, ra, s5","a6,ra,s5",,x16,0x00000000,True,True,No CSR
 0x000114e8,0x012e1c13,,,x24,0xe0400000,000114e8,slli,s8:e0400000,,012e1c13,3,"slli    s8, t3, 18","s8,t3,18",,x24,0xe0400000,True,True,No CSR
-0x000114ec,0x21b12653,,,f12,0xffc00000,000114ec,fsgnjx.s,fa2:80000000,,21b12653,3,"fsgnjx.s fa2, ft2, fs11","fa2,ft2,fs11",,f12,0x80000000,True,False,No CSR
+0x000114ec,0x21b12653,,,f12,0x80000000,000114ec,fsgnjx.s,fa2:80000000,,21b12653,3,"fsgnjx.s fa2, ft2, fs11","fa2,ft2,fs11",,f12,0x80000000,True,True,No CSR
 0x000114f0,0x016489b3,,,x19,0x0001781a,000114f0,add,s3:0001781a,,016489b3,3,"add     s3, s1, s6","s3,s1,s6",,x19,0x0001781a,True,True,No CSR
 0x000114f4,0x09e3f3d3,,,f7,0x7fc00000,000114f4,fsub.s,ft7:7fc00000,,09e3f3d3,3,"fsub.s  ft7, ft7, ft10","ft7,ft7,ft10",,f7,0x7fc00000,True,True,No CSR
 0x000114f8,0xf6bbac93,,,x25,0x00000000,000114f8,slti,s9:00000000,,f6bbac93,3,"slti    s9, s7, -149","s9,s7,-149",,x25,0x00000000,True,True,No CSR
@@ -1360,8 +1360,8 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x00011538,0x217e2837,,,x16,0x217e2000,00011538,lui,a6:217e2000,,217e2837,3,"lui     a6, 0x217e2","a6,0x217e2",,x16,0x217e2000,True,True,No CSR
 0x0001153c,0x00789813,,,x16,0xcb23fe80,0001153c,slli,a6:cb23fe80,,00789813,3,"slli    a6, a7, 7","a6,a7,7",,x16,0xcb23fe80,True,True,No CSR
 0x00011540,0x01178633,,,x12,0xa5964849,00011540,add,a2:a5964849,,01178633,3,"add     a2, a5, a7","a2,a5,a7",,x12,0xa5964849,True,True,No CSR
-0x00011544,0x00c8f253,c1_fflags,0x00000002,f4,0x7fc00000,00011544,fadd.s,ft4:00000000,,00c8f253,3,"fadd.s  ft4, fa7, fa2","ft4,fa7,fa2",,f4,0x00000000,True,False,Mismatched CSR access!
-0x00011548,0x1095fdd3,,,f27,0x7fc00000,00011548,fmul.s,fs11:7fc00000,,1095fdd3,3,"fmul.s  fs11, fa1, fs1","fs11,fa1,fs1",,f27,0x7fc00000,True,True,No CSR
+0x00011544,0x00c8f253,c1_fflags,0x00000002,f4,0x00000000,00011544,fadd.s,ft4:00000000,,00c8f253,3,"fadd.s  ft4, fa7, fa2","ft4,fa7,fa2",,f4,0x00000000,True,True,Mismatched CSR access!
+0x00011548,0x1095fdd3,c1_fflags,0x00000002,f27,0x7fc00000,00011548,fmul.s,fs11:7fc00000,,1095fdd3,3,"fmul.s  fs11, fa1, fs1","fs11,fa1,fs1",,f27,0x7fc00000,True,True,Mismatched CSR access!
 0x0001154c,0x00795d13,,,x26,0x00000000,0001154c,srli,s10:00000000,,00795d13,3,"srli    s10, s2, 7","s10,s2,7",,x26,0x00000000,True,True,No CSR
 0x00011550,0x41585033,,,,,00011550,sra,,,41585033,3,"sra     zero, a6, s5","zero,a6,s5",,,,No reg,No reg,No CSR
 0x00011554,0x208d14d3,,,f9,0x80000000,00011554,fsgnjn.s,fs1:80000000,,208d14d3,3,"fsgnjn.s fs1, fs10, fs0","fs1,fs10,fs0",,f9,0x80000000,True,True,No CSR
@@ -1371,31 +1371,31 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x00011564,0x210aa453,,,f8,0x44614000,00011564,fsgnjx.s,fs0:44614000,,210aa453,3,"fsgnjx.s fs0, fs5, fa6","fs0,fs5,fa6",,f8,0x44614000,True,True,No CSR
 0x00011568,0x7ead3037,,,,,00011568,lui,,,7ead3037,3,"lui     zero, 0x7ead3","zero,0x7ead3",,,,No reg,No reg,No CSR
 0x0001156c,0xf00684d3,,,f9,0x7fc00000,0001156c,fmv.w.x,fs1:7fc00000,,f00684d3,3,"fmv.w.x fs1, a3","fs1,a3",,f9,0x7fc00000,True,True,No CSR
-0x00011570,0xe0088553,,,x10,0x7fc00000,00011570,fmv.x.w,a0:00000000,,e0088553,3,"fmv.x.w a0, fa7","a0,fa7",,x10,0x00000000,True,False,No CSR
+0x00011570,0xe0088553,,,x10,0x00000000,00011570,fmv.x.w,a0:00000000,,e0088553,3,"fmv.x.w a0, fa7","a0,fa7",,x10,0x00000000,True,True,No CSR
 0x00011574,0xd00e7a53,,,f20,0x3f800000,00011574,fcvt.s.w,fs4:3f800000,,d00e7a53,3,"fcvt.s.w fs4, t3","fs4,t3",,f20,0x3f800000,True,True,No CSR
 0x00011578,0xc01c7253,,,x4,0x00000000,00011578,fcvt.wu.s,tp:00000000,,c01c7253,3,"fcvt.wu.s tp, fs8","tp,fs8",,x4,0x00000000,True,True,No CSR
 0x0001157c,0x0009f5b3,,,x11,0x00000000,0001157c,and,a1:00000000,,0009f5b3,3,"and     a1, s3, zero","a1,s3,zero",,x11,0x00000000,True,True,No CSR
 0x00011580,0x0079c233,,,x4,0x00017b82,00011580,xor,tp:00017b82,,0079c233,3,"xor     tp, s3, t2","tp,s3,t2",,x4,0x00017b82,True,True,No CSR
 0x00011584,0x282f81d3,,,f3,0x00000000,00011584,fmin.s,ft3:00000000,,282f81d3,3,"fmin.s  ft3, ft11, ft2","ft3,ft11,ft2",,f3,0x00000000,True,True,No CSR
-0x00011588,0xe0010553,,,x10,0x7fc00000,00011588,fmv.x.w,a0:00000000,,e0010553,3,"fmv.x.w a0, ft2","a0,ft2",,x10,0x00000000,True,False,No CSR
+0x00011588,0xe0010553,,,x10,0x00000000,00011588,fmv.x.w,a0:00000000,,e0010553,3,"fmv.x.w a0, ft2","a0,ft2",,x10,0x00000000,True,True,No CSR
 0x0001158c,0x010a3bb3,,,x23,0x00000001,0001158c,sltu,s7:00000001,,010a3bb3,3,"sltu    s7, s4, a6","s7,s4,a6",,x23,0x00000001,True,True,No CSR
 0x00011590,0xd019ffd3,,,f31,0x47bc0d00,00011590,fcvt.s.wu,ft11:47bc0d00,,d019ffd3,3,"fcvt.s.wu ft11, s3","ft11,s3",,f31,0x47bc0d00,True,True,No CSR
 0x00011594,0x681c3393,,,x7,0x00000000,00011594,sltiu,t2:00000000,,681c3393,3,"sltiu   t2, s8, 1665","t2,s8,1665",,x7,0x00000000,True,True,No CSR
-0x00011598,0x0987f1d3,,,f3,0x7fc00000,00011598,fsub.s,ft3:80000000,,0987f1d3,3,"fsub.s  ft3, fa5, fs8","ft3,fa5,fs8",,f3,0x80000000,True,False,No CSR
+0x00011598,0x0987f1d3,c1_fflags,0x00000002,f3,0x80000000,00011598,fsub.s,ft3:80000000,,0987f1d3,3,"fsub.s  ft3, fa5, fs8","ft3,fa5,fs8",,f3,0x80000000,True,True,Mismatched CSR access!
 0x0001159c,0x281912d3,,,f5,0x00000000,0001159c,fmax.s,ft5:00000000,,281912d3,3,"fmax.s  ft5, fs2, ft1","ft5,fs2,ft1",,f5,0x00000000,True,True,No CSR
 0x000115a0,0x015c1813,,,x16,0x00000000,000115a0,slli,a6:00000000,,015c1813,3,"slli    a6, s8, 21","a6,s8,21",,x16,0x00000000,True,True,No CSR
 0x000115a4,0xc66d0b13,,,x22,0xfffffc66,000115a4,addi,s6:fffffc66,,c66d0b13,3,"addi    s6, s10, -922","s6,s10,-922",,x22,0xfffffc66,True,True,No CSR
 0x000115a8,0x03690633,,,x12,0xffffc660,000115a8,mul,a2:ffffc660,,03690633,3,"mul     a2, s2, s6","a2,s2,s6",,x12,0xffffc660,True,True,No CSR
 0x000115ac,0x03c2d4b3,,,x9,0x13400000,000115ac,divu,s1:13400000,,03c2d4b3,3,"divu    s1, t0, t3","s1,t0,t3",,x9,0x13400000,True,True,No CSR
 0x000115b0,0x012452b3,,,x5,0x0000ffff,000115b0,srl,t0:0000ffff,,012452b3,3,"srl     t0, s0, s2","t0,s0,s2",,x5,0x0000ffff,True,True,No CSR
-0x000115b4,0x20920b53,,,f22,0x7fc00000,000115b4,fsgnj.s,fs6:00000000,,20920b53,3,"fsgnj.s fs6, ft4, fs1","fs6,ft4,fs1",,f22,0x00000000,True,False,No CSR
+0x000115b4,0x20920b53,,,f22,0x00000000,000115b4,fsgnj.s,fs6:00000000,,20920b53,3,"fsgnj.s fs6, ft4, fs1","fs6,ft4,fs1",,f22,0x00000000,True,True,No CSR
 0x000115b8,0x03b841b3,,,x3,0x00000000,000115b8,div,gp:00000000,,03b841b3,3,"div     gp, a6, s11","gp,a6,s11",,x3,0x00000000,True,True,No CSR
 0x000115bc,0xe00e9d53,,,x26,0x00000008,000115bc,fclass.s,s10:00000008,,e00e9d53,3,"fclass.s s10, ft9","s10,ft9",,x26,0x00000008,True,True,No CSR
 0x000115c0,0x021e1cb3,,,x25,0xffffffff,000115c0,mulh,s9:ffffffff,,021e1cb3,3,"mulh    s9, t3, ra","s9,t3,ra",,x25,0xffffffff,True,True,No CSR
 0x000115c4,0x004f5033,,,,,000115c4,srl,,,004f5033,3,"srl     zero, t5, tp","zero,t5,tp",,,,No reg,No reg,No CSR
 0x000115c8,0x02815d33,,,x26,0x00000000,000115c8,divu,s10:00000000,,02815d33,3,"divu    s10, sp, s0","s10,sp,s0",,x26,0x00000000,True,True,No CSR
 0x000115cc,0x194cf653,,,f12,0x47bc0a00,000115cc,fdiv.s,fa2:47bc0a00,,194cf653,3,"fdiv.s  fa2, fs9, fs4","fa2,fs9,fs4",,f12,0x47bc0a00,True,True,No CSR
-0x000115d0,0x102e7e53,,,f28,0x7fc00000,000115d0,fmul.s,ft8:00000000,,102e7e53,3,"fmul.s  ft8, ft8, ft2","ft8,ft8,ft2",,f28,0x00000000,True,False,No CSR
+0x000115d0,0x102e7e53,c1_fflags,0x00000002,f28,0x00000000,000115d0,fmul.s,ft8:00000000,,102e7e53,3,"fmul.s  ft8, ft8, ft2","ft8,ft8,ft2",,f28,0x00000000,True,True,Mismatched CSR access!
 0x000115d4,0x03dcc933,,,x18,0x00000000,000115d4,div,s2:00000000,,03dcc933,3,"div     s2, s9, t4","s2,s9,t4",,x18,0x00000000,True,True,No CSR
 0x000115d8,0x21730553,,,f10,0x7fc00000,000115d8,fsgnj.s,fa0:7fc00000,,21730553,3,"fsgnj.s fa0, ft6, fs7","fa0,ft6,fs7",,f10,0x7fc00000,True,True,No CSR
 0x000115dc,0xe0049453,,,x8,0x00000200,000115dc,fclass.s,s0:00000200,,e0049453,3,"fclass.s s0, fs1","s0,fs1",,x8,0x00000200,True,True,No CSR
@@ -1408,7 +1408,7 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x000115f8,0xd0127fd3,,,f31,0x47bdc100,000115f8,fcvt.s.wu,ft11:47bdc100,,d0127fd3,3,"fcvt.s.wu ft11, tp","ft11,tp",,f31,0x47bdc100,True,True,No CSR
 0x000115fc,0x00000013,,,,,000115fc,addi,,,00000013,3,nop,"zero,zero,0",,,,No reg,No reg,No CSR
 0x00011600,0x540f7e13,,,x28,0x00000000,00011600,andi,t3:00000000,,540f7e13,3,"andi    t3, t5, 1344","t3,t5,1344",,x28,0x00000000,True,True,No CSR
-0x00011604,0x18fff153,c1_fflags,0x00000002,f2,0x7fc00000,00011604,fdiv.s,ft2:ff800000,c1_fflags:0000001d,18fff153,3,"fdiv.s  ft2, ft11, fa5","ft2,ft11,fa5",,f2,0xff800000,True,False,Mismatched CSR Value!
+0x00011604,0x18fff153,c1_fflags,0x0000000d,f2,0xff800000,00011604,fdiv.s,ft2:ff800000,c1_fflags:0000001d,18fff153,3,"fdiv.s  ft2, ft11, fa5","ft2,ft11,fa5",,f2,0xff800000,True,True,Mismatched CSR Value!
 0x00011608,0x400382b3,,,x5,0x00000000,00011608,sub,t0:00000000,,400382b3,3,"sub     t0, t2, zero","t0,t2,zero",,x5,0x00000000,True,True,No CSR
 0x0001160c,0x8f6e4093,,,x1,0xfffff8f6,0001160c,xori,ra:fffff8f6,,8f6e4093,3,"xori    ra, t3, -1802","ra,t3,-1802",,x1,0xfffff8f6,True,True,No CSR
 0x00011610,0x00b94cb3,,,x25,0x00000000,00011610,xor,s9:00000000,,00b94cb3,3,"xor     s9, s2, a1","s9,s2,a1",,x25,0x00000000,True,True,No CSR
@@ -1420,10 +1420,10 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x00011628,0x21469e53,,,f28,0xffc00000,00011628,fsgnjn.s,ft8:ffc00000,,21469e53,3,"fsgnjn.s ft8, fa3, fs4","ft8,fa3,fs4",,f28,0xffc00000,True,True,No CSR
 0x0001162c,0x193f70d3,c1_fflags,0x0000000d,f1,0x7f800000,0001162c,fdiv.s,ft1:7f800000,c1_fflags:0000001d,193f70d3,3,"fdiv.s  ft1, ft10, fs3","ft1,ft10,fs3",,f1,0x7f800000,True,True,Mismatched CSR Value!
 0x00011630,0xe0051153,,,x2,0x00000200,00011630,fclass.s,sp:00000200,,e0051153,3,"fclass.s sp, fa0","sp,fa0",,x2,0x00000200,True,True,No CSR
-0x00011634,0x203f9453,,,f8,0xc7bdc100,00011634,fsgnjn.s,fs0:47bdc100,,203f9453,3,"fsgnjn.s fs0, ft11, ft3","fs0,ft11,ft3",,f8,0x47bdc100,True,False,No CSR
+0x00011634,0x203f9453,,,f8,0x47bdc100,00011634,fsgnjn.s,fs0:47bdc100,,203f9453,3,"fsgnjn.s fs0, ft11, ft3","fs0,ft11,ft3",,f8,0x47bdc100,True,True,No CSR
 0x00011638,0xa1fa8553,,,x10,0x00000001,00011638,fle.s,a0:00000001,,a1fa8553,3,"fle.s   a0, fs5, ft11","a0,fs5,ft11",,x10,0x00000001,True,True,No CSR
 0x0001163c,0x01a20333,,,x6,0x00017b81,0001163c,add,t1:00017b81,,01a20333,3,"add     t1, tp, s10","t1,tp,s10",,x6,0x00017b81,True,True,No CSR
-0x00011640,0x09f474d3,,,f9,0xc83dc100,00011640,fsub.s,fs1:00000000,,09f474d3,3,"fsub.s  fs1, fs0, ft11","fs1,fs0,ft11",,f9,0x00000000,True,False,No CSR
+0x00011640,0x09f474d3,c1_fflags,0x00000003,f9,0x00000000,00011640,fsub.s,fs1:00000000,,09f474d3,3,"fsub.s  fs1, fs0, ft11","fs1,fs0,ft11",,f9,0x00000000,True,True,Mismatched CSR access!
 0x00011644,0x01af2533,,,x10,0x00000000,00011644,slt,a0:00000000,,01af2533,3,"slt     a0, t5, s10","a0,t5,s10",,x10,0x00000000,True,True,No CSR
 0x00011648,0x033cc7b3,,,x15,0x00000000,00011648,div,a5:00000000,,033cc7b3,3,"div     a5, s9, s3","a5,s9,s3",,x15,0x00000000,True,True,No CSR
 0x0001164c,0xd019f653,,,f12,0x47bc0d00,0001164c,fcvt.s.wu,fa2:47bc0d00,,d019f653,3,"fcvt.s.wu fa2, s3","fa2,s3",,f12,0x47bc0d00,True,True,No CSR
@@ -1446,9 +1446,9 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x00011690,0x842e2137,,,x2,0x842e2000,00011690,lui,sp:842e2000,,842e2137,3,"lui     sp, 0x842e2","sp,0x842e2",,x2,0x842e2000,True,True,No CSR
 0x00011694,0x41635333,,,x6,0x000005ee,00011694,sra,t1:000005ee,,41635333,3,"sra     t1, t1, s6","t1,t1,s6",,x6,0x000005ee,True,True,No CSR
 0x00011698,0x920dc8b7,,,x17,0x920dc000,00011698,lui,a7:920dc000,,920dc8b7,3,"lui     a7, 0x920dc","a7,0x920dc",,x17,0x920dc000,True,True,No CSR
-0x0001169c,0x284003d3,,,f7,0x7fc00000,0001169c,fmin.s,ft7:00000000,,284003d3,3,"fmin.s  ft7, ft0, ft4","ft7,ft0,ft4",,f7,0x00000000,True,False,No CSR
+0x0001169c,0x284003d3,,,f7,0x00000000,0001169c,fmin.s,ft7:00000000,,284003d3,3,"fmin.s  ft7, ft0, ft4","ft7,ft0,ft4",,f7,0x00000000,True,True,No CSR
 0x000116a0,0xde576013,,,,,000116a0,ori,,,de576013,3,"ori     zero, a4, -539","zero,a4,-539",,,,No reg,No reg,No CSR
-0x000116a4,0x009bf4d3,,,f9,0xc83dc100,000116a4,fadd.s,fs1:00000000,,009bf4d3,3,"fadd.s  fs1, fs7, fs1","fs1,fs7,fs1",,f9,0x00000000,True,False,No CSR
+0x000116a4,0x009bf4d3,c1_fflags,0x00000002,f9,0x00000000,000116a4,fadd.s,fs1:00000000,,009bf4d3,3,"fadd.s  fs1, fs7, fs1","fs1,fs7,fs1",,f9,0x00000000,True,True,Mismatched CSR access!
 0x000116a8,0x01432b33,,,x22,0x00000000,000116a8,slt,s6:00000000,,01432b33,3,"slt     s6, t1, s4","s6,t1,s4",,x22,0x00000000,True,True,No CSR
 0x000116ac,0x292b8253,,,f4,0x00000000,000116ac,fmin.s,ft4:00000000,,292b8253,3,"fmin.s  ft4, fs7, fs2","ft4,fs7,fs2",,f4,0x00000000,True,True,No CSR
 0x000116b0,0xa1eda353,,,x6,0x00000000,000116b0,feq.s,t1:00000000,,a1eda353,3,"feq.s   t1, fs11, ft10","t1,fs11,ft10",,x6,0x00000000,True,True,No CSR
@@ -1466,7 +1466,7 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x000116e0,0x038a0333,,,x6,0x00000000,000116e0,mul,t1:00000000,,038a0333,3,"mul     t1, s4, s8","t1,s4,s8",,x6,0x00000000,True,True,No CSR
 0x000116e4,0xe0030053,,,,,000116e4,fmv.x.w,,,e0030053,3,"fmv.x.w zero, ft6","zero,ft6",,,,No reg,No reg,No CSR
 0x000116e8,0xaf394a13,,,x20,0x00017aef,000116e8,xori,s4:00017aef,,af394a13,3,"xori    s4, s2, -1293","s4,s2,-1293",,x20,0x00017aef,True,True,No CSR
-0x000116ec,0x1889fcd3,c1_fflags,0x00000002,f25,0x80000000,000116ec,fdiv.s,fs9:00000000,,1889fcd3,3,"fdiv.s  fs9, fs3, fs0","fs9,fs3,fs0",,f25,0x00000000,True,False,Mismatched CSR access!
+0x000116ec,0x1889fcd3,c1_fflags,0x00000002,f25,0x00000000,000116ec,fdiv.s,fs9:00000000,,1889fcd3,3,"fdiv.s  fs9, fs3, fs0","fs9,fs3,fs0",,f25,0x00000000,True,True,Mismatched CSR access!
 0x000116f0,0x030ea5b3,,,x11,0x00000000,000116f0,mulhsu,a1:00000000,,030ea5b3,3,"mulhsu  a1, t4, a6","a1,t4,a6",,x11,0x00000000,True,True,No CSR
 0x000116f4,0x00eedc33,,,x24,0x4c12c630,000116f4,srl,s8:4c12c630,,00eedc33,3,"srl     s8, t4, a4","s8,t4,a4",,x24,0x4c12c630,True,True,No CSR
 0x000116f8,0x01bd71b3,,,x3,0x00017814,000116f8,and,gp:00017814,,01bd71b3,3,"and     gp, s10, s11","gp,s10,s11",,x3,0x00017814,True,True,No CSR
@@ -1492,22 +1492,22 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x00011748,0x00ac5433,,,x8,0x00018565,00011748,srl,s0:00018565,,00ac5433,3,"srl     s0, s8, a0","s0,s8,a0",,x8,0x00018565,True,True,No CSR
 0x0001174c,0xa0e40853,,,x16,0x00000000,0001174c,fle.s,a6:00000000,c1_fflags:0000001d,a0e40853,3,"fle.s   a6, fs0, fa4","a6,fs0,fa4",,x16,0x00000000,True,True,No CSR
 0x00011750,0x00000013,,,,,00011750,addi,,,00000013,3,nop,"zero,zero,0",,,,No reg,No reg,No CSR
-0x00011754,0x18fc71d3,c1_fflags,0x00000002,f3,0x7fc00000,00011754,fdiv.s,ft3:ff800000,c1_fflags:0000001d,18fc71d3,3,"fdiv.s  ft3, fs8, fa5","ft3,fs8,fa5",,f3,0xff800000,True,False,Mismatched CSR Value!
+0x00011754,0x18fc71d3,c1_fflags,0x0000000d,f3,0xff800000,00011754,fdiv.s,ft3:ff800000,c1_fflags:0000001d,18fc71d3,3,"fdiv.s  ft3, fs8, fa5","ft3,fs8,fa5",,f3,0xff800000,True,True,Mismatched CSR Value!
 0x00011758,0x00f27333,,,x6,0x00000000,00011758,and,t1:00000000,,00f27333,3,"and     t1, tp, a5","t1,tp,a5",,x6,0x00000000,True,True,No CSR
-0x0001175c,0x28c78ed3,,,f29,0x47bc0d00,0001175c,fmin.s,ft9:80000000,,28c78ed3,3,"fmin.s  ft9, fa5, fa2","ft9,fa5,fa2",,f29,0x80000000,True,False,No CSR
+0x0001175c,0x28c78ed3,,,f29,0x80000000,0001175c,fmin.s,ft9:80000000,,28c78ed3,3,"fmin.s  ft9, fa5, fa2","ft9,fa5,fa2",,f29,0x80000000,True,True,No CSR
 0x00011760,0x00988033,,,,,00011760,add,,,00988033,3,"add     zero, a7, s1","zero,a7,s1",,,,No reg,No reg,No CSR
 0x00011764,0xa1339853,,,x16,0x00000000,00011764,flt.s,a6:00000000,,a1339853,3,"flt.s   a6, ft7, fs3","a6,ft7,fs3",,x16,0x00000000,True,True,No CSR
 0x00011768,0x02728233,,,x4,0x00000001,00011768,mul,tp:00000001,,02728233,3,"mul     tp, t0, t2","tp,t0,t2",,x4,0x00000001,True,True,No CSR
 0x0001176c,0xe0050653,,,x12,0x7fc00000,0001176c,fmv.x.w,a2:7fc00000,,e0050653,3,"fmv.x.w a2, fa0","a2,fa0",,x12,0x7fc00000,True,True,No CSR
 0x00011770,0xf00b0e53,,,f28,0x67da739f,00011770,fmv.w.x,ft8:67da739f,,f00b0e53,3,"fmv.w.x ft8, s6","ft8,s6",,f28,0x67da739f,True,True,No CSR
-0x00011774,0x21970153,,,f2,0xffc00000,00011774,fsgnj.s,ft2:7fc00000,,21970153,3,"fsgnj.s ft2, fa4, fs9","ft2,fa4,fs9",,f2,0x7fc00000,True,False,No CSR
+0x00011774,0x21970153,,,f2,0x7fc00000,00011774,fsgnj.s,ft2:7fc00000,,21970153,3,"fsgnj.s ft2, fa4, fs9","ft2,fa4,fs9",,f2,0x7fc00000,True,True,No CSR
 0x00011778,0x01185993,,,x19,0x00000000,00011778,srli,s3:00000000,,01185993,3,"srli    s3, a6, 17","s3,a6,17",,x19,0x00000000,True,True,No CSR
 0x0001177c,0xdba5bc13,,,x24,0x00000001,0001177c,sltiu,s8:00000001,,dba5bc13,3,"sltiu   s8, a1, -582","s8,a1,-582",,x24,0x00000001,True,True,No CSR
 0x00011780,0x00ca9213,,,x4,0x00002000,00011780,slli,tp:00002000,,00ca9213,3,"slli    tp, s5, 12","tp,s5,12",,x4,0x00002000,True,True,No CSR
 0x00011784,0x20fa0e53,,,f28,0xbf800000,00011784,fsgnj.s,ft8:bf800000,,20fa0e53,3,"fsgnj.s ft8, fs4, fa5","ft8,fs4,fa5",,f28,0xbf800000,True,True,No CSR
 0x00011788,0xa1f6a1d3,,,x3,0x00000000,00011788,feq.s,gp:00000000,,a1f6a1d3,3,"feq.s   gp, fa3, ft11","gp,fa3,ft11",,x3,0x00000000,True,True,No CSR
 0x0001178c,0x014c0133,,,x2,0x00000002,0001178c,add,sp:00000002,,014c0133,3,"add     sp, s8, s4","sp,s8,s4",,x2,0x00000002,True,True,No CSR
-0x00011790,0x1188f253,c1_fflags,0x00000002,f4,0x7fc00000,00011790,fmul.s,ft4:00000000,,1188f253,3,"fmul.s  ft4, fa7, fs8","ft4,fa7,fs8",,f4,0x00000000,True,False,Mismatched CSR access!
+0x00011790,0x1188f253,c1_fflags,0x00000002,f4,0x00000000,00011790,fmul.s,ft4:00000000,,1188f253,3,"fmul.s  ft4, fa7, fs8","ft4,fa7,fs8",,f4,0x00000000,True,True,Mismatched CSR access!
 0x00011794,0xa1bc8053,,,,,00011794,fle.s,,c1_fflags:0000001d,a1bc8053,3,"fle.s   zero, fs9, fs11","zero,fs9,fs11",,,,No reg,No reg,No CSR
 0x00011798,0xe0090453,,,x8,0x7fc00000,00011798,fmv.x.w,s0:7fc00000,,e0090453,3,"fmv.x.w s0, fs2","s0,fs2",,x8,0x7fc00000,True,True,No CSR
 0x0001179c,0x40e7d193,,,x3,0x00000000,0001179c,srai,gp:00000000,,40e7d193,3,"srai    gp, a5, 14","gp,a5,14",,x3,0x00000000,True,True,No CSR
@@ -1528,8 +1528,8 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x000117d8,0x006960b3,,,x1,0xfffe801c,000117d8,or,ra:fffe801c,,006960b3,3,"or      ra, s2, t1","ra,s2,t1",,x1,0xfffe801c,True,True,No CSR
 0x000117dc,0x00d95733,,,x14,0xfffe801c,000117dc,srl,a4:fffe801c,,00d95733,3,"srl     a4, s2, a3","a4,s2,a3",,x14,0xfffe801c,True,True,No CSR
 0x000117e0,0x26c6b517,,,x10,0x26c7c7e0,000117e0,auipc,a0:26c7c7e0,,26c6b517,3,"auipc   a0, 0x26c6b","a0,0x26c6b",,x10,0x26c7c7e0,True,True,No CSR
-0x000117e4,0x0888f1d3,,,f3,0x7fc00000,000117e4,fsub.s,ft3:c7bdc100,,0888f1d3,3,"fsub.s  ft3, fa7, fs0","ft3,fa7,fs0",,f3,0xc7bdc100,True,False,No CSR
-0x000117e8,0xa09202d3,,,x5,0x00000000,000117e8,fle.s,t0:00000001,,a09202d3,3,"fle.s   t0, ft4, fs1","t0,ft4,fs1",,x5,0x00000001,True,False,No CSR
+0x000117e4,0x0888f1d3,,,f3,0xc7bdc100,000117e4,fsub.s,ft3:c7bdc100,,0888f1d3,3,"fsub.s  ft3, fa7, fs0","ft3,fa7,fs0",,f3,0xc7bdc100,True,True,No CSR
+0x000117e8,0xa09202d3,,,x5,0x00000001,000117e8,fle.s,t0:00000001,,a09202d3,3,"fle.s   t0, ft4, fs1","t0,ft4,fs1",,x5,0x00000001,True,True,No CSR
 0x000117ec,0x00c86e33,,,x28,0x7fc00000,000117ec,or,t3:7fc00000,,00c86e33,3,"or      t3, a6, a2","t3,a6,a2",,x28,0x7fc00000,True,True,No CSR
 0x000117f0,0x294a8053,,,f0,0x00000001,000117f0,fmin.s,ft0:00000001,,294a8053,3,"fmin.s  ft0, fs5, fs4","ft0,fs5,fs4",,f0,0x00000001,True,True,No CSR
 0x000117f4,0x00d7ab33,,,x22,0x00000001,000117f4,slt,s6:00000001,,00d7ab33,3,"slt     s6, a5, a3","s6,a5,a3",,x22,0x00000001,True,True,No CSR
@@ -1544,14 +1544,14 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x00011818,0x02382033,,,,,00011818,mulhsu,,,02382033,3,"mulhsu  zero, a6, gp","zero,a6,gp",,,,No reg,No reg,No CSR
 0x0001181c,0xf0000953,,,f18,0x00000000,0001181c,fmv.w.x,fs2:00000000,,f0000953,3,"fmv.w.x fs2, zero","fs2,zero",,f18,0x00000000,True,True,No CSR
 0x00011820,0x02a0bab3,,,x21,0x7fff400e,00011820,mulhu,s5:7fff400e,,02a0bab3,3,"mulhu   s5, ra, a0","s5,ra,a0",,x21,0x7fff400e,True,True,No CSR
-0x00011824,0xc013f4d3,,,x9,0xffffffff,00011824,fcvt.wu.s,s1:00000000,,c013f4d3,3,"fcvt.wu.s s1, ft7","s1,ft7",,x9,0x00000000,True,False,No CSR
+0x00011824,0xc013f4d3,,,x9,0x00000000,00011824,fcvt.wu.s,s1:00000000,,c013f4d3,3,"fcvt.wu.s s1, ft7","s1,ft7",,x9,0x00000000,True,True,No CSR
 0x00011828,0x29c913d3,,,f7,0x41f0221f,00011828,fmax.s,ft7:41f0221f,,29c913d3,3,"fmax.s  ft7, fs2, ft8","ft7,fs2,ft8",,f7,0x41f0221f,True,True,No CSR
 0x0001182c,0xf00f0b53,,,f22,0x00000001,0001182c,fmv.w.x,fs6:00000001,,f00f0b53,3,"fmv.w.x fs6, t5","fs6,t5",,f22,0x00000001,True,True,No CSR
 0x00011830,0x1816fed3,c1_fflags,0x0000000d,f29,0x7f800000,00011830,fdiv.s,ft9:7f800000,,1816fed3,3,"fdiv.s  ft9, fa3, ft1","ft9,fa3,ft1",,f29,0x7f800000,True,True,Mismatched CSR access!
 0x00011834,0x00879493,,,x9,0x00000000,00011834,slli,s1:00000000,,00879493,3,"slli    s1, a5, 8","s1,a5,8",,x9,0x00000000,True,True,No CSR
 0x00011838,0xfcd3c093,,,x1,0xffffffcd,00011838,xori,ra:ffffffcd,,fcd3c093,3,"xori    ra, t2, -51","ra,t2,-51",,x1,0xffffffcd,True,True,No CSR
 0x0001183c,0x20511953,,,f18,0xffc00000,0001183c,fsgnjn.s,fs2:ffc00000,,20511953,3,"fsgnjn.s fs2, ft2, ft5","fs2,ft2,ft5",,f18,0xffc00000,True,True,No CSR
-0x00011840,0x20a79f53,,,f30,0xffc00000,00011840,fsgnjn.s,ft10:80000000,,20a79f53,3,"fsgnjn.s ft10, fa5, fa0","ft10,fa5,fa0",,f30,0x80000000,True,False,No CSR
+0x00011840,0x20a79f53,,,f30,0x80000000,00011840,fsgnjn.s,ft10:80000000,,20a79f53,3,"fsgnjn.s ft10, fa5, fa0","ft10,fa5,fa0",,f30,0x80000000,True,True,No CSR
 0x00011844,0x01c778b3,,,x17,0x7fc00000,00011844,and,a7:7fc00000,,01c778b3,3,"and     a7, a4, t3","a7,a4,t3",,x17,0x7fc00000,True,True,No CSR
 0x00011848,0xa1f92953,,,x18,0x00000000,00011848,feq.s,s2:00000000,,a1f92953,3,"feq.s   s2, fs2, ft11","s2,fs2,ft11",,x18,0x00000000,True,True,No CSR
 0x0001184c,0x293e1553,,,f10,0x41f0221f,0001184c,fmax.s,fa0:41f0221f,,293e1553,3,"fmax.s  fa0, ft8, fs3","fa0,ft8,fs3",,f10,0x41f0221f,True,True,No CSR
@@ -1572,21 +1572,21 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x00011888,0xf00c03d3,,,f7,0x00000000,00011888,fmv.w.x,ft7:00000000,,f00c03d3,3,"fmv.w.x ft7, s8","ft7,s8",,f7,0x00000000,True,True,No CSR
 0x0001188c,0xf155c313,,,x6,0x00000357,0001188c,xori,t1:00000357,,f155c313,3,"xori    t1, a1, -235","t1,a1,-235",,x6,0x00000357,True,True,No CSR
 0x00011890,0xab6fc413,,,x8,0xfffe8552,00011890,xori,s0:fffe8552,,ab6fc413,3,"xori    s0, t6, -1354","s0,t6,-1354",,x8,0xfffe8552,True,True,No CSR
-0x00011894,0xe0019bd3,,,x23,0x00000200,00011894,fclass.s,s7:00000002,,e0019bd3,3,"fclass.s s7, ft3","s7,ft3",,x23,0x00000002,True,False,No CSR
+0x00011894,0xe0019bd3,,,x23,0x00000002,00011894,fclass.s,s7:00000002,,e0019bd3,3,"fclass.s s7, ft3","s7,ft3",,x23,0x00000002,True,True,No CSR
 0x00011898,0xa1f223d3,,,x7,0x00000000,00011898,feq.s,t2:00000000,,a1f223d3,3,"feq.s   t2, ft4, ft11","t2,ft4,ft11",,x7,0x00000000,True,True,No CSR
 0x0001189c,0x01bbbab3,,,x21,0x00000001,0001189c,sltu,s5:00000001,,01bbbab3,3,"sltu    s5, s7, s11","s5,s7,s11",,x21,0x00000001,True,True,No CSR
 0x000118a0,0x01109e33,,,x28,0xffffffcd,000118a0,sll,t3:ffffffcd,,01109e33,3,"sll     t3, ra, a7","t3,ra,a7",,x28,0xffffffcd,True,True,No CSR
-0x000118a4,0x084e7bd3,,,f23,0x7fc00000,000118a4,fsub.s,fs7:41f0221f,,084e7bd3,3,"fsub.s  fs7, ft8, ft4","fs7,ft8,ft4",,f23,0x41f0221f,True,False,No CSR
+0x000118a4,0x084e7bd3,,,f23,0x41f0221f,000118a4,fsub.s,fs7:41f0221f,,084e7bd3,3,"fsub.s  fs7, ft8, ft4","fs7,ft8,ft4",,f23,0x41f0221f,True,True,No CSR
 0x000118a8,0x40338033,,,,,000118a8,sub,,,40338033,3,"sub     zero, t2, gp","zero,t2,gp",,,,No reg,No reg,No CSR
 0x000118ac,0xa014a253,,,x4,0x00000000,000118ac,feq.s,tp:00000000,,a014a253,3,"feq.s   tp, fs1, ft1","tp,fs1,ft1",,x4,0x00000000,True,True,No CSR
 0x000118b0,0x10d67e53,c1_fflags,0x00000007,f28,0x7f800000,000118b0,fmul.s,ft8:7f800000,,10d67e53,3,"fmul.s  ft8, fa2, fa3","ft8,fa2,fa3",,f28,0x7f800000,True,True,Mismatched CSR access!
-0x000118b4,0xe0040653,,,x12,0xc7bdc100,000118b4,fmv.x.w,a2:47bdc100,,e0040653,3,"fmv.x.w a2, fs0","a2,fs0",,x12,0x47bdc100,True,False,No CSR
+0x000118b4,0xe0040653,,,x12,0x47bdc100,000118b4,fmv.x.w,a2:47bdc100,,e0040653,3,"fmv.x.w a2, fs0","a2,fs0",,x12,0x47bdc100,True,True,No CSR
 0x000118b8,0x580078d3,,,f17,0x1a3504f3,000118b8,fsqrt.s,fa7:1a3504f3,c1_fflags:0000001d,580078d3,3,"fsqrt.s fa7, ft0","fa7,ft0",,f17,0x1a3504f3,True,True,No CSR
 0x000118bc,0xdd621037,,,,,000118bc,lui,,,dd621037,3,"lui     zero, 0xdd621","zero,0xdd621",,,,No reg,No reg,No CSR
 0x000118c0,0x460a19b7,,,x19,0x460a1000,000118c0,lui,s3:460a1000,,460a19b7,3,"lui     s3, 0x460a1","s3,0x460a1",,x19,0x460a1000,True,True,No CSR
 0x000118c4,0x019ab2b3,,,x5,0x00000001,000118c4,sltu,t0:00000001,,019ab2b3,3,"sltu    t0, s5, s9","t0,s5,s9",,x5,0x00000001,True,True,No CSR
 0x000118c8,0x63fb6c93,,,x25,0x0000063f,000118c8,ori,s9:0000063f,,63fb6c93,3,"ori     s9, s6, 1599","s9,s6,1599",,x25,0x0000063f,True,True,No CSR
-0x000118cc,0x007be233,,,x4,0x00000200,000118cc,or,tp:00000002,,007be233,3,"or      tp, s7, t2","tp,s7,t2",,x4,0x00000002,True,False,No CSR
+0x000118cc,0x007be233,,,x4,0x00000002,000118cc,or,tp:00000002,,007be233,3,"or      tp, s7, t2","tp,s7,t2",,x4,0x00000002,True,True,No CSR
 0x000118d0,0x08717dd3,,,f27,0x7fc00000,000118d0,fsub.s,fs11:7fc00000,,08717dd3,3,"fsub.s  fs11, ft2, ft7","fs11,ft2,ft7",,f27,0x7fc00000,True,True,No CSR
 0x000118d4,0x004a7033,,,,,000118d4,and,,,004a7033,3,"and     zero, s4, tp","zero,s4,tp",,,,No reg,No reg,No CSR
 0x000118d8,0xc01371d3,,,x3,0x00000000,000118d8,fcvt.wu.s,gp:00000000,,c01371d3,3,"fcvt.wu.s gp, ft6","gp,ft6",,x3,0x00000000,True,True,No CSR
@@ -1595,12 +1595,12 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x000118e4,0x280c98d3,,,f17,0x7f800000,000118e4,fmax.s,fa7:7f800000,,280c98d3,3,"fmax.s  fa7, fs9, ft0","fa7,fs9,ft0",,f17,0x7f800000,True,True,No CSR
 0x000118e8,0x43db7293,,,x5,0x00000001,000118e8,andi,t0:00000001,,43db7293,3,"andi    t0, s6, 1085","t0,s6,1085",,x5,0x00000001,True,True,No CSR
 0x000118ec,0x01334e33,,,x28,0x460a1357,000118ec,xor,t3:460a1357,,01334e33,3,"xor     t3, t1, s3","t3,t1,s3",,x28,0x460a1357,True,True,No CSR
-0x000118f0,0xe0040653,,,x12,0xc7bdc100,000118f0,fmv.x.w,a2:47bdc100,,e0040653,3,"fmv.x.w a2, fs0","a2,fs0",,x12,0x47bdc100,True,False,No CSR
+0x000118f0,0xe0040653,,,x12,0x47bdc100,000118f0,fmv.x.w,a2:47bdc100,,e0040653,3,"fmv.x.w a2, fs0","a2,fs0",,x12,0x47bdc100,True,True,No CSR
 0x000118f4,0x0221d633,,,x12,0x00000000,000118f4,divu,a2:00000000,,0221d633,3,"divu    a2, gp, sp","a2,gp,sp",,x12,0x00000000,True,True,No CSR
 0x000118f8,0x210118d3,,,f17,0xffc00000,000118f8,fsgnjn.s,fa7:ffc00000,,210118d3,3,"fsgnjn.s fa7, ft2, fa6","fa7,ft2,fa6",,f17,0xffc00000,True,True,No CSR
 0x000118fc,0x019716b3,,,x13,0x00000000,000118fc,sll,a3:00000000,,019716b3,3,"sll     a3, a4, s9","a3,a4,s9",,x13,0x00000000,True,True,No CSR
 0x00011900,0xa0331953,,,x18,0x00000000,00011900,flt.s,s2:00000000,,a0331953,3,"flt.s   s2, ft6, ft3","s2,ft6,ft3",,x18,0x00000000,True,True,No CSR
-0x00011904,0x09c0f4d3,c1_fflags,0x00000002,f9,0xff800000,00011904,fsub.s,fs1:ff800000,,09c0f4d3,3,"fsub.s  fs1, ft1, ft8","fs1,ft1,ft8",,f9,0xff800000,True,True,Mismatched CSR access!
+0x00011904,0x09c0f4d3,,,f9,0xff800000,00011904,fsub.s,fs1:ff800000,,09c0f4d3,3,"fsub.s  fs1, ft1, ft8","fs1,ft1,ft8",,f9,0xff800000,True,True,No CSR
 0x00011908,0x0175f2d3,,,f5,0x7fc00000,00011908,fadd.s,ft5:7fc00000,,0175f2d3,3,"fadd.s  ft5, fa1, fs7","ft5,fa1,fs7",,f5,0x7fc00000,True,True,No CSR
 0x0001190c,0x03a8c4b3,,,x9,0xffffffff,0001190c,div,s1:ffffffff,,03a8c4b3,3,"div     s1, a7, s10","s1,a7,s10",,x9,0xffffffff,True,True,No CSR
 0x00011910,0x02054a33,,,x20,0xffffffff,00011910,div,s4:ffffffff,,02054a33,3,"div     s4, a0, zero","s4,a0,zero",,x20,0xffffffff,True,True,No CSR
@@ -1631,16 +1631,16 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x00011974,0x23057a13,,,x20,0x00000000,00011974,andi,s4:00000000,,23057a13,3,"andi    s4, a0, 560","s4,a0,560",,x20,0x00000000,True,True,No CSR
 0x00011978,0xc95dbf13,,,x30,0x00000001,00011978,sltiu,t5:00000001,,c95dbf13,3,"sltiu   t5, s11, -875","t5,s11,-875",,x30,0x00000001,True,True,No CSR
 0x0001197c,0x41228733,,,x14,0x00000001,0001197c,sub,a4:00000001,,41228733,3,"sub     a4, t0, s2","a4,t0,s2",,x14,0x00000001,True,True,No CSR
-0x00011980,0x036263b3,,,x7,0x0000006b,00011980,rem,t2:00000002,,036263b3,3,"rem     t2, tp, s6","t2,tp,s6",,x7,0x00000002,True,False,No CSR
+0x00011980,0x036263b3,,,x7,0x00000002,00011980,rem,t2:00000002,,036263b3,3,"rem     t2, tp, s6","t2,tp,s6",,x7,0x00000002,True,True,No CSR
 0x00011984,0x1bd08413,,,x8,0x0000018a,00011984,addi,s0:0000018a,,1bd08413,3,"addi    s0, ra, 445","s0,ra,445",,x8,0x0000018a,True,True,No CSR
 0x00011988,0xd01af3d3,,,f7,0x3f800000,00011988,fcvt.s.wu,ft7:3f800000,,d01af3d3,3,"fcvt.s.wu ft7, s5","ft7,s5",,f7,0x3f800000,True,True,No CSR
 0x0001198c,0xa0d490d3,,,x1,0x00000001,0001198c,flt.s,ra:00000001,,a0d490d3,3,"flt.s   ra, fs1, fa3","ra,fs1,fa3",,x1,0x00000001,True,True,No CSR
 0x00011990,0x5c003437,,,x8,0x5c003000,00011990,lui,s0:5c003000,,5c003437,3,"lui     s0, 0x5c003","s0,0x5c003",,x8,0x5c003000,True,True,No CSR
-0x00011994,0x004fc2b3,,,x5,0x00017de4,00011994,xor,t0:00017fe6,,004fc2b3,3,"xor     t0, t6, tp","t0,t6,tp",,x5,0x00017fe6,True,False,No CSR
+0x00011994,0x004fc2b3,,,x5,0x00017fe6,00011994,xor,t0:00017fe6,,004fc2b3,3,"xor     t0, t6, tp","t0,t6,tp",,x5,0x00017fe6,True,True,No CSR
 0x00011998,0x01bb4333,,,x6,0x00017981,00011998,xor,t1:00017981,,01bb4333,3,"xor     t1, s6, s11","t1,s6,s11",,x6,0x00017981,True,True,No CSR
 0x0001199c,0xe00c15d3,,,x11,0x00000040,0001199c,fclass.s,a1:00000040,,e00c15d3,3,"fclass.s a1, fs8","a1,fs8",,x11,0x00000040,True,True,No CSR
 0x000119a0,0x19837653,c1_fflags,0x00000002,f12,0x80000000,000119a0,fdiv.s,fa2:80000000,,19837653,3,"fdiv.s  fa2, ft6, fs8","fa2,ft6,fs8",,f12,0x80000000,True,True,Mismatched CSR access!
-0x000119a4,0x027557b3,,,x15,0x01323e34,000119a4,divu,a5:40000000,,027557b3,3,"divu    a5, a0, t2","a5,a0,t2",,x15,0x40000000,True,False,No CSR
+0x000119a4,0x027557b3,,,x15,0x40000000,000119a4,divu,a5:40000000,,027557b3,3,"divu    a5, a0, t2","a5,a0,t2",,x15,0x40000000,True,True,No CSR
 0x000119a8,0x18b5f253,,,f4,0x7fc00000,000119a8,fdiv.s,ft4:7fc00000,,18b5f253,3,"fdiv.s  ft4, fa1, fa1","ft4,fa1,fa1",,f4,0x7fc00000,True,True,No CSR
 0x000119ac,0x0309ae33,,,x28,0x00000000,000119ac,mulhsu,t3:00000000,,0309ae33,3,"mulhsu  t3, s3, a6","t3,s3,a6",,x28,0x00000000,True,True,No CSR
 0x000119b0,0x83d4f793,,,x15,0xfffff83d,000119b0,andi,a5:fffff83d,,83d4f793,3,"andi    a5, s1, -1987","a5,s1,-1987",,x15,0xfffff83d,True,True,No CSR
@@ -1742,7 +1742,7 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x00011b30,0x70d2cc93,,,x25,0x0000070d,00011b30,xori,s9:0000070d,,70d2cc93,3,"xori    s9, t0, 1805","s9,t0,1805",,x25,0x0000070d,True,True,No CSR
 0x00011b34,0xa1a3a553,,,x10,0x00000000,00011b34,feq.s,a0:00000000,,a1a3a553,3,"feq.s   a0, ft7, fs10","a0,ft7,fs10",,x10,0x00000000,True,True,No CSR
 0x00011b38,0xa0ad1e53,,,x28,0x00000001,00011b38,flt.s,t3:00000001,,a0ad1e53,3,"flt.s   t3, fs10, fa0","t3,fs10,fa0",,x28,0x00000001,True,True,No CSR
-0x00011b3c,0x003bfb53,,,f22,0x7fc00000,00011b3c,fadd.s,fs6:4eff7d07,c1_fflags:0000001d,003bfb53,3,"fadd.s  fs6, fs7, ft3","fs6,fs7,ft3",,f22,0x4eff7d07,True,False,No CSR
+0x00011b3c,0x003bfb53,c1_fflags,0x00000001,f22,0x4eff7d07,00011b3c,fadd.s,fs6:4eff7d07,c1_fflags:0000001d,003bfb53,3,"fadd.s  fs6, fs7, ft3","fs6,fs7,ft3",,f22,0x4eff7d07,True,True,Mismatched CSR Value!
 0x00011b40,0x412a5533,,,x10,0x00000000,00011b40,sra,a0:00000000,,412a5533,3,"sra     a0, s4, s2","a0,s4,s2",,x10,0x00000000,True,True,No CSR
 0x00011b44,0x286d9a53,,,f20,0x80000000,00011b44,fmax.s,fs4:80000000,,286d9a53,3,"fmax.s  fs4, fs11, ft6","fs4,fs11,ft6",,f20,0x80000000,True,True,No CSR
 0x00011b48,0x19517a53,,,f20,0x383e2010,00011b48,fdiv.s,fs4:383e2010,c1_fflags:0000001d,19517a53,3,"fdiv.s  fs4, ft2, fs5","fs4,ft2,fs5",,f20,0x383e2010,True,True,No CSR
@@ -2023,7 +2023,7 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x00011f94,0xa1ad9bd3,,,x23,0x00000000,00011f94,flt.s,s7:00000000,c1_fflags:0000001d,a1ad9bd3,3,"flt.s   s7, fs11, fs10","s7,fs11,fs10",,x23,0x00000000,True,True,No CSR
 0x00011f98,0x28321b53,,,f22,0xbf800000,00011f98,fmax.s,fs6:bf800000,,28321b53,3,"fmax.s  fs6, ft4, ft3","fs6,ft4,ft3",,f22,0xbf800000,True,True,No CSR
 0x00011f9c,0xbd156f13,,,x30,0xfffffbd1,00011f9c,ori,t5:fffffbd1,,bd156f13,3,"ori     t5, a0, -1071","t5,a0,-1071",,x30,0xfffffbd1,True,True,No CSR
-0x00011fa0,0x09897f53,c1_fflags,0x00000007,f30,0x7f800000,00011fa0,fsub.s,ft10:7f800000,,09897f53,3,"fsub.s  ft10, fs2, fs8","ft10,fs2,fs8",,f30,0x7f800000,True,True,Mismatched CSR access!
+0x00011fa0,0x09897f53,c1_fflags,0x00000005,f30,0x7f800000,00011fa0,fsub.s,ft10:7f800000,,09897f53,3,"fsub.s  ft10, fs2, fs8","ft10,fs2,fs8",,f30,0x7f800000,True,True,Mismatched CSR access!
 0x00011fa4,0x5802f853,,,f16,0x473504f2,00011fa4,fsqrt.s,fa6:473504f2,c1_fflags:0000001d,5802f853,3,"fsqrt.s fa6, ft5","fa6,ft5",,f16,0x473504f2,True,True,No CSR
 0x00011fa8,0x03020c33,,,x24,0x00000000,00011fa8,mul,s8:00000000,,03020c33,3,"mul     s8, tp, a6","s8,tp,a6",,x24,0x00000000,True,True,No CSR
 0x00011fac,0x001cda33,,,x20,0x7fffffff,00011fac,srl,s4:7fffffff,,001cda33,3,"srl     s4, s9, ra","s4,s9,ra",,x20,0x7fffffff,True,True,No CSR
@@ -2148,44 +2148,3 @@ file1_Address,file1_Instruction,file1_Flag,file1_Flag Value,file1_Register,file1
 0x00012188,0x00f2d713,,,x14,0x00000000,00012188,srli,a4:00000000,,00f2d713,3,"srli    a4, t0, 15","a4,t0,15",,x14,0x00000000,True,True,No CSR
 0x0001218c,0x417b8e33,,,x28,0x00000000,0001218c,sub,t3:00000000,,417b8e33,3,"sub     t3, s7, s7","t3,s7,s7",,x28,0x00000000,True,True,No CSR
 0x00012190,0xc01877d3,,,x15,0x0000b504,00012190,fcvt.wu.s,a5:0000b504,c1_fflags:0000001d,c01877d3,3,"fcvt.wu.s a5, fa6","a5,fa6",,x15,0x0000b504,True,True,No CSR
-0x00012194,0x0178de33,,,x28,0x00000000,00012194,srl,t3:00000000,,0178de33,3,"srl     t3, a7, s7","t3,a7,s7",,x28,0x00000000,True,True,No CSR
-0x00012198,0x00000013,,,,,00012198,addi,,,00000013,3,nop,"zero,zero,0",,,,No reg,No reg,No CSR
-0x0001219c,0x718caa93,,,x21,0x00000000,0001219c,slti,s5:00000000,,718caa93,3,"slti    s5, s9, 1816","s5,s9,1816",,x21,0x00000000,True,True,No CSR
-0x000121a0,0x7204a993,,,x19,0x00000001,000121a0,slti,s3:00000001,,7204a993,3,"slti    s3, s1, 1824","s3,s1,1824",,x19,0x00000001,True,True,No CSR
-0x000121a4,0x007ca4b3,,,x9,0x00000000,000121a4,slt,s1:00000000,,007ca4b3,3,"slt     s1, s9, t2","s1,s9,t2",,x9,0x00000000,True,True,No CSR
-0x000121a8,0xc0187453,,,x8,0x0000b504,000121a8,fcvt.wu.s,s0:0000b504,c1_fflags:0000001d,c0187453,3,"fcvt.wu.s s0, fa6","s0,fa6",,x8,0x0000b504,True,True,No CSR
-0x000121ac,0x4df37413,,,x8,0x00000000,000121ac,andi,s0:00000000,,4df37413,3,"andi    s0, t1, 1247","s0,t1,1247",,x8,0x00000000,True,True,No CSR
-0x000121b0,0x01ab3033,,,,,000121b0,sltu,,,01ab3033,3,"sltu    zero, s6, s10","zero,s6,s10",,,,No reg,No reg,No CSR
-0x000121b4,0x00c11a93,,,x21,0x00000000,000121b4,slli,s5:00000000,,00c11a93,3,"slli    s5, sp, 12","s5,sp,12",,x21,0x00000000,True,True,No CSR
-0x000121b8,0xdd7b7113,,,x2,0xbc141000,000121b8,andi,sp:bc141000,,dd7b7113,3,"andi    sp, s6, -553","sp,s6,-553",,x2,0xbc141000,True,True,No CSR
-0x000121bc,0x9e7c6113,,,x2,0xfffff9e7,000121bc,ori,sp:fffff9e7,,9e7c6113,3,"ori     sp, s8, -1561","sp,s8,-1561",,x2,0xfffff9e7,True,True,No CSR
-0x000121c0,0x1168f8d3,c1_fflags,0x00000002,f17,0x7fc00000,000121c0,fmul.s,fa7:7fc00000,,1168f8d3,3,"fmul.s  fa7, fa7, fs6","fa7,fa7,fs6",,f17,0x7fc00000,True,True,Mismatched CSR access!
-0x000121c4,0xa0018053,,,,,000121c4,fle.s,,,a0018053,3,"fle.s   zero, ft3, ft0","zero,ft3,ft0",,,,No reg,No reg,No CSR
-0x000121c8,0x980f0813,,,x16,0x0721ca80,000121c8,addi,a6:0721ca80,,980f0813,3,"addi    a6, t5, -1664","a6,t5,-1664",,x16,0x0721ca80,True,True,No CSR
-0x000121cc,0x16031737,,,x14,0x16031000,000121cc,lui,a4:16031000,,16031737,3,"lui     a4, 0x16031","a4,0x16031",,x14,0x16031000,True,True,No CSR
-0x000121d0,0x48b43c13,,,x24,0x00000001,000121d0,sltiu,s8:00000001,,48b43c13,3,"sltiu   s8, s0, 1163","s8,s0,1163",,x24,0x00000001,True,True,No CSR
-0x000121d4,0x01eeda33,,,x20,0x98258c61,000121d4,srl,s4:98258c61,,01eeda33,3,"srl     s4, t4, t5","s4,t4,t5",,x20,0x98258c61,True,True,No CSR
-0x000121d8,0x027be033,,,,,000121d8,rem,,,027be033,3,"rem     zero, s7, t2","zero,s7,t2",,,,No reg,No reg,No CSR
-0x000121dc,0xc01af353,,,x6,0x00000000,000121dc,fcvt.wu.s,t1:00000000,,c01af353,3,"fcvt.wu.s t1, fs5","t1,fs5",,x6,0x00000000,True,True,No CSR
-0x000121e0,0x40148433,,,x8,0xffffff80,000121e0,sub,s0:ffffff80,,40148433,3,"sub     s0, s1, ra","s0,s1,ra",,x8,0xffffff80,True,True,No CSR
-0x000121e4,0xf00684d3,,,f9,0x00000000,000121e4,fmv.w.x,fs1:00000000,,f00684d3,3,"fmv.w.x fs1, a3","fs1,a3",,f9,0x00000000,True,True,No CSR
-0x000121e8,0xbc423193,,,x3,0x00000001,000121e8,sltiu,gp:00000001,,bc423193,3,"sltiu   gp, tp, -1084","gp,tp,-1084",,x3,0x00000001,True,True,No CSR
-0x000121ec,0x006d7bd3,,,f23,0x473504f2,000121ec,fadd.s,fs7:473504f2,,006d7bd3,3,"fadd.s  fs7, fs10, ft6","fs7,fs10,ft6",,f23,0x473504f2,True,True,No CSR
-0x000121f0,0xe0070753,,,x14,0x00000000,000121f0,fmv.x.w,a4:00000000,,e0070753,3,"fmv.x.w a4, fa4","a4,fa4",,x14,0x00000000,True,True,No CSR
-0x000121f4,0x41dcd193,,,x3,0x00000003,000121f4,srai,gp:00000003,,41dcd193,3,"srai    gp, s9, 29","gp,s9,29",,x3,0x00000003,True,True,No CSR
-0x000121f8,0x58077b53,,,f22,0x00000000,000121f8,fsqrt.s,fs6:00000000,,58077b53,3,"fsqrt.s fs6, fa4","fs6,fa4",,f22,0x00000000,True,True,No CSR
-0x000121fc,0x016efc33,,,x24,0x98040000,000121fc,and,s8:98040000,,016efc33,3,"and     s8, t4, s6","s8,t4,s6",,x24,0x98040000,True,True,No CSR
-0x00012200,0xe00e1753,,,x14,0x00000040,00012200,fclass.s,a4:00000040,,e00e1753,3,"fclass.s a4, ft8","a4,ft8",,x14,0x00000040,True,True,No CSR
-0x00012204,0x00530233,,,x4,0x00000000,00012204,add,tp:00000000,,00530233,3,"add     tp, t1, t0","tp,t1,t0",,x4,0x00000000,True,True,No CSR
-0x00012208,0xd00a76d3,,,f13,0xcecfb4e7,00012208,fcvt.s.w,fa3:cecfb4e7,c1_fflags:0000001d,d00a76d3,3,"fcvt.s.w fa3, s4","fa3,s4",,f13,0xcecfb4e7,True,True,No CSR
-0x0001220c,0xbe0fa013,,,,,0001220c,slti,,,be0fa013,3,"slti    zero, t6, -1056","zero,t6,-1056",,,,No reg,No reg,No CSR
-0x00012210,0xb5f66413,,,x8,0xffffff7f,00012210,ori,s0:ffffff7f,,b5f66413,3,"ori     s0, a2, -1185","s0,a2,-1185",,x8,0xffffff7f,True,True,No CSR
-0x00012214,0xd001f4d3,,,f9,0x40400000,00012214,fcvt.s.w,fs1:40400000,,d001f4d3,3,"fcvt.s.w fs1, gp","fs1,gp",,f9,0x40400000,True,True,No CSR
-0x00012218,0x01b30a33,,,x20,0x00017814,00012218,add,s4:00017814,,01b30a33,3,"add     s4, t1, s11","s4,t1,s11",,x20,0x00017814,True,True,No CSR
-0x0001221c,0xf0090dd3,,,f27,0x00000001,0001221c,fmv.w.x,fs11:00000001,,f0090dd3,3,"fmv.w.x fs11, s2","fs11,s2",,f27,0x00000001,True,True,No CSR
-0x00012220,0xc3558e13,,,x28,0xfffffc35,00012220,addi,t3:fffffc35,,c3558e13,3,"addi    t3, a1, -971","t3,a1,-971",,x28,0xfffffc35,True,True,No CSR
-0x00012224,0x012d8033,,,,,00012224,add,,,012d8033,3,"add     zero, s11, s2","zero,s11,s2",,,,No reg,No reg,No CSR
-0x00012228,0x297d1d53,,,f26,0x473504f2,00012228,fmax.s,fs10:473504f2,,297d1d53,3,"fmax.s  fs10, fs10, fs7","fs10,fs10,fs7",,f26,0x473504f2,True,True,No CSR
-0x0001222c,0x00009493,,,x9,0x00000080,0001222c,slli,s1:00000080,,00009493,3,"slli    s1, ra, 0","s1,ra,0",,x9,0x00000080,True,True,No CSR
-0x00012230,0xc019f4d3,,,x9,0xffffffff,00012230,fcvt.wu.s,s1:ffffffff,c1_fflags:0000001d,c019f4d3,3,"fcvt.wu.s s1, fs3","s1,fs3",,x9,0xffffffff,True,True,No CSR
-0x00012234,0x00f9c1b3,,,x3,0x0000b505,00012234,xor,gp:0000b505,,00f9c1b3,3,"xor     gp, s3, a5","gp,s3,a5",,x3,0x0000b505,True,True,No CSR
