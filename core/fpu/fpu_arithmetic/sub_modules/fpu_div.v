@@ -16,10 +16,11 @@ module fpu_div
 
 wire[49:0] Dividend;
 wire[49:0] Divisor;
-wire[4:0]  offSetB;
+wire[4:0]  offSetA, offSetB;
 
+lzc27 lzcsig_A(.x({1'b0, sig_A,2'b11}), .z(offSetA));
 lzc27 lzcsig_B(.x({1'b0, sig_B,2'b11}), .z(offSetB));
-assign Dividend = sig_A << 26;
+assign Dividend = sig_A << 26 + (offSetA - 1);
 assign Divisor  = {26'b0, sig_B};
 
 
@@ -35,7 +36,7 @@ wire [26:0] div_out_sig;
 
 sigDiv sigDiv(.clk(clk), .start(div_start), .reset(reset), .offSetB(offSetB), .dividend(Dividend), .divisor(Divisor), .rdy(div_rdy), .div_out(div_out_sig));
 
-divNormalizer norm_div(.inSig(div_out_sig), .inExp(preNorm_exp), .is_exp_underFlow(is_exp_underFlow), .offSetB(offSetB), .outSig(div_proNorm_sig), .outExp(div_proNorm_exp), .of(OF_from_proNorm), .uf(UF_from_proNorm));
+divNormalizer norm_div(.inSig(div_out_sig), .inExp(preNorm_exp), .is_exp_underFlow(is_exp_underFlow), .offSetA(offSetA), .offSetB(offSetB), .outSig(div_proNorm_sig), .outExp(div_proNorm_exp), .of(OF_from_proNorm), .uf(UF_from_proNorm));
 
 endmodule
 
@@ -61,6 +62,7 @@ module divNormalizer
     input wire[26:0]  inSig,
     input wire[8:0]   inExp,
     input wire        is_exp_underFlow,
+    input wire[4:0]   offSetA,
     input wire[4:0]   offSetB,
    output wire[26:0]  outSig,
    output wire[7:0]   outExp,
@@ -100,7 +102,7 @@ begin
     begin
         if (inSig[26] == 1'b1) // if mantissa carry is 1 
         begin
-            ExpTemp = inExp + offSetB  - 1 ;
+            ExpTemp = inExp + (offSetB  - 1) - (offSetA - 1);
             SigTemp = inSig;
             underflow = 1'b0; 
         end
@@ -115,7 +117,7 @@ begin
         end
         else
         begin
-            ExpTemp = inExp - zeroCount + offSetB  - 1  ;
+            ExpTemp = inExp - zeroCount + (offSetB  - 1) - (offSetA - 1)  ;
             SigTemp = inSig << zeroCount;
             underflow = 1'b0; 
         end  
