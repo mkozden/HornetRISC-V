@@ -87,11 +87,12 @@ assign overflow = is_exp_underFlow ? 1'b0 :
 assign of = overflow;
 assign uf = underflow;
 
+wire norm_underflow;
 
 assign outExp = ExpTemp[7:0];
 lzc27 lcz(.x(inSig), .z(zeroCount));
- 
- 
+
+assign norm_underflow = ({3'b0,offSetA} > inExp);
 
 
 assign outSig = SigTemp;
@@ -115,16 +116,22 @@ begin
             underflow = 1'b1;
             
         end
+        else if(norm_underflow) begin
+            ExpTemp = 8'b0;
+            SigTemp = inSig >> (offSetA - inExp); //If subtracting offsetA from exp would underflow it, instead set exp to 0 and shift sig by offsetA-inExp
+            underflow = 1'b1;
+        end
         else
         begin
-            ExpTemp = inExp - zeroCount + (offSetB  - 1) - (offSetA - 1)  ;
+            ExpTemp = inExp - zeroCount + (offSetB  - 1) - (offSetA - 1) ;
             SigTemp = inSig << zeroCount;
             underflow = 1'b0; 
         end  
     end
     else
     begin
-        SigTemp        = inSig >> inExp_2C + 1;
+        //SigTemp        = inSig >> inExp_2C + 1;
+        SigTemp        = inSig >> inExp_2C + 1 + (offSetA - 1); //Probably wrong, added due to the addition of offsetA
 
 
         if(SigTemp[26]) begin
