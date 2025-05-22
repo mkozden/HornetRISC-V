@@ -174,7 +174,8 @@ end
 assign exp_O             = (exp_A_adjusted >= exp_B_adjusted) ? exp_A_adjusted : exp_B_adjusted;
 assign out_sig           = first_operand + second_operand;
 assign out_sig_abs       = isout_sigNeg  ? ~out_sig+1 : out_sig; 
-assign sign_O            = (exp_A_adjusted == exp_B_adjusted) ? (sig_A_adjusted >= sig_B_adjusted ? sign_O_equal : eff_sign_B) : //if both significands and exponents are equal, the sign should be sign_A -> positive, since result should be 0 or a positive number 
+assign sign_O            = (exp_A_adjusted == exp_B_adjusted) ? (sig_A_adjusted == sig_B_adjusted ? sign_O_equal : 
+                           (sig_A_adjusted > sig_B_adjusted ? sign_A : eff_sign_B)) :
                            (exp_A_adjusted >  exp_B_adjusted) ? sign_A : eff_sign_B;  
 
 wire second_operand_zero;

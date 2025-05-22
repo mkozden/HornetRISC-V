@@ -101,7 +101,12 @@ always @(*)// normalization
 begin
     if (!is_exp_underFlow)
     begin
-        if (inSig[26] == 1'b1) // if mantissa carry is 1 
+        if(norm_underflow) begin //This case takes precedence over all else, since offsetA is used in almost all of them
+            ExpTemp = 8'b0;
+            SigTemp = inSig >> (offSetA - inExp); //If subtracting offsetA from exp would underflow it, instead set exp to 0 and shift sig by offsetA-inExp
+            underflow = 1'b1;
+        end
+        else if (inSig[26] == 1'b1) // if mantissa carry is 1 
         begin
             ExpTemp = inExp + (offSetB  - 1) - (offSetA - 1);
             SigTemp = inSig;
@@ -115,11 +120,6 @@ begin
             SigTemp = inSig << inExp - 1;
             underflow = 1'b1;
             
-        end
-        else if(norm_underflow) begin
-            ExpTemp = 8'b0;
-            SigTemp = inSig >> (offSetA - inExp); //If subtracting offsetA from exp would underflow it, instead set exp to 0 and shift sig by offsetA-inExp
-            underflow = 1'b1;
         end
         else
         begin
