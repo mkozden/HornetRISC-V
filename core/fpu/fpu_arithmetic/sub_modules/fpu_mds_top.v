@@ -177,11 +177,6 @@ module fpu_mds_top(
                             else OUT_reg <= muldiv_sqrt;
                         end
                     end
-                    else if(mds_op == 2'b10 && rounding_mode == 3'b011 && subnormal_sqrt_in) begin //sqrt edge case for RUP and 3 very small subnormal numbers (Terrible fix, but hopefully enough)
-                        if(sig_A == 23'h1 || sig_A == 23'h4 || sig_A == 23'h6)
-                            OUT_reg <= muldiv_sqrt + 1;
-                        else OUT_reg <= muldiv_sqrt;
-                    end
                     else OUT_reg <= muldiv_sqrt;
         end
     end
