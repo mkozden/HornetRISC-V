@@ -24,7 +24,7 @@ lzc36 lzc36(.x(sqrt_sig), .z(lzc_for_subnorm));
 
 wire [35:0] sqrt_norm_sig;
 assign sqrt_norm_sig = sqrt_sig << lzc_for_subnorm;
-assign sqrt_proNorm_sig = is_subnormal ? sqrt_norm_sig[35:9] : sqrt_sig[35:9];
+assign sqrt_proNorm_sig = is_subnormal ? {sqrt_norm_sig[35:10],|sqrt_norm_sig[9:0]} : {sqrt_sig[35:10],|sqrt_sig[9:0]}; //So that the sticky bit is properly set.
 assign sqrt_proNorm_exp = is_subnormal ? exp_half - lzc_for_subnorm : exp_half;
 
 assign uf = is_subnormal ?  !sqrt_norm_sig[35] : 1'b0; // if hidden bit is 0 then, underflow. Normal inputs can't set underflow flag.
