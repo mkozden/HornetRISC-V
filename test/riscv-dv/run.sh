@@ -9,7 +9,7 @@ LOG_FILE="simulation.log"
 WAVE_CONFIG="barebones_top_tb_behav.wcfg"  # Optional waveform config
 TEST="riscv_floating_point_arithmetic_test"
 
-#python3 run.py --verbose --test ${TEST} --simulator pyflow --isa rv32imf --mabi ilp32f --sim_opts=""
+python3 run.py --verbose --test ${TEST} --simulator pyflow --isa rv32imf --mabi ilp32f --sim_opts=""
 
 if [ -d "out_$(date +%Y-%m-%d)" ]; then
     cd "out_$(date +%Y-%m-%d)"
@@ -81,7 +81,7 @@ python3 scripts/trace_to_csv.py -l ../../trace.log -o deneme.csv
 python3 scripts/compare.py deneme.csv spike_deneme.csv combined.csv
 
 # Add a counter to limit repetitions
-MAX_ITER=50
+MAX_ITER=100
 COUNTER_FILE=".run_counter"
 
 if [ ! -f "$COUNTER_FILE" ]; then
