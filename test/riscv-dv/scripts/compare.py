@@ -1,5 +1,6 @@
 import csv
 import argparse
+import sys
 
 REGISTER_MAPPING = {
     # Integer registers
@@ -169,6 +170,10 @@ def horizontal_merge_with_comparison(file1, file2, output_file):
             print(" " * ((59 - len("PASS")) // 2) + "PASS")
         print("===========================================================")
         print(f"ERROR:{hard_mismatch_cnt}\nWARNING:{soft_mismatch_cnt}")
+        if hard_mismatch_cnt != 0:
+            sys.exit(1)
+        else:
+            sys.exit(0)
 
 # Usage
 if __name__ == "__main__":

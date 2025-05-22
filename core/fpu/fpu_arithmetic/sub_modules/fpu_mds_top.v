@@ -65,7 +65,7 @@ module fpu_mds_top(
     wire        uf_sqrt;
 
     fpu_sqrt fpu_sqrt(.clk(clk), .reset(reset), .start(sqrt_start), .is_subnormal(subnormal_sqrt_in), .in_exp0(exp_A[0]), .exp_half(preNorm_exp[7:0]), .in_sig(sig_A), .sqrt_done(sqrt_rdy), .sqrt_proNorm_sig(sqrt_proNorm_sig), .sqrt_proNorm_exp(sqrt_proNorm_exp), .uf(uf_sqrt));
-    sqrt_rounder sqrt_rounder(.LGRS(sqrt_proNorm_sig[2:0]), .rounding_mode(rounding_mode), .sign_O(sign_O), .round_out(sqrt_round_out));
+    sqrt_rounder sqrt_rounder(.LGRS(sqrt_proNorm_sig[3:0]), .rounding_mode(rounding_mode), .sign_O(sign_O), .round_out(sqrt_round_out));
 
 
     // Final Normalizer Signals
@@ -165,8 +165,19 @@ module fpu_mds_top(
                             else OUT_reg <= muldiv_sqrt;
                         end
                     end
+                    else if(underflow && muldiv_sqrt == 32'b0) begin //Underflow edge cases, only if value is 0
+                        if(sign_O) begin //For negative numbers
+                            if((rounding_mode == 3'b010))
+                                OUT_reg <= 32'h80000001; //For RDN, -0.0 rounds down to smallest mag. negative number
+                            else OUT_reg <= muldiv_sqrt;
+                        end
+                        else begin //For positive numbers
+                            if((rounding_mode == 3'b011))
+                                OUT_reg <= 32'h0000001; //For RUP, +0.0 rounds up to smallest mag. positive number
+                            else OUT_reg <= muldiv_sqrt;
+                        end
+                    end
                     else OUT_reg <= muldiv_sqrt;
-           
         end
     end
 endmodule

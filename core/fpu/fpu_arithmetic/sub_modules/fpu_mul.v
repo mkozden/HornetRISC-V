@@ -84,8 +84,7 @@ begin
             RS = {SigTemp[22], |SigTemp[21:0]};
     end
     else
-        if(SigTemp == 46'b0) RS = {lrs[1:0]}; //I'm not sure, but might fix the problem
-        else RS = {SigTemp[22], |SigTemp[21:0]};
+            RS = {SigTemp[22], |SigTemp[21:0]};
 
 end    
 

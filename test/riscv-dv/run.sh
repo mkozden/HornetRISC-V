@@ -9,7 +9,7 @@ LOG_FILE="simulation.log"
 WAVE_CONFIG="barebones_top_tb_behav.wcfg"  # Optional waveform config
 TEST="riscv_floating_point_arithmetic_test"
 
-python3 run.py --verbose --test ${TEST} --simulator pyflow --isa rv32imf --mabi ilp32f --sim_opts=""
+#python3 run.py --verbose --test ${TEST} --simulator pyflow --isa rv32imf --mabi ilp32f --sim_opts=""
 
 if [ -d "out_$(date +%Y-%m-%d)" ]; then
     cd "out_$(date +%Y-%m-%d)"
@@ -80,6 +80,36 @@ python3 scripts/spike_log_to_trace_csv.py --log "out_$(date +%Y-%m-%d)"/spike_si
 python3 scripts/trace_to_csv.py -l ../../trace.log -o deneme.csv
 python3 scripts/compare.py deneme.csv spike_deneme.csv combined.csv
 
+# Add a counter to limit repetitions
+MAX_ITER=50
+COUNTER_FILE=".run_counter"
+
+if [ ! -f "$COUNTER_FILE" ]; then
+    echo 1 > "$COUNTER_FILE"
+fi
+
+COUNTER=$(cat "$COUNTER_FILE")
+
+if python3 scripts/compare.py deneme.csv spike_deneme.csv combined.csv > /dev/null 2>&1; then
+    if [ $? -ne 1 ]; then
+        if [ "$COUNTER" -lt "$MAX_ITER" ]; then
+            COUNTER=$((COUNTER + 1))
+            echo "$COUNTER" > "$COUNTER_FILE"
+            # Print colored message (green)
+            echo -e "\033[1;32mRepeating the script as last test had no failures (iteration $COUNTER/$MAX_ITER)\033[0m"
+            exec "$0"
+        else
+            echo "Maximum iterations ($MAX_ITER) reached. Stopping."
+            rm -f "$COUNTER_FILE"
+        fi
+    else
+        # Reset counter on failure
+        echo 1 > "$COUNTER_FILE"
+    fi
+else
+    # Reset counter on failure
+    echo 1 > "$COUNTER_FILE"
+fi
 
 
 
