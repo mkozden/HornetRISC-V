@@ -43,7 +43,7 @@ begin
                 else round_out = 2'b0; 
             else begin
                 if(sign_less == 1'b1 && second_operand_zero) round_out = 2'b01; //If we subtract a very small amount from a negative number, RDN will pull it down (so magnitude increases)
-                if(|LRS[1:0]) round_out = 2'b01; //Round only if R or S bit is set
+                else if(|LRS[1:0]) round_out = 2'b01; //Round only if R or S bit is set
                 else round_out = 2'b00;
             end
         end

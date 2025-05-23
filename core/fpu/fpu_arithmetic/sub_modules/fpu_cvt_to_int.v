@@ -41,7 +41,7 @@ always @(*) begin //Edge cases involving various outcomes due to is_exp_neg arou
     if(final_out == 32'h0)begin
         if(rounding_mode == 3'b001) exp_neg_out = 32'h0; //RTZ
         else if(rounding_mode == 3'b010) begin //RDN
-            if(sign_A) exp_neg_out = 32'hFFFFFFFF; //For negative values, round down to -1
+            if(sign_A && !is_unsigned) exp_neg_out = 32'hFFFFFFFF; //For negative values, round down to -1, but only if conversion is signed
             else exp_neg_out = 32'h0; //Else 0
         end
         else if(rounding_mode == 3'b011) begin//RUP

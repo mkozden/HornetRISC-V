@@ -165,17 +165,18 @@ module fpu_mds_top(
                             else OUT_reg <= muldiv_sqrt;
                         end
                     end
-                    else if(underflow && muldiv_sqrt == 32'b0) begin //Underflow edge cases, only if value is 0
-                        if(sign_O) begin //For negative numbers
+                    else if(underflow) begin //Underflow edge cases
+                        if(sign_O && muldiv_sqrt == 32'h80000000) begin //For negative numbers, only if output value is initially -0.0
                             if((rounding_mode == 3'b010))
                                 OUT_reg <= 32'h80000001; //For RDN, -0.0 rounds down to smallest mag. negative number
                             else OUT_reg <= muldiv_sqrt;
                         end
-                        else begin //For positive numbers
+                        else if(!sign_O && muldiv_sqrt == 32'b0) begin //For positive numbers, only if output value is initially 0.0
                             if((rounding_mode == 3'b011))
                                 OUT_reg <= 32'h0000001; //For RUP, +0.0 rounds up to smallest mag. positive number
                             else OUT_reg <= muldiv_sqrt;
                         end
+                        else OUT_reg <= muldiv_sqrt;
                     end
                     else OUT_reg <= muldiv_sqrt;
         end
