@@ -88,6 +88,9 @@ assign of = overflow;
 assign uf = underflow;
 
 wire norm_underflow;
+reg [7:0] shift_amount;
+reg sticky;
+reg [26:0] unshift;
 
 assign outExp = ExpTemp[7:0];
 lzc27 lcz(.x(inSig), .z(zeroCount));
@@ -95,7 +98,7 @@ lzc27 lcz(.x(inSig), .z(zeroCount));
 assign norm_underflow = ({3'b0,offSetA} > inExp);
 
 
-assign outSig = SigTemp;
+assign outSig = {SigTemp[26:1], sticky};
         
 always @(*)// normalization
 begin
@@ -103,13 +106,18 @@ begin
     begin
         if(norm_underflow) begin //This case takes precedence over all else, since offsetA is used in almost all of them
             ExpTemp = 8'b0;
-            SigTemp = inSig >> (offSetA - inExp); //If subtracting offsetA from exp would underflow it, instead set exp to 0 and shift sig by offsetA-inExp
+            shift_amount = (offSetA - inExp); //If subtracting offsetA from exp would underflow it, instead set exp to 0 and shift sig by offsetA-inExp
+            SigTemp = inSig >> shift_amount;
+            unshift = SigTemp << shift_amount;
+            sticky = (SigTemp != unshift);
             underflow = 1'b1;
         end
         else if (inSig[26] == 1'b1) // if mantissa carry is 1 
         begin
             ExpTemp = inExp + (offSetB  - 1) - (offSetA - 1);
             SigTemp = inSig;
+            unshift = 27'b0;
+            sticky = SigTemp[0];
             underflow = 1'b0; 
         end
        
@@ -118,6 +126,8 @@ begin
             
             ExpTemp = 8'b0;
             SigTemp = inSig << inExp - 1;
+            unshift = 27'b0;
+            sticky = SigTemp[0];
             underflow = 1'b1;
             
         end
@@ -125,13 +135,18 @@ begin
         begin
             ExpTemp = inExp - zeroCount + (offSetB  - 1) - (offSetA - 1) ;
             SigTemp = inSig << zeroCount;
+            unshift = 27'b0;
+            sticky = SigTemp[0];
             underflow = 1'b0; 
         end  
     end
     else
     begin
         //SigTemp        = inSig >> inExp_2C + 1;
-        SigTemp        = inSig >> inExp_2C + 1 + (offSetA - 1); //Probably wrong, added due to the addition of offsetA
+        shift_amount = inExp_2C + 1 + (offSetA - 1); 
+        SigTemp = inSig >> shift_amount;
+        unshift = SigTemp << shift_amount;
+        sticky = (SigTemp != unshift);
 
 
         if(SigTemp[26]) begin
