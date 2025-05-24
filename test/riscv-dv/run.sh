@@ -7,7 +7,7 @@ PROJECT_DIR="/home/deniz/${PROJECT_NAME}" # 3 directories up relative to the "ou
 SIM_TOP="barebones_top_tb.v"
 LOG_FILE="simulation.log"
 WAVE_CONFIG="barebones_top_tb_behav.wcfg"  # Optional waveform config
-TEST="riscv_floating_point_arithmetic_test"
+TEST="riscv_floating_point_general_test"
 
 python3.11 run.py --verbose --test ${TEST} --simulator pyflow --isa rv32imf --mabi ilp32f --sim_opts=""
 
