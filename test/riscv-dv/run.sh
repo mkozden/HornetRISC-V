@@ -3,13 +3,13 @@
 # Configuration
 VIVADO_VERSION="2024.1"
 PROJECT_NAME="HornetRISCV-vivado"
-PROJECT_DIR="../../../${PROJECT_NAME}" # 3 directories up relative to the "out" folder
+PROJECT_DIR="/home/deniz/${PROJECT_NAME}" # 3 directories up relative to the "out" folder
 SIM_TOP="barebones_top_tb.v"
 LOG_FILE="simulation.log"
 WAVE_CONFIG="barebones_top_tb_behav.wcfg"  # Optional waveform config
 TEST="riscv_floating_point_arithmetic_test"
 
-#python3 run.py --verbose --test ${TEST} --simulator pyflow --isa rv32imf --mabi ilp32f --sim_opts=""
+python3.11 run.py --verbose --test ${TEST} --simulator pyflow --isa rv32imf --mabi ilp32f --sim_opts=""
 
 if [ -d "out_$(date +%Y-%m-%d)" ]; then
     cd "out_$(date +%Y-%m-%d)"
@@ -18,7 +18,17 @@ else
     exit 1
 fi
 
-riscv32-unknown-elf-objcopy -O binary -j .init -j .text -j .rodata -j .sdata asm_test/${TEST}_0.o final.bin
+
+# riscv32-unknown-elf-as ../../crt0.s -o hornet.o #Compile the entry-exit functions of hornet
+
+# grep -v '^\s*\.include' asm_test/riscv_floating_point_arithmetic_test_0.S > main_filtered.s #Remove the user extension includes
+# riscv32-unknown-elf-as main_filtered.S -o main.o #Compile riscv-dv output
+
+# riscv32-unknown-elf-objcopy --keep-symbol=init --keep-symbol=main --strip-all main.o main-clean.o #Remove everything except the main function
+
+# riscv32-unknown-elf-ld -T ../../linksc-10000.ld hornet.o main-clean.o -o final.elf
+
+$RISCV_OBJCOPY -O binary -j .init -j .text -j .rodata -j .sdata asm_test/${TEST}_0.o final.bin
 ../../rom_generator final.bin
 cp final.data ../../memory_contents/instruction.data #Always writing on the same file simplifies the vivado simulation
 
@@ -77,11 +87,11 @@ echo "Simulation log saved to ${LOG_FILE}"
 cd ..
 
 python3 scripts/spike_log_to_trace_csv.py --log "out_$(date +%Y-%m-%d)"/spike_sim/${TEST}_0.log --csv spike_deneme.csv -f
-python3 scripts/trace_to_csv.py -l ../../trace.log -o deneme.csv
+python3 scripts/trace_to_csv.py -l ~/trace.log -o deneme.csv
 python3 scripts/compare.py deneme.csv spike_deneme.csv combined.csv
 
 # Add a counter to limit repetitions
-MAX_ITER=100
+MAX_ITER=1000
 COUNTER_FILE=".run_counter"
 
 if [ ! -f "$COUNTER_FILE" ]; then

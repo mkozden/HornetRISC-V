@@ -105,11 +105,21 @@ begin
     if (!is_exp_underFlow)
     begin
         if(norm_underflow) begin //This case takes precedence over all else, since offsetA is used in almost all of them
+            // CORRECTED RIGHT SHIFT STICKY CALCULATION
+            shift_amount = (offSetA - inExp);
+            
+            // Handle cases where shift_amount exceeds input width
+            if (shift_amount > 27) begin
+                SigTemp = 27'b0;
+                sticky = |inSig;  // All bits shifted out
+            end
+            else begin
+                SigTemp = inSig >> shift_amount;
+                // Capture OR of bits shifted out (LSBs of original)
+                sticky = |(inSig & ((1 << shift_amount) - 1));
+            end
+            
             ExpTemp = 8'b0;
-            shift_amount = (offSetA - inExp); //If subtracting offsetA from exp would underflow it, instead set exp to 0 and shift sig by offsetA-inExp
-            SigTemp = inSig >> shift_amount;
-            unshift = SigTemp << shift_amount;
-            sticky = (SigTemp != unshift);
             underflow = 1'b1;
         end
         else if (inSig[26] == 1'b1) // if mantissa carry is 1 
@@ -144,9 +154,16 @@ begin
     begin
         //SigTemp        = inSig >> inExp_2C + 1;
         shift_amount = inExp_2C + 1 + (offSetA - 1); 
-        SigTemp = inSig >> shift_amount;
-        unshift = SigTemp << shift_amount;
-        sticky = (SigTemp != unshift);
+        // Handle cases where shift_amount exceeds input width
+            if (shift_amount > 27) begin
+                SigTemp = 27'b0;
+                sticky = |inSig;  // All bits shifted out
+            end
+            else begin
+                SigTemp = inSig >> shift_amount;
+                // Capture OR of bits shifted out (LSBs of original)
+                sticky = |(inSig & ((1 << shift_amount) - 1));
+            end
 
 
         if(SigTemp[26]) begin

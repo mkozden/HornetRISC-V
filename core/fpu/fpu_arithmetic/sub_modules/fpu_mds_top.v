@@ -165,13 +165,14 @@ module fpu_mds_top(
                             else OUT_reg <= muldiv_sqrt;
                         end
                     end
-                    else if(underflow) begin //Underflow edge cases
-                        if(sign_O && muldiv_sqrt == 32'h80000000) begin //For negative numbers, only if output value is initially -0.0
+                    // Might have solved this problem in div_Normalizer with a more general solution so this solution might be spesific and unnecessary
+                    else if(underflow) begin //Underflow edge cases // Did fix for division underflows (sometimes rounding messes it up) (also, it can be rounded to smallest negative or positive number if it is needed during division underflow)
+                        if(sign_O && ((muldiv_sqrt == 32'h80000000) || ((mds_op == 2'b01) && (muldiv_sqrt == 32'h80000002)))) begin //For negative numbers, only if output value is initially -0.0
                             if((rounding_mode == 3'b010))
                                 OUT_reg <= 32'h80000001; //For RDN, -0.0 rounds down to smallest mag. negative number
                             else OUT_reg <= muldiv_sqrt;
                         end
-                        else if(!sign_O && muldiv_sqrt == 32'b0) begin //For positive numbers, only if output value is initially 0.0
+                        else if(!sign_O && ((muldiv_sqrt == 32'b0) || ((mds_op == 2'b01) && (muldiv_sqrt == 32'h2)))) begin //For positive numbers, only if output value is initially 0.0
                             if((rounding_mode == 3'b011))
                                 OUT_reg <= 32'h0000001; //For RUP, +0.0 rounds up to smallest mag. positive number
                             else OUT_reg <= muldiv_sqrt;

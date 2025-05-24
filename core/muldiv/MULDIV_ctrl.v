@@ -209,7 +209,8 @@ begin
 				if(op_mul == 2'b00) //00: MUL, 01:MULH, 10:MULHSU, 11:MULHU
                     fastres = A_2C;
                 else if(op_mul == 2'b01) //For MULH, result is the sign bit of the 2's comp of B, repeated.
-                    fastres = {32{A_2C[31]}};
+                    if(A_2C == A) fastres = 32'd0; //For the edge case 0x80000000, 2's comp of B is equal to itself, but its upper bits should be zero.
+                    else fastres = {32{A_2C[31]}};
                 else
                     fastres = 32'hffffffff; //Not used for MULHU, but used for MULHSU
 			end
