@@ -7,3 +7,4 @@ trace.log
 test/riscv-dv/combined.csv
 test/riscv-dv/deneme.csv
 test/riscv-dv/spike_deneme.csv
+**spike.log
