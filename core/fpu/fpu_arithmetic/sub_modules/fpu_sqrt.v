@@ -7,6 +7,7 @@ module fpu_sqrt
         input         in_exp0,
         input [7:0]   exp_half,
         input [23:0]  in_sig,
+        input [2:0]   rounding_mode,
         output        sqrt_done,
         output [26:0] sqrt_proNorm_sig,
         output [7:0]  sqrt_proNorm_exp,
@@ -24,7 +25,8 @@ lzc44 lzc44(.x(sqrt_sig), .z(lzc_for_subnorm));
 
 wire [43:0] sqrt_norm_sig;
 assign sqrt_norm_sig = sqrt_sig << lzc_for_subnorm;
-assign sqrt_proNorm_sig = is_subnormal ? {sqrt_norm_sig[43:18],|sqrt_sig[17:0]} : {sqrt_sig[43:18],|sqrt_sig[17:0]}; //So that the sticky bit is properly set.
+assign sqrt_proNorm_sig = is_subnormal ? ( (rounding_mode == 3'b011) ? {sqrt_norm_sig[43:20],sqrt_sig[19:18],|sqrt_sig[17:0]} : {sqrt_norm_sig[43:18],|sqrt_norm_sig[17:0]}) : 
+                                         {sqrt_sig[43:18],|sqrt_sig[17:0]}; //So that the sticky bit is properly set.
 assign sqrt_proNorm_exp = is_subnormal ? exp_half - lzc_for_subnorm : exp_half;
 
 assign uf = is_subnormal ?  !sqrt_norm_sig[43] : 1'b0; // if hidden bit is 0 then, underflow. Normal inputs can't set underflow flag.

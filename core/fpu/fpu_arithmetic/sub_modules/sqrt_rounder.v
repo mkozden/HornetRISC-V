@@ -1,5 +1,5 @@
 
-module sqrt_rounder(input wire[3:0] LGRS,
+module sqrt_rounder(input wire[2:0] LGRS,
                     input wire[2:0] rounding_mode,
                     input wire      sign_O,
                     output reg      round_out);
@@ -17,10 +17,11 @@ always @(*)
 begin
     case(rounding_mode)
     3'b000:begin
-           casez(LGRS[2:0])
-           3'b0??: round_out = 1'b0; 
-           3'b100: round_out = LGRS[3] ? 1'b1 : 1'b0;       
-           default: round_out = 1'b1;
+           casez(LGRS)
+           3'b0??: round_out = 1'b0;
+           3'b1??: round_out = 1'b1;
+           default: round_out = 1'b0;
+
            endcase
            end
     3'b001:round_out = 1'b0;
@@ -40,7 +41,7 @@ begin
                 round_out = 1'b0;
             end
     3'b100:begin
-           casez(LGRS[2:0])
+           casez(LGRS)
                3'b0??: round_out = 1'b0;
                default: round_out = 1'b1;
            endcase

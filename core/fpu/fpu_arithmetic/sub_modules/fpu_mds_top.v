@@ -64,8 +64,8 @@ module fpu_mds_top(
     wire[7:0]   sqrt_proNorm_exp;
     wire        uf_sqrt;
 
-    fpu_sqrt fpu_sqrt(.clk(clk), .reset(reset), .start(sqrt_start), .is_subnormal(subnormal_sqrt_in), .in_exp0(exp_A[0]), .exp_half(preNorm_exp[7:0]), .in_sig(sig_A), .sqrt_done(sqrt_rdy), .sqrt_proNorm_sig(sqrt_proNorm_sig), .sqrt_proNorm_exp(sqrt_proNorm_exp), .uf(uf_sqrt));
-    sqrt_rounder sqrt_rounder(.LGRS(sqrt_proNorm_sig[3:0]), .rounding_mode(rounding_mode), .sign_O(sign_O), .round_out(sqrt_round_out));
+    fpu_sqrt fpu_sqrt(.clk(clk), .reset(reset), .start(sqrt_start), .is_subnormal(subnormal_sqrt_in), .in_exp0(exp_A[0]), .exp_half(preNorm_exp[7:0]), .in_sig(sig_A), .rounding_mode(rounding_mode), .sqrt_done(sqrt_rdy), .sqrt_proNorm_sig(sqrt_proNorm_sig), .sqrt_proNorm_exp(sqrt_proNorm_exp), .uf(uf_sqrt));
+    sqrt_rounder sqrt_rounder(.LGRS(sqrt_proNorm_sig[2:0]), .rounding_mode(rounding_mode), .sign_O(sign_O), .round_out(sqrt_round_out));
 
 
     // Final Normalizer Signals

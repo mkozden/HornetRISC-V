@@ -3,8 +3,8 @@
 # SW Build 4029153 on Fri Oct 13 20:14:34 MDT 2023
 # IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
 # SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
-# Start of session at: Sun May 25 16:42:58 2025
-# Process ID: 2148
+# Start of session at: Sun May 25 19:40:47 2025
+# Process ID: 24616
 # Current directory: D:/Documents/RISCV_PROJE/Hornet_RISC-V/test/fputest3
 # Command line: vivado.exe -mode batch -source run_sim.tcl -notrace
 # Log file: D:/Documents/RISCV_PROJE/Hornet_RISC-V/test/fputest3/vivado.log
@@ -18,7 +18,7 @@ Finished scanning sources
 INFO: [IP_Flow 19-234] Refreshing IP repositories
 INFO: [IP_Flow 19-1704] No user IP repositories specified
 INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'E:/XILINX/Vivado/2023.2/data/ip'.
-open_project: Time (s): cpu = 00:00:05 ; elapsed = 00:00:06 . Memory (MB): peak = 466.219 ; gain = 192.773
+open_project: Time (s): cpu = 00:00:05 ; elapsed = 00:00:06 . Memory (MB): peak = 466.180 ; gain = 192.031
 Command: launch_simulation 
 INFO: [Vivado 12-12493] Simulation top is 'barebones_top_tb'
 WARNING: [Vivado 12-13340] Unable to auto find GCC executables from simulator install path! (path not set)
@@ -67,8 +67,8 @@ open_wave_config {D:/Documents/RISCV_PROJE/Hornet_RISC-V/HornetRISCV-vivado/Horn
 source barebones_top_tb.tcl
 INFO: [USF-XSim-96] XSim completed. Design snapshot 'barebones_top_tb_behav' loaded.
 INFO: [USF-XSim-97] XSim simulation ran for 1000ns
-launch_simulation: Time (s): cpu = 00:00:01 ; elapsed = 00:00:07 . Memory (MB): peak = 490.613 ; gain = 24.395
-$finish called at time : 183501787500 ps : File "D:/Documents/RISCV_PROJE/Hornet_RISC-V/peripherals/debug_interface_wb.v" Line 47
-run: Time (s): cpu = 00:02:23 ; elapsed = 00:02:46 . Memory (MB): peak = 490.613 ; gain = 0.000
-INFO: xsimkernel Simulation Memory Usage: 17444 KB (Peak: 17444 KB), Simulation CPU Usage: 130655 ms
-INFO: [Common 17-206] Exiting Vivado at Sun May 25 16:45:59 2025...
+launch_simulation: Time (s): cpu = 00:00:01 ; elapsed = 00:00:08 . Memory (MB): peak = 489.523 ; gain = 23.344
+$finish called at time : 347341787500 ps : File "D:/Documents/RISCV_PROJE/Hornet_RISC-V/peripherals/debug_interface_wb.v" Line 47
+run: Time (s): cpu = 00:03:56 ; elapsed = 00:04:32 . Memory (MB): peak = 489.523 ; gain = 0.000
+INFO: xsimkernel Simulation Memory Usage: 17464 KB (Peak: 17464 KB), Simulation CPU Usage: 213671 ms
+INFO: [Common 17-206] Exiting Vivado at Sun May 25 19:45:37 2025...

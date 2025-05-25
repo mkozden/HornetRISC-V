@@ -30,7 +30,7 @@ SATP_MODE = satp_mode_t.BARE
 supported_privileged_mode = [privileged_mode_t.MACHINE_MODE]
 
 # Unsupported instructions
-unsupported_instr = [riscv_instr_name_t.FMADD_S, riscv_instr_name_t.FMSUB_S, riscv_instr_name_t.FNMADD_S, riscv_instr_name_t.FNMSUB_S, riscv_instr_name_t.FSQRT_S]
+unsupported_instr = [riscv_instr_name_t.FMADD_S, riscv_instr_name_t.FMSUB_S, riscv_instr_name_t.FNMADD_S, riscv_instr_name_t.FNMSUB_S]
 
 # ISA supported by the processor
 supported_isa = [riscv_instr_group_t.RV32I, riscv_instr_group_t.RV32M,

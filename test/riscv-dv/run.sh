@@ -21,9 +21,10 @@ if [ "$USE_RISCVDV" -eq 1 ]; then
         exit 1
     fi
 
-    $(CC32)-objcopy -O binary -j .init -j .text -j .rodata -j .sdata asm_test/${TEST}_0.o final.bin
+    ${CC32}-objcopy -O binary -j .init -j .text -j .rodata -j .sdata asm_test/${TEST}_0.o final.bin
     ../../rom_generator final.bin
     cp final.data ../../memory_contents/instruction.data #Always writing on the same file simplifies the vivado simulation
+    VIVADO_DURATION="1ms"
 else
     if [ -d "../${TEST}" ]; then
         CCFLAGS="-march=rv32imf -mabi=ilp32f -Os -fno-math-errno -T ../linksc-10000.ld -lm -nostartfiles -ffunction-sections -fdata-sections -Wl,--gc-sections -g -ggdb -o ${TEST}.elf"
@@ -36,6 +37,7 @@ else
         ${SPIKE_PATH}/spike --log-commits --isa=rv32imf --priv=M -m0xf000:1,0x10000:0x8000,0x8010:1 -l --log=spike.log ${TEST}.elf
         echo "Spike simulation completed"
         PROJECT_DIR="../../${PROJECT_NAME}" # 3 directories up relative to the test folder
+        VIVADO_DURATION="400ms"
     else
         echo "Directory not found"
         exit 1
@@ -60,7 +62,7 @@ if {[file exists ${WAVE_CONFIG}]} {
 launch_simulation
 
 # Run simulation (adjust time as needed)
-run 200ms
+run ${VIVADO_DURATION}
 
 # Close project and exit
 close_project
