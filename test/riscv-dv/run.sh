@@ -7,20 +7,41 @@ PROJECT_DIR="../../../${PROJECT_NAME}" # 3 directories up relative to the "out" 
 SIM_TOP="barebones_top_tb.v"
 LOG_FILE="simulation.log"
 WAVE_CONFIG="barebones_top_tb_behav.wcfg"  # Optional waveform config
-TEST="riscv_floating_point_arithmetic_test"
+CC32=riscv32-unknown-elf
+USE_RISCVDV=0
+TEST="fputest3"
 
-python3 run.py --verbose --test ${TEST} --simulator pyflow --isa rv32imf --mabi ilp32f --sim_opts=""
+if [ "$USE_RISCVDV" -eq 1 ]; then
+    python3 run.py --verbose --test ${TEST} --simulator pyflow --isa rv32imf --mabi ilp32f --sim_opts=""
 
-if [ -d "out_$(date +%Y-%m-%d)" ]; then
-    cd "out_$(date +%Y-%m-%d)"
+    if [ -d "out_$(date +%Y-%m-%d)" ]; then
+        cd "out_$(date +%Y-%m-%d)"
+    else
+        echo "Directory not found"
+        exit 1
+    fi
+
+    $(CC32)-objcopy -O binary -j .init -j .text -j .rodata -j .sdata asm_test/${TEST}_0.o final.bin
+    ../../rom_generator final.bin
+    cp final.data ../../memory_contents/instruction.data #Always writing on the same file simplifies the vivado simulation
 else
-    echo "Directory not found"
-    exit 1
+    if [ -d "../${TEST}" ]; then
+        CCFLAGS="-march=rv32imf -mabi=ilp32f -Os -fno-math-errno -T ../linksc-10000.ld -lm -nostartfiles -ffunction-sections -fdata-sections -Wl,--gc-sections -g -ggdb -o ${TEST}.elf"
+        cd "../${TEST}"
+        ${CC32}-gcc ${TEST}.s ../crt0.s ${CCFLAGS} # Might need to change the test extension to .c if the test is written in C
+        ${CC32}-objcopy -O binary -j .init -j .text -j .rodata -j .sdata ${TEST}.elf ${TEST}.bin
+        ../rom_generator ${TEST}.bin
+        cp ${TEST}.data ../memory_contents/instruction.data
+        echo "Test compiled, running spike"
+        ${SPIKE_PATH}/spike --log-commits --isa=rv32imf --priv=M -m0xf000:1,0x10000:0x8000,0x8010:1 -l --log=spike.log ${TEST}.elf
+        echo "Spike simulation completed"
+        PROJECT_DIR="../../${PROJECT_NAME}" # 3 directories up relative to the test folder
+    else
+        echo "Directory not found"
+        exit 1
+    fi
 fi
 
-riscv32-unknown-elf-objcopy -O binary -j .init -j .text -j .rodata -j .sdata asm_test/${TEST}_0.o final.bin
-../../rom_generator final.bin
-cp final.data ../../memory_contents/instruction.data #Always writing on the same file simplifies the vivado simulation
 
 # Generate TCL script
 cat > run_sim.tcl << EOF
@@ -39,7 +60,7 @@ if {[file exists ${WAVE_CONFIG}]} {
 launch_simulation
 
 # Run simulation (adjust time as needed)
-run 95612500ps
+run 200ms
 
 # Close project and exit
 close_project
@@ -54,7 +75,7 @@ else
 fi
 
 # Run simulation
-echo "Starting simulation at $(date)" | tee ${LOG_FILE}
+echo "Starting RTL simulation at $(date)" | tee ${LOG_FILE}
 if [ "$WSL" -eq 0 ]; then
     vivado -mode batch -source run_sim.tcl -notrace | tee -a ${LOG_FILE}
 else
@@ -71,42 +92,51 @@ else
 fi
 
 # Cleanup
-#rm -f run_sim.tcl
+rm -f run_sim.tcl
 
 echo "Simulation log saved to ${LOG_FILE}"
-cd ..
 
-python3 scripts/spike_log_to_trace_csv.py --log "out_$(date +%Y-%m-%d)"/spike_sim/${TEST}_0.log --csv spike_deneme.csv -f
-python3 scripts/trace_to_csv.py -l ../../trace.log -o deneme.csv
-python3 scripts/compare.py deneme.csv spike_deneme.csv combined.csv
+if [ "$USE_RISCVDV" -eq 1 ]; then
+    cd ..
+    python3 scripts/spike_log_to_trace_csv.py --log "out_$(date +%Y-%m-%d)"/spike_sim/${TEST}_0.log --csv spike_deneme.csv -f
+    python3 scripts/trace_to_csv.py -l ../../trace.log -o deneme.csv
+    python3 scripts/compare.py deneme.csv spike_deneme.csv combined.csv
 
-# Add a counter to limit repetitions
-MAX_ITER=1000
-COUNTER_FILE=".run_counter"
+    # Add a counter to limit repetitions
+    MAX_ITER=1000
+    COUNTER_FILE=".run_counter"
 
-if [ ! -f "$COUNTER_FILE" ]; then
-    echo 1 > "$COUNTER_FILE"
-fi
+    if [ ! -f "$COUNTER_FILE" ]; then
+        echo 1 > "$COUNTER_FILE"
+    fi
 
-COUNTER=$(cat "$COUNTER_FILE")
+    COUNTER=$(cat "$COUNTER_FILE")
 
-if python3 scripts/compare.py deneme.csv spike_deneme.csv combined.csv > /dev/null 2>&1; then
-    if [ $? -ne 1 ]; then
-        if [ "$COUNTER" -lt "$MAX_ITER" ]; then
-            COUNTER=$((COUNTER + 1))
-            echo "$COUNTER" > "$COUNTER_FILE"
-            # Print colored message (green)
-            echo -e "\033[1;32mRepeating the script as last test had no failures (iteration $COUNTER/$MAX_ITER)\033[0m"
-            exec "$0"
+    if python3 scripts/compare.py deneme.csv spike_deneme.csv combined.csv > /dev/null 2>&1; then
+        if [ $? -ne 1 ]; then
+            if [ "$COUNTER" -lt "$MAX_ITER" ]; then
+                COUNTER=$((COUNTER + 1))
+                echo "$COUNTER" > "$COUNTER_FILE"
+                # Print colored message (green)
+                echo -e "\033[1;32mRepeating the script as last test had no failures (iteration $COUNTER/$MAX_ITER)\033[0m"
+                exec "$0"
+            else
+                echo "Maximum iterations ($MAX_ITER) reached. Stopping."
+                rm -f "$COUNTER_FILE"
+            fi
         else
-            echo "Maximum iterations ($MAX_ITER) reached. Stopping."
-            rm -f "$COUNTER_FILE"
+            # Reset counter on failure
+            echo 1 > "$COUNTER_FILE"
         fi
     else
         # Reset counter on failure
         echo 1 > "$COUNTER_FILE"
     fi
 else
-    # Reset counter on failure
-    echo 1 > "$COUNTER_FILE"
+    cd "../riscv-dv"
+    python3 scripts/spike_log_to_trace_csv.py --log "../${TEST}/spike.log" --csv spike_deneme.csv -f
+    python3 scripts/trace_to_csv.py -l ../../trace.log -o deneme.csv
+    python3 scripts/compare.py deneme.csv spike_deneme.csv combined.csv
 fi
+
+

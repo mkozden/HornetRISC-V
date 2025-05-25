@@ -5,19 +5,19 @@ module sqrt_24
         input is_exp_odd,
         input [23:0] significand,   
         output done,     
-        output reg [35:0] sq_root 
+        output reg [43:0] sq_root 
     );
 
  
  
-    wire [37:0] first_op, second_op; //From 28
-    wire signed [37:0] result; //From 28
-    reg [71:0] reg_adjusted_input; //From 53
-    reg [37:0] reg_remainder; //From 28
-    reg [35:0] reg_partial_root; //From 26
-    assign first_op = { reg_remainder[35:0], reg_adjusted_input[71:70]};
-    assign second_op = { reg_partial_root, reg_remainder[37], 1'b1};
-    assign result = reg_remainder[37] ? first_op + second_op : first_op - second_op;
+    wire [45:0] first_op, second_op; //From 28
+    wire signed [45:0] result; //From 28
+    reg [87:0] reg_adjusted_input; //From 53
+    reg [45:0] reg_remainder; //From 28
+    reg [43:0] reg_partial_root; //From 26
+    assign first_op = { reg_remainder[43:0], reg_adjusted_input[87:86]};
+    assign second_op = { reg_partial_root, reg_remainder[45], 1'b1};
+    assign result = reg_remainder[45] ? first_op + second_op : first_op - second_op;
    
     wire shiftSig, shiftQ, load;
 
@@ -35,20 +35,20 @@ module sqrt_24
 	   else begin
             if (load) begin
                 sq_root <= 0;
-                reg_adjusted_input <= is_exp_odd ? {significand, 48'b0} : {1'b0, significand, 47'b0};
+                reg_adjusted_input <= is_exp_odd ? {significand, 64'b0} : {1'b0, significand, 63'b0};
                 reg_remainder <= 0;
                 reg_partial_root <= 0;
             end
 
             else begin
                 if (shiftSig) 
-                    reg_adjusted_input <= {reg_adjusted_input[69:0], 2'b00};
+                    reg_adjusted_input <= {reg_adjusted_input[85:0], 2'b00};
                 else 
                     reg_adjusted_input <= reg_adjusted_input;
 
 
                 if (shiftQ)
-                    reg_partial_root <= {reg_partial_root[34:0], !result[37]};
+                    reg_partial_root <= {reg_partial_root[42:0], !result[45]};
                 else
                     reg_partial_root <= reg_partial_root;
                 
@@ -146,7 +146,7 @@ module sqrt_control
             ITR: begin
               
                 load = 1'b0;
-                if(itr != 36) begin
+                if(itr != 44) begin
                     shiftSig = 1'b1;
                     shiftQ = 1'b1;
 
