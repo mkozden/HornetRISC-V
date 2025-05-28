@@ -92,7 +92,7 @@ module fpu_mds_top(
                          mds_op == 2'b10 ? sqrt_proNorm_exp :
                          0;
 
-    mds_final_normalizer mds_final_normalizer(sig_after_round, of_from_pro_norm, proNorm_exp, final_exp, final_sig, of_final_norm);
+    mds_final_normalizer mds_final_normalizer(sig_after_round, of_from_pro_norm, proNorm_exp, mds_op, final_exp, final_sig, of_final_norm);
 
 
   

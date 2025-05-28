@@ -90,7 +90,6 @@ assign uf = underflow;
 wire norm_underflow;
 reg [7:0] shift_amount;
 reg sticky;
-reg [26:0] unshift;
 
 assign outExp = ExpTemp[7:0];
 lzc27 lcz(.x(inSig), .z(zeroCount));
@@ -126,7 +125,6 @@ begin
         begin
             ExpTemp = inExp + (offSetB  - 1) - (offSetA - 1);
             SigTemp = inSig;
-            unshift = 27'b0;
             sticky = SigTemp[0];
             underflow = 1'b0; 
         end
@@ -136,7 +134,6 @@ begin
             
             ExpTemp = 8'b0;
             SigTemp = inSig << inExp - 1;
-            unshift = 27'b0;
             sticky = SigTemp[0];
             underflow = 1'b1;
             
@@ -145,7 +142,6 @@ begin
         begin
             ExpTemp = inExp - zeroCount + (offSetB  - 1) - (offSetA - 1) ;
             SigTemp = inSig << zeroCount;
-            unshift = 27'b0;
             sticky = SigTemp[0];
             underflow = 1'b0; 
         end  

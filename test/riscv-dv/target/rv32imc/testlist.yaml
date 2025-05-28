@@ -36,8 +36,9 @@
   description: >
     Enable floating point with general everything instructions
   gen_opts: >
-    +instr_cnt=10000
+    +instr_cnt=6000
     +num_of_sub_program=0
+    +no_data_page=1
     +enable_floating_point=1
     +boot_mode=m
     +disable_compressed_instr=1

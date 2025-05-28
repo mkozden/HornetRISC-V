@@ -72,6 +72,9 @@ assign of = overflow;
 assign outExp = ExpTemp[7:0];
 lzc27 lcz(.x(inSig[46:20]), .z(zeroCount));
  
+reg [7:0] shift_amount;
+reg sticky;
+
 always @(*)
 begin
     if(!is_exp_underFlow)
@@ -81,10 +84,10 @@ begin
         else if  (inSig[46])
             RS = {lrs[1:0]};
         else
-            RS = {SigTemp[22], |SigTemp[21:0]};
+            RS = {SigTemp[22], |SigTemp[21:0] | sticky};
     end
     else
-            RS = {SigTemp[22], |SigTemp[21:0]};
+            RS = {SigTemp[22], |SigTemp[21:0] | sticky};
 
 end    
 
@@ -99,13 +102,15 @@ begin
         if (inSig[47] == 1'b1) // if mantissa carry is 1 
         begin
             ExpTemp = inExp + 1;
-            SigTemp = inSig >> 1; 
+            SigTemp = inSig >> 1;
+            sticky = inSig[0]; 
             uf = 1'b0;
         end
         else if (inSig[46] == 1'b1)
         begin
             ExpTemp = inExp;
-            SigTemp = inSig; 
+            SigTemp = inSig;
+            sticky = SigTemp[0]; 
             uf = 1'b0;     
         end
         else if (inExp == 1 | inExp <= zeroCount)
@@ -113,21 +118,34 @@ begin
             
             ExpTemp = 8'b0;
             SigTemp = inSig << inExp - 1;
+            sticky = SigTemp[0];
             uf = 1'b1;
             
         end
         else
         begin
             ExpTemp = inExp - zeroCount;
-            SigTemp = inSig << zeroCount; 
+            SigTemp = inSig << zeroCount;
+            sticky = SigTemp[0]; 
             uf = 1'b1;
         end  
     end
     else
     begin
         
-        SigTemp = inSig >> inExp_2C + 1 ;
-
+        //SigTemp = inSig >> inExp_2C + 1 ;
+        shift_amount = inExp_2C + 1; 
+        // Handle cases where shift_amount exceeds input width
+            if (shift_amount > 47) begin
+                SigTemp = 47'b0;
+                sticky = |inSig;  // All bits shifted out
+            end
+            else begin
+                SigTemp = inSig >> shift_amount;
+                // Capture OR of bits shifted out (LSBs of original)
+                sticky = |(inSig & ((1 << shift_amount) - 1));
+            end
+        
         if(SigTemp[46])
             ExpTemp = 1;
         else
