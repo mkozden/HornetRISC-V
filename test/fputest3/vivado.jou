@@ -1,16 +1,26 @@
 #-----------------------------------------------------------
-# Vivado v2023.2 (64-bit)
-# SW Build 4029153 on Fri Oct 13 20:14:34 MDT 2023
-# IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
-# SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
-# Start of session at: Sun May 25 19:40:47 2025
-# Process ID: 24616
-# Current directory: D:/Documents/RISCV_PROJE/Hornet_RISC-V/test/fputest3
-# Command line: vivado.exe -mode batch -source run_sim.tcl -notrace
-# Log file: D:/Documents/RISCV_PROJE/Hornet_RISC-V/test/fputest3/vivado.log
-# Journal file: D:/Documents/RISCV_PROJE/Hornet_RISC-V/test/fputest3\vivado.jou
-# Running On: DESKTOP-SMT4I8Q, OS: Windows, CPU Frequency: 3500 MHz, CPU Physical cores: 12, Host memory: 17090 MB
+# Vivado v2025.2 (64-bit)
+# SW Build 6299465 on Fri Nov 14 12:34:56 MST 2025
+# IP Build 6300035 on Fri Nov 14 10:48:45 MST 2025
+# SharedData Build 6298862 on Thu Nov 13 04:50:51 MST 2025
+# Start of session at: Mon Mar  9 21:55:30 2026
+# Process ID         : 281856
+# Current directory  : /run/media/mkaan/HDD1/Documents/RISCV_PROJE/Hornet_RISC-V/test/fputest3
+# Command line       : vivado -mode batch -source run_sim.tcl -notrace
+# Log file           : /run/media/mkaan/HDD1/Documents/RISCV_PROJE/Hornet_RISC-V/test/fputest3/vivado.log
+# Journal file       : /run/media/mkaan/HDD1/Documents/RISCV_PROJE/Hornet_RISC-V/test/fputest3/vivado.jou
+# Running On         : cachyos-x8664
+# Platform           : cachyos
+# Operating System   : CachyOS
+# Processor Detail   : AMD Ryzen 5 5600 6-Core Processor
+# CPU Frequency      : 3559.932 MHz
+# CPU Physical cores : 6
+# CPU Logical cores  : 12
+# Host memory        : 16663 MB
+# Swap memory        : 33842 MB
+# Total Virtual      : 50506 MB
+# Available Virtual  : 36935 MB
 #-----------------------------------------------------------
 source run_sim.tcl -notrace
-open_wave_config {D:/Documents/RISCV_PROJE/Hornet_RISC-V/HornetRISCV-vivado/HornetRISCV-vivado.srcs/sim_1/imports/Hornet RISC-V/HornetRISCV-vivado/barebones_top_tb_behav.wcfg}
+open_wave_config {/run/media/mkaan/HDD1/Documents/RISCV_PROJE/Hornet_RISC-V/HornetRISCV-vivado/HornetRISCV-vivado.srcs/sim_1/imports/Hornet RISC-V/HornetRISCV-vivado/barebones_top_tb_behav.wcfg}
 source barebones_top_tb.tcl

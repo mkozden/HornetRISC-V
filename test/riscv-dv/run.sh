@@ -8,8 +8,8 @@ SIM_TOP="barebones_top_tb.v"
 LOG_FILE="simulation.log"
 WAVE_CONFIG="barebones_top_tb_behav.wcfg"  # Optional waveform config
 CC32=riscv32-unknown-elf
-USE_RISCVDV=1
-TEST="riscv_floating_point_general_test"
+USE_RISCVDV=0
+TEST="fputest3"
 
 if [ "$USE_RISCVDV" -eq 1 ]; then
     python3 run.py --verbose --test ${TEST} --simulator pyflow --isa rv32imf --mabi ilp32f --sim_opts=""
@@ -34,7 +34,11 @@ else
         ../rom_generator ${TEST}.bin
         cp ${TEST}.data ../memory_contents/instruction.data
         echo "Test compiled, running spike"
-        ${SPIKE_PATH}/spike --log-commits --isa=rv32imf --priv=M -m0xf000:1,0x10000:0x8000,0x8010:1 -l --log=spike.log ${TEST}.elf
+        if [[ -z "${SPIKE_PATH}" ]]; then
+          spike --log-commits --isa=rv32imf --priv=M -m0xf000:1,0x10000:0x8000,0x8010:1 -l --log=spike.log ${TEST}.elf
+        else
+          ${SPIKE_PATH}/spike --log-commits --isa=rv32imf --priv=M -m0xf000:1,0x10000:0x8000,0x8010:1 -l --log=spike.log ${TEST}.elf
+        fi
         echo "Spike simulation completed"
         PROJECT_DIR="../../${PROJECT_NAME}" # 3 directories up relative to the test folder
         VIVADO_DURATION="400ms"

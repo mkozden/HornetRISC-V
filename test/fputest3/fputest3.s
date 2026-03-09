@@ -1,7 +1,7 @@
 .global main
 main:
-	li a1, 0x000e0000
-	li a2, 0x00100000
+	li a1, 0x00000000
+	li a2, 0x00001000
 loop:
 	beq a1, a2, end
 	fmv.w.x fa1, a1
