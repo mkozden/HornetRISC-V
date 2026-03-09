@@ -9,7 +9,7 @@ LOG_FILE="simulation.log"
 WAVE_CONFIG="barebones_top_tb_behav.wcfg"  # Optional waveform config
 CC32=riscv32-unknown-elf
 USE_RISCVDV=0
-TEST="fputest3"
+TEST="fpu_edge_cases"
 
 if [ "$USE_RISCVDV" -eq 1 ]; then
     python3 run.py --verbose --test ${TEST} --simulator pyflow --isa rv32imf --mabi ilp32f --sim_opts=""
