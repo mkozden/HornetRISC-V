@@ -3,10 +3,10 @@ module fpu_top_ctrl
     input clk,
     input reset,
     input start,
-    input [4:0] op,
     input done,
     output reg in_sel,
-    output reg reg_AB_en
+    output reg reg_AB_en,
+    output reg f2_valid
 );
 
 
@@ -27,26 +27,22 @@ always @* begin
         FIRST: begin
             in_sel = 1'b1;
             reg_AB_en = 1'b1;
-            if(start && done) //If both signals are on at the same cycle, this is actually a single-cycle operation (think of edge cases for sqrt, mul and div)
-                next_state = FIRST;
-            else
-                casez(op)
-                    5'b0001?, 5'b01011 : next_state = SECOND;
-                    default : next_state = FIRST;
-                endcase
-        end 
+            f2_valid = 1'b0;
+            next_state = start ? SECOND : FIRST;
+        end
         SECOND: begin
             in_sel = 1'b0;
             reg_AB_en = 1'b0;
+            f2_valid = 1'b1;
             if(start)
                 if(done)
                     next_state = FIRST;
                 else
                     next_state = SECOND;
-            else 
+            else
                 next_state = FIRST;
         end
-    
+
     endcase
 end
 

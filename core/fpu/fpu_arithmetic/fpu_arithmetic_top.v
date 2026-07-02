@@ -5,11 +5,11 @@ module fpu_arithmetic_top
     input        reset,
     input        start,
     input  [4:0] op,
-    input  [2:0] rounding_mode,
-    input  [2:0] csr_dynamic_rounding_mode,
+    input  [2:0] round_override, // resolved (static-vs-dynamic) rounding mode, latched at fpu_top for F1/F2 stability
     input [31:0] A,
     input [31:0] B,
     input        rs2_lsb,
+    input        f2_valid,
     // outputs
     output [31:0] fpu_arith_out,
     output        done,
@@ -18,7 +18,7 @@ module fpu_arithmetic_top
     output        invalid,
     output        inexact,
     output        div_by_zero
-    
+
 );
 /*
        OP   |     operation
@@ -34,14 +34,11 @@ module fpu_arithmetic_top
    5'b10100 |      FEQ, FLT, FLE
 
 */
-reg [2:0] round_override;
 
-always @(*) begin
-    if(rounding_mode == 3'b111)
-        round_override = csr_dynamic_rounding_mode;
-    else
-        round_override = rounding_mode;
-end
+// F1/F2 pipeline register enable: high while fpu_top_ctrl's FSM is in FIRST.
+// f2_valid is the FSM's SECOND-state flag, so this is just its complement.
+wire reg_AB_en;
+assign reg_AB_en = ~f2_valid;
 
 // decoder signals
 wire       sign_A, sign_B;
@@ -52,8 +49,8 @@ wire       isZeroA, isZeroB;
 wire       isInfA, isInfB, isSignalingA;
 wire       isNaNA, isNaNB, isSignalingB;
 
-fpu_decoder  decA(.in(A), .sign_o(sign_A), .exp_o(exp_A_tmp), .sig_o(sig_A), .isSubnormal(isSubnormalA), .isZero(isZeroA), .isInf(isInfA), .isNaN(isNaNA), .isSignaling(isSignalingA), .exp_o_for_sgninj(exp_A_for_sgninj));         
-fpu_decoder  decB(.in(B), .sign_o(sign_B), .exp_o(exp_B_tmp), .sig_o(sig_B), .isSubnormal(isSubnormalB), .isZero(isZeroB), .isInf(isInfB), .isNaN(isNaNB), .isSignaling(isSignalingB), .exp_o_for_sgninj(exp_B_for_sgninj)); 
+fpu_decoder  decA(.in(A), .sign_o(sign_A), .exp_o(exp_A_tmp), .sig_o(sig_A), .isSubnormal(isSubnormalA), .isZero(isZeroA), .isInf(isInfA), .isNaN(isNaNA), .isSignaling(isSignalingA), .exp_o_for_sgninj(exp_A_for_sgninj));
+fpu_decoder  decB(.in(B), .sign_o(sign_B), .exp_o(exp_B_tmp), .sig_o(sig_B), .isSubnormal(isSubnormalB), .isZero(isZeroB), .isInf(isInfB), .isNaN(isNaNB), .isSignaling(isSignalingB), .exp_o_for_sgninj(exp_B_for_sgninj));
 
 // Add logic for sign injection
 assign exp_A  = op == 5'b00100 ? exp_A_for_sgninj : exp_A_tmp;
@@ -75,7 +72,31 @@ wire [31:0] add_sub_out;
 wire        sub_op;
 assign sub_op = op[0] ? 1'b1 : 1'b0;
 
-fpu_add_sub fas(sign_A, sign_B, exp_A_for_sgninj, exp_B_for_sgninj, sig_A, sig_B, isZeroA, isZeroB, isInfA, isInfB, isNaNA, isNaNB, isSignaling, sub_op, round_override, overflow_add, underflow_add, invalid_add, inexact_add, add_sub_out);
+fpu_add_sub fas(
+    .clk(clk),
+    .reset(reset),
+    .reg_AB_en(reg_AB_en),
+    .sign_A(sign_A),
+    .sign_B(sign_B),
+    .exp_A(exp_A_for_sgninj),
+    .exp_B(exp_B_for_sgninj),
+    .sig_A(sig_A),
+    .sig_B(sig_B),
+    .isZeroA(isZeroA),
+    .isZeroB(isZeroB),
+    .isInfA(isInfA),
+    .isInfB(isInfB),
+    .isNaNA(isNaNA),
+    .isNaNB(isNaNB),
+    .isSignaling(isSignaling),
+    .sub_op(sub_op),
+    .rounding_mode(round_override),
+    .overflow(overflow_add),
+    .underflow(underflow_add),
+    .invalid(invalid_add),
+    .inexact(inexact_add),
+    .OUT(add_sub_out)
+);
 
 
 // MUL-DIV-SQRT signals
@@ -94,7 +115,10 @@ assign mds_op = op[3:0] == 4'b1011 ? 2'b10 : // sqrt
                 op[3:0] == 4'b0011 ? 2'b01 : // div
                                      2'b00 ; // mul
 
-assign mds_start = start & (op == 5'b00010 | op == 5'b00011 | op == 5'b01011);
+wire is_mds;
+assign is_mds = (op == 5'b00010) | (op == 5'b00011) | (op == 5'b01011);
+
+assign mds_start = start & is_mds;
 
 fpu_mds_top fpu_mds_top(clk, mds_start, reset, round_override, isSubnormalA, isZeroA, isZeroB, isInfA, isInfB, isNaNA, isNaNB, isSignaling, sign_A, sign_B, exp_A, exp_B, sig_A, sig_B, mds_op, mds_out, mds_done, overflow_mds, underflow_mds, invalid_mds, inexact_mds, div_by_zero_mds);
 
@@ -112,7 +136,7 @@ wire invalid_min_max;
 // rounding mode's lsb is determine min or max operatin
 
 
-fpu_min_max fpu_min_max(round_override[0], sign_A, sign_B, exp_A_for_sgninj, exp_B_for_sgninj, sig_A, sig_B, isInfA, isInfB, isNaNA, isNaNB, isSignaling, min_max_out, invalid_min_max); 
+fpu_min_max fpu_min_max(round_override[0], sign_A, sign_B, exp_A_for_sgninj, exp_B_for_sgninj, sig_A, sig_B, isInfA, isInfB, isNaNA, isNaNB, isSignaling, min_max_out, invalid_min_max);
 
 //FPU-SIGN INJECTION signals
 wire sign_O_inj;
@@ -138,77 +162,84 @@ wire[9:0] classifier_out;
 fpu_classifier fpu_classifier(sign_A, isSubnormalA, isZeroA, isInfA, isNaNA, isSignalingA, classifier_out);
 
 
+// ============================================================
+// F1/F2 register for the "simple" (single-cycle-class) ops:
+// sgnj, min/max, cvt-to-int, cvt-to-float, compare, classify/fmv.
+// These complete combinationally in F1; their muxed result and
+// flag bits are sampled at the end of F1 (reg_AB_en) and read
+// out in F2, alongside add_sub_out/mds_out.
+// ============================================================
+
+wire [31:0] misc_result;
+assign misc_result = op == 5'b00100                                     ? {sign_O_inj, exp_A, sig_A[22:0]} : // sign injection
+                      op == 5'b00101                                     ? min_max_out                      : // min, max
+                      op == 5'b11000                                     ? cvt_to_int_out                   : // convert to int
+                      op == 5'b11010                                     ? cvt_to_float_out                 : // convert to float
+                      op == 5'b10100                                     ? {31'b0,comp_out}                 : // equ, lt, le
+                      op == 5'b11100 & round_override[0]                  ? {22'b0,classifier_out}           : // classifier out
+                   (op == 5'b11100 | op == 5'b11110) & !(|round_override) ? A                                :
+                      32'b0;
+
+reg [31:0] f12_misc_result;
+reg        f12_invalid_comp;
+reg        f12_invalid_min_max;
+reg        f12_overflow_cvt_to_int;
+
+always @ (posedge clk or negedge reset) begin
+    if(!reset) begin
+        f12_misc_result         <= 32'b0;
+        f12_invalid_comp        <= 1'b0;
+        f12_invalid_min_max     <= 1'b0;
+        f12_overflow_cvt_to_int <= 1'b0;
+    end
+    else if(reg_AB_en) begin
+        f12_misc_result         <= misc_result;
+        f12_invalid_comp        <= invalid_comp;
+        f12_invalid_min_max     <= invalid_min_max;
+        f12_overflow_cvt_to_int <= overflow_cvt_to_int;
+    end
+end
 
 
+// exception flag assignments — every term is sampled from the F2 domain
+// (fpu_add_sub's outputs are already F2-combinational, mds outputs are
+// already registered/F2-aligned, and the misc-op flags come from the
+// F1/F2 register above).
 
-
-// exception flag assignments
-
-assign overflow    = op == 5'b00000 | op == 5'b00001                    ? overflow_add          : // add, sub
-                     op == 5'b00010 | op == 5'b00011  | op == 5'b01011  ? overflow_mds          : // mul, div, sqrt
-                     op == 5'b00100                                     ? 1'b0                  : // sign injection
-                     op == 5'b00101                                     ? 1'b0                  : // min, max
-                     op == 5'b11000                                     ? overflow_cvt_to_int  : // convert to int
-                     op == 5'b10100                                     ? 1'b0                  : // equ, lt, le
+assign overflow    = op == 5'b00000 | op == 5'b00001 ? overflow_add          : // add, sub
+                     is_mds                           ? overflow_mds          : // mul, div, sqrt
+                     op == 5'b11000                   ? f12_overflow_cvt_to_int : // convert to int
                      1'b0;
 
 
 
 
-assign underflow   = op == 5'b00000 | op == 5'b00001                    ? underflow_add : // add, sub
-                     op == 5'b00010 | op == 5'b00011  | op == 5'b01011  ? underflow_mds : // mul, div, sqrt
-                     op == 5'b00100                                     ? 1'b0          : // sign injection
-                     op == 5'b00101                                     ? 1'b0          : // min, max
-                     op == 5'b11000                                     ? 1'b0          : // convert to int
-                     op == 5'b10100                                     ? 1'b0          : // equ, lt, le
+assign underflow   = op == 5'b00000 | op == 5'b00001 ? underflow_add : // add, sub
+                     is_mds                           ? underflow_mds : // mul, div, sqrt
                      1'b0;
 
-assign invalid     = op == 5'b00000 | op == 5'b00001                    ? invalid_add     : // add, sub
-                     op == 5'b00010 | op == 5'b00011  | op == 5'b01011  ? invalid_mds     : // mul, div, sqrt
-                     op == 5'b00100                                     ? 1'b0            : // sign injection
-                     op == 5'b00101                                     ? invalid_min_max : // min, max
-                     op == 5'b11000                                     ? 1'b0            : // convert to int
-                     op == 5'b10100                                     ? invalid_comp    : // equ, lt, le
+assign invalid     = op == 5'b00000 | op == 5'b00001 ? invalid_add        : // add, sub
+                     is_mds                           ? invalid_mds        : // mul, div, sqrt
+                     op == 5'b00101                   ? f12_invalid_min_max : // min, max
+                     op == 5'b10100                   ? f12_invalid_comp    : // equ, lt, le
                      1'b0;
 
-assign inexact     = op == 5'b00000 | op == 5'b00001                    ? inexact_add : // add, sub
-                     op == 5'b00010 | op == 5'b00011  | op == 5'b01011  ? inexact_mds : // mul, div, sqrt
-                     op == 5'b00100                                     ? 1'b0        : // sign injection
-                     op == 5'b00101                                     ? 1'b0        : // min, max
-                     op == 5'b11000                                     ? 1'b0        : // convert to int
-                     op == 5'b10100                                     ? 1'b0        : // equ, lt, le
+assign inexact     = op == 5'b00000 | op == 5'b00001 ? inexact_add : // add, sub
+                     is_mds                           ? inexact_mds : // mul, div, sqrt
                      1'b0;
-                     
-assign div_by_zero = op == 5'b00010 | op == 5'b00011  | op == 5'b01011  ? div_by_zero_mds : // mul, div, sqrt
-                     1'b0;
+
+assign div_by_zero = is_mds ? div_by_zero_mds : 1'b0; // mul, div, sqrt
 
 // assignment of final output
 
 assign done        = !start ? 1'b0 :
-                    op == 5'b00010 | op == 5'b00011  | op == 5'b01011 ? mds_done : // mul, div, sqrt
-                    1'b1;
+                     is_mds ? mds_done :
+                     f2_valid;
 
 
 
-assign fpu_arith_out = op == 5'b00000 | op == 5'b00001                    ? add_sub_out                      : // add, sub
-                       op == 5'b00010 | op == 5'b00011  | op == 5'b01011  ? mds_out                          : // mul, div, sqrt
-                       op == 5'b00100                                     ? {sign_O_inj, exp_A, sig_A[22:0]} : // sign injection
-                       op == 5'b00101                                     ? min_max_out                      : // min, max
-                       op == 5'b11000                                     ? cvt_to_int_out                   : // convert to int
-                       op == 5'b11010                                     ? cvt_to_float_out                 : // convert to float
-                       op == 5'b10100                                     ? {31'b0,comp_out}                 : // equ, lt, le
-                       op == 5'b11100 & round_override[0]                  ? {22'b0,classifier_out}           : // classifier out
-                    (op == 5'b11100 | op == 5'b11110) & !(|round_override) ? A                                :
-                       32'b0;
-
-
-
-
-
-
-
-
-
-
+assign fpu_arith_out = op == 5'b00000 | op == 5'b00001 ? add_sub_out      : // add, sub
+                       is_mds                           ? mds_out          : // mul, div, sqrt
+                       f12_misc_result                                    ; // sgnj, min/max, cvt, compare, classify/fmv
 
 endmodule
