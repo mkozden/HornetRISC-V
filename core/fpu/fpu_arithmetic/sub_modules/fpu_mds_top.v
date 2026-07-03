@@ -81,7 +81,19 @@ module fpu_mds_top(
     wire of_div, uf_div;
 
     fpu_div fpu_div(.clk(clk), .reset(reset), .div_start(div_start), .snap_en(snap_en), .preNorm_exp(q_preNorm_exp), .is_exp_underFlow(q_is_exp_underFlow), .sig_A(sig_A), .sig_B(sig_B), .div_proNorm_sig(div_proNorm_sig), .div_proNorm_exp(div_proNorm_exp), .div_rdy(div_rdy), .OF_from_proNorm(of_div), .UF_from_proNorm(uf_div));
-    div_rounder div_rounder(.LGRS(div_proNorm_sig[3:0]), .rounding_mode(rounding_mode), .sign_O(q_sign_O), .round_out(div_round_out));
+
+    // divNormalizer's "normal_else"/"carry"/"exact_uf" branches renormalize
+    // their shifted significand so bit 26 holds an implicit hidden 1 (as if
+    // the result were normal), even when div_proNorm_exp lands on 0 (i.e.
+    // the true result is subnormal). Rounding at the normal bit position
+    // (div_proNorm_sig[3:0]) in that case drops a guard bit that belongs to
+    // the real (post hidden-bit-drop) subnormal mantissa, silently rounding
+    // down cases that should round up (e.g. tf_fdiv_s_014: 0x006d8f05 vs the
+    // correct 0x006d8f06). When bit 26 is set alongside div_proNorm_exp==0,
+    // round one bit lower so the guard/round/sticky bits line up with the
+    // mantissa position mds_final_normalizer will actually keep.
+    wire div_subnorm_shift = (div_proNorm_exp == 8'd0) && div_proNorm_sig[26];
+    div_rounder div_rounder(.LGRS(div_subnorm_shift ? div_proNorm_sig[4:1] : div_proNorm_sig[3:0]), .rounding_mode(rounding_mode), .sign_O(q_sign_O), .round_out(div_round_out));
 
 
 
@@ -104,7 +116,7 @@ module fpu_mds_top(
     wire        of_final_norm;
 
     assign sig_after_round = mds_op == 2'b00 ? mul_proNorm_sig[25:2] + mul_round_out :
-                             mds_op == 2'b01 ? div_proNorm_sig[26:3] + div_round_out :
+                             mds_op == 2'b01 ? (div_subnorm_shift ? {1'b0, div_proNorm_sig[26:4]} + div_round_out : div_proNorm_sig[26:3] + div_round_out) :
                              mds_op == 2'b10 ? sqrt_proNorm_sig[26:3] + sqrt_round_out :
                              0;
 
