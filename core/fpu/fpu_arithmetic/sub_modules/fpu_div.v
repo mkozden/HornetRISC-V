@@ -2,6 +2,7 @@ module fpu_div
 (   input        clk,
     input        reset,
     input        div_start,
+    input        snap_en,
     input [8:0]  preNorm_exp,
     input        is_exp_underFlow,
     input [23:0] sig_A,
@@ -23,6 +24,27 @@ lzc27 lzcsig_B(.x({1'b0, sig_B,2'b11}), .z(offSetB));
 assign Dividend = sig_A << 26 + (offSetA - 1);
 assign Divisor  = {26'b0, sig_B};
 
+// Snapshot of offSetA/offSetB (§8.2b): these are pure functions of
+// sig_A/sig_B (stable for the whole op via the A/B latch), but live from the
+// lzc27s they drag the decoders into the done-cycle cone. norm_div consumes
+// them in the done cycle directly; sigDiv's offSetB port also re-enters that
+// cone (divider_24.v: Q_adjusted = Q50 << 24 - offSetB is applied
+// combinationally to the quotient register on the same cycle div_out is
+// sampled, i.e. at completion, not at divider start) so it must use the
+// snapshot too. Only the Dividend calc above (fpu_div.v:24) is a genuine
+// start-time consumer and keeps the live offSetA.
+reg [4:0] q_offSetA, q_offSetB;
+
+always @ (posedge clk or negedge reset) begin
+    if (!reset) begin
+        q_offSetA <= 5'b0;
+        q_offSetB <= 5'b0;
+    end
+    else if (snap_en) begin
+        q_offSetA <= offSetA;
+        q_offSetB <= offSetB;
+    end
+end
 
 // denormolized division out
 wire [26:0] div_out_sig;
@@ -34,9 +56,9 @@ wire [26:0] div_out_sig;
 
 
 
-sigDiv sigDiv(.clk(clk), .start(div_start), .reset(reset), .offSetB(offSetB), .dividend(Dividend), .divisor(Divisor), .rdy(div_rdy), .div_out(div_out_sig));
+sigDiv sigDiv(.clk(clk), .start(div_start), .reset(reset), .offSetB(q_offSetB), .dividend(Dividend), .divisor(Divisor), .rdy(div_rdy), .div_out(div_out_sig));
 
-divNormalizer norm_div(.inSig(div_out_sig), .inExp(preNorm_exp), .is_exp_underFlow(is_exp_underFlow), .offSetA(offSetA), .offSetB(offSetB), .outSig(div_proNorm_sig), .outExp(div_proNorm_exp), .of(OF_from_proNorm), .uf(UF_from_proNorm));
+divNormalizer norm_div(.inSig(div_out_sig), .inExp(preNorm_exp), .is_exp_underFlow(is_exp_underFlow), .offSetA(q_offSetA), .offSetB(q_offSetB), .outSig(div_proNorm_sig), .outExp(div_proNorm_exp), .of(OF_from_proNorm), .uf(UF_from_proNorm));
 
 endmodule
 

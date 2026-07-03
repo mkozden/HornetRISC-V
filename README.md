@@ -4,7 +4,7 @@ Hornet is a simple, fully open-source, FPGA-proven 32-bit RISC-V core.
 ## Highlights
 * RV32IMF instructions (base integer, multiply/divide, and single-precision floating point)
 * Machine mode support
-* 5-stage pipelined microarchitecture, with a pipelined (F1/F2) FPU datapath
+* 5-stage pipelined microarchitecture, with a pipelined (F1/F2/F3) FPU add/sub datapath and a snapshot register that cuts the mul/div/sqrt completion-cone critical path
 * Misaligned access support
 * FPGA proven
 
@@ -35,6 +35,13 @@ cd test/riscv-dv
 ```
 `run.sh` has `TEST` and `USE_RISCVDV` variables at the top; with `USE_RISCVDV=0`, it builds and runs whatever directed test `TEST` names, then compares the RTL trace against Spike with `scripts/compare.py`.
 
+#### TestFloat-driven FPU tests
+`test/testfloat` feeds Berkeley TestFloat's corner-biased operand vectors (subnormals, rounding ties, NaN payloads, overflow boundaries) through the FPU as prebuilt directed ROM images — see `test/testfloat/README.md` for how new chunks are generated. Each chunk is a standalone test named `tf_<op>_s_NNN` (e.g. `tf_fdiv_s_000`, `tf_fdiv_s_001`, ...); point `run.sh` at one the same way as any other directed test:
+```sh
+TEST="tf_fdiv_s_000"
+```
+`run.sh`'s directed branch falls back to `test/testfloat/` (and skips recompilation, since these chunks' `.elf`s are prebuilt by testfloat's own makefile) whenever a dedicated `test/<TEST>/` directory doesn't exist.
+
 ### Randomized tests (riscv-dv)
 Setting `USE_RISCVDV=1` instead drives [riscv-dv](https://github.com/chipsalliance/riscv-dv) to generate a random instruction stream (`TEST` then names one of the registered riscv-dv tests, e.g. `riscv_floating_point_arithmetic_test` — see `test/riscv-dv/target/rv32imc/testlist.yaml` and `test/riscv-dv/yaml/base_testlist.yaml` for the full list), simulates it, and compares against Spike the same way. On a clean pass it repeats automatically (up to 1000 iterations) to build up confidence with fresh random seeds each time.
 
@@ -50,6 +57,10 @@ cd test/riscv-dv
 source env.fish   # or: source env.sh
 ./run.sh
 ```
+
+### Known issues
+* `fdiv.s` mis-rounds at least one subnormal/normal-boundary rounding tie: dividing `0x00ffffff` by `0x40000000` (2.0) should round (RNE, tie-to-even) up to the smallest normal number `0x00800000`, but the RTL currently produces `0x00400000` — off by a factor of 2 from either rounding candidate. Found via `test/testfloat`'s `tf_fdiv_s_002` chunk; not yet root-caused (undetermined whether it's a regression from the FPU pipelining work or a pre-existing bug newly exposed by TestFloat's targeted corner-case vectors).
+* A handful of FPU ops leave the cumulative `fflags` CSR diverged from Spike's while the computed result value itself stays bit-identical (e.g. dense `fdiv.s` corner-case runs report ~500 such warnings). Also not yet root-caused; observed both before and after the pipelining work.
 
 ## Troubleshooting, Bugs & Suggestions
 Feel free to create an issue on GitHub.

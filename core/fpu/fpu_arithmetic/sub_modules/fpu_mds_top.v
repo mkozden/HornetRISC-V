@@ -15,6 +15,7 @@ module fpu_mds_top(
     input [23:0] sig_A,
     input [23:0] sig_B,
     input [1:0]  mds_op,
+    input        snap_en, // F1/completion snapshot register load enable (~fpu_top_ctrl's reg_AB_en)
     output wire [31:0] OUT,
     output muldiv_sqrt_done,
     output overflow,
@@ -37,14 +38,40 @@ module fpu_mds_top(
 
     preNorm_exp_handler preNorm_exp_handler(exp_A, exp_B, mds_op, subnormal_sqrt_in, is_exp_underFlow, preNorm_exp);
 
+    // ============================================================
+    // Snapshot register (not a pipeline stage — zero added latency):
+    // operand-derived values that only ever get *consumed* many
+    // cycles later, at completion, are captured once at op start
+    // (snap_en) so the completion-cycle cone doesn't have to
+    // re-traverse the decoders/exponent arithmetic live. The
+    // fast-path detection in fpu_mds_ctrl (registered into FAST_out
+    // at the end of cycle 1) must keep using the live signals below,
+    // not these — the snapshot isn't valid until cycle 2.
+    // ============================================================
+    reg [8:0] q_preNorm_exp;
+    reg       q_is_exp_underFlow;
+    reg       q_sign_O;
+
+    always @ (posedge clk or negedge reset) begin
+        if (!reset) begin
+            q_preNorm_exp      <= 9'b0;
+            q_is_exp_underFlow <= 1'b0;
+            q_sign_O           <= 1'b0;
+        end
+        else if (snap_en) begin
+            q_preNorm_exp      <= preNorm_exp;
+            q_is_exp_underFlow <= is_exp_underFlow;
+            q_sign_O           <= sign_O;
+        end
+    end
 
     // Multiplication Signals
     wire [25:0] mul_proNorm_sig;
     wire [7:0]  mul_proNorm_exp;
     wire  of_mul, uf_mul;
 
-    fpu_mul fpu_mul(.clk(clk), .reset(reset), .preNorm_exp(preNorm_exp), .is_exp_underFlow(is_exp_underFlow), .sig_A(sig_A), .sig_B(sig_B), .mul_proNorm_sig(mul_proNorm_sig), .mul_proNorm_exp(mul_proNorm_exp), .OF_from_proNorm(of_mul), .UF_from_proNorm(uf_mul));
-    mul_rounder mul_rounder(.LRS(mul_proNorm_sig[2:0]), .rounding_mode(rounding_mode), .sign_O(sign_O), .round_out(mul_round_out));
+    fpu_mul fpu_mul(.clk(clk), .reset(reset), .preNorm_exp(q_preNorm_exp), .is_exp_underFlow(q_is_exp_underFlow), .sig_A(sig_A), .sig_B(sig_B), .mul_proNorm_sig(mul_proNorm_sig), .mul_proNorm_exp(mul_proNorm_exp), .OF_from_proNorm(of_mul), .UF_from_proNorm(uf_mul));
+    mul_rounder mul_rounder(.LRS(mul_proNorm_sig[2:0]), .rounding_mode(rounding_mode), .sign_O(q_sign_O), .round_out(mul_round_out));
 
 
     // Division Signals
@@ -53,10 +80,10 @@ module fpu_mds_top(
     wire[7:0]  div_proNorm_exp;
     wire of_div, uf_div;
 
-    fpu_div fpu_div(.clk(clk), .reset(reset), .div_start(div_start), .preNorm_exp(preNorm_exp), .is_exp_underFlow(is_exp_underFlow), .sig_A(sig_A), .sig_B(sig_B), .div_proNorm_sig(div_proNorm_sig), .div_proNorm_exp(div_proNorm_exp), .div_rdy(div_rdy), .OF_from_proNorm(of_div), .UF_from_proNorm(uf_div));
-    div_rounder div_rounder(.LGRS(div_proNorm_sig[3:0]), .rounding_mode(rounding_mode), .sign_O(sign_O), .round_out(div_round_out));
+    fpu_div fpu_div(.clk(clk), .reset(reset), .div_start(div_start), .snap_en(snap_en), .preNorm_exp(q_preNorm_exp), .is_exp_underFlow(q_is_exp_underFlow), .sig_A(sig_A), .sig_B(sig_B), .div_proNorm_sig(div_proNorm_sig), .div_proNorm_exp(div_proNorm_exp), .div_rdy(div_rdy), .OF_from_proNorm(of_div), .UF_from_proNorm(uf_div));
+    div_rounder div_rounder(.LGRS(div_proNorm_sig[3:0]), .rounding_mode(rounding_mode), .sign_O(q_sign_O), .round_out(div_round_out));
 
-    
+
 
     // Square-Root Signals
     wire        sqrt_start, sqrt_rdy;
@@ -64,8 +91,8 @@ module fpu_mds_top(
     wire[7:0]   sqrt_proNorm_exp;
     wire        uf_sqrt;
 
-    fpu_sqrt fpu_sqrt(.clk(clk), .reset(reset), .start(sqrt_start), .is_subnormal(subnormal_sqrt_in), .in_exp0(exp_A[0]), .exp_half(preNorm_exp[7:0]), .in_sig(sig_A), .rounding_mode(rounding_mode), .sqrt_done(sqrt_rdy), .sqrt_proNorm_sig(sqrt_proNorm_sig), .sqrt_proNorm_exp(sqrt_proNorm_exp), .uf(uf_sqrt));
-    sqrt_rounder sqrt_rounder(.LGRS(sqrt_proNorm_sig[2:0]), .rounding_mode(rounding_mode), .sign_O(sign_O), .round_out(sqrt_round_out));
+    fpu_sqrt fpu_sqrt(.clk(clk), .reset(reset), .start(sqrt_start), .is_subnormal(subnormal_sqrt_in), .in_exp0(exp_A[0]), .exp_half(q_preNorm_exp[7:0]), .in_sig(sig_A), .rounding_mode(rounding_mode), .sqrt_done(sqrt_rdy), .sqrt_proNorm_sig(sqrt_proNorm_sig), .sqrt_proNorm_exp(sqrt_proNorm_exp), .uf(uf_sqrt));
+    sqrt_rounder sqrt_rounder(.LGRS(sqrt_proNorm_sig[2:0]), .rounding_mode(rounding_mode), .sign_O(q_sign_O), .round_out(sqrt_round_out));
 
 
     // Final Normalizer Signals
@@ -117,8 +144,8 @@ module fpu_mds_top(
 
     wire [31:0] muldiv_sqrt;
 
-    assign muldiv_sqrt = mux_muldiv_sqrt_out_sel == 2'b00 || mux_muldiv_sqrt_out_sel == 2'b01 ? {sign_O, final_exp, final_sig} :
-                        mux_muldiv_sqrt_out_sel == 2'b10 ? {sign_O, sqrt_proNorm_exp, sqrt_proNorm_sig} : 32'b0;
+    assign muldiv_sqrt = mux_muldiv_sqrt_out_sel == 2'b00 || mux_muldiv_sqrt_out_sel == 2'b01 ? {q_sign_O, final_exp, final_sig} :
+                        mux_muldiv_sqrt_out_sel == 2'b10 ? {q_sign_O, sqrt_proNorm_exp, sqrt_proNorm_sig} : 32'b0;
 
     
 
@@ -154,7 +181,7 @@ module fpu_mds_top(
         else begin 
                 if(reg_muldiv_sqrt_en)
                     if(overflow) begin //Overflow edge cases
-                        if(sign_O) begin //For negative numbers
+                        if(q_sign_O) begin //For negative numbers
                             if((rounding_mode == 3'b001) || (rounding_mode == 3'b011))
                                 OUT_reg <= 32'hff7fffff; //For RTZ or RUP, -Inf rounds down to largest mag. negative number
                             else OUT_reg <= muldiv_sqrt;
@@ -166,12 +193,12 @@ module fpu_mds_top(
                         end
                     end
                     else if(underflow) begin //Underflow edge cases
-                        if(sign_O && muldiv_sqrt == 32'h80000000) begin //For negative numbers, only if output value is initially -0.0
+                        if(q_sign_O && muldiv_sqrt == 32'h80000000) begin //For negative numbers, only if output value is initially -0.0
                             if((rounding_mode == 3'b010))
                                 OUT_reg <= 32'h80000001; //For RDN, -0.0 rounds down to smallest mag. negative number
                             else OUT_reg <= muldiv_sqrt;
                         end
-                        else if(!sign_O && muldiv_sqrt == 32'b0) begin //For positive numbers, only if output value is initially 0.0
+                        else if(!q_sign_O && muldiv_sqrt == 32'b0) begin //For positive numbers, only if output value is initially 0.0
                             if((rounding_mode == 3'b011))
                                 OUT_reg <= 32'h0000001; //For RUP, +0.0 rounds up to smallest mag. positive number
                             else OUT_reg <= muldiv_sqrt;

@@ -9,7 +9,7 @@ LOG_FILE="simulation.log"
 WAVE_CONFIG="barebones_top_tb_behav.wcfg"  # Optional waveform config
 CC32=riscv32-unknown-elf
 USE_RISCVDV=0
-TEST="fpu_edge_cases"
+TEST="tf_fdiv_s_002"
 
 if [ "$USE_RISCVDV" -eq 1 ]; then
     python3 run.py --verbose --test ${TEST} --simulator pyflow --isa rv32imf --mabi ilp32f --sim_opts=""
@@ -27,25 +27,30 @@ if [ "$USE_RISCVDV" -eq 1 ]; then
     VIVADO_DURATION="1ms"
 else
     if [ -d "../${TEST}" ]; then
-        CCFLAGS="-march=rv32imf -mabi=ilp32f -Os -fno-math-errno -T ../linksc-10000.ld -lm -nostartfiles -ffunction-sections -fdata-sections -Wl,--gc-sections -g -ggdb -o ${TEST}.elf"
-        cd "../${TEST}"
-        ${CC32}-gcc ${TEST}.s ../crt0.s ${CCFLAGS} # Might need to change the test extension to .c if the test is written in C
-        ${CC32}-objcopy -O binary -j .init -j .text -j .rodata -j .sdata ${TEST}.elf ${TEST}.bin
-        ../rom_generator ${TEST}.bin
-        cp ${TEST}.data ../memory_contents/instruction.data
-        echo "Test compiled, running spike"
-        if [[ -z "${SPIKE_PATH}" ]]; then
-          spike --log-commits --isa=rv32imf --priv=M -m0xf000:1,0x10000:0x8000,0x8010:1 -l --log=spike.log ${TEST}.elf
-        else
-          ${SPIKE_PATH}/spike --log-commits --isa=rv32imf --priv=M -m0xf000:1,0x10000:0x8000,0x8010:1 -l --log=spike.log ${TEST}.elf
-        fi
-        echo "Spike simulation completed"
-        PROJECT_DIR="../../${PROJECT_NAME}" # 3 directories up relative to the test folder
-        VIVADO_DURATION="400ms"
+        TEST_DIR="../${TEST}"
+    elif [ -d "../testfloat" ] && [ -f "../testfloat/${TEST}.elf" ]; then
+        TEST_DIR="../testfloat" # prebuilt tf_*_NNN chunk (own makefile), shared dir for all chunks
     else
         echo "Directory not found"
         exit 1
     fi
+    cd "${TEST_DIR}"
+    if [ ! -f "${TEST}.elf" ]; then
+        CCFLAGS="-march=rv32imf -mabi=ilp32f -Os -fno-math-errno -T ../linksc-10000.ld -lm -nostartfiles -ffunction-sections -fdata-sections -Wl,--gc-sections -g -ggdb -o ${TEST}.elf"
+        ${CC32}-gcc ${TEST}.s ../crt0.s ${CCFLAGS} # Might need to change the test extension to .c if the test is written in C
+        ${CC32}-objcopy -O binary -j .init -j .text -j .rodata -j .sdata ${TEST}.elf ${TEST}.bin
+        ../rom_generator ${TEST}.bin
+    fi
+    cp ${TEST}.data ../memory_contents/instruction.data
+    echo "Test compiled, running spike"
+    if [[ -z "${SPIKE_PATH}" ]]; then
+      spike --log-commits --isa=rv32imf --priv=M -m0xf000:1,0x10000:0x8000,0x8010:1 -l --log=spike.log ${TEST}.elf
+    else
+      ${SPIKE_PATH}/spike --log-commits --isa=rv32imf --priv=M -m0xf000:1,0x10000:0x8000,0x8010:1 -l --log=spike.log ${TEST}.elf
+    fi
+    echo "Spike simulation completed"
+    PROJECT_DIR="../../${PROJECT_NAME}" # 3 directories up relative to the test folder
+    VIVADO_DURATION="400ms"
 fi
 
 
@@ -140,7 +145,7 @@ if [ "$USE_RISCVDV" -eq 1 ]; then
     fi
 else
     cd "../riscv-dv"
-    python3 scripts/spike_log_to_trace_csv.py --log "../${TEST}/spike.log" --csv spike_deneme.csv -f
+    python3 scripts/spike_log_to_trace_csv.py --log "${TEST_DIR}/spike.log" --csv spike_deneme.csv -f
     python3 scripts/trace_to_csv.py -l ../../trace.log -o deneme.csv
     python3 scripts/compare.py deneme.csv spike_deneme.csv combined.csv
 fi

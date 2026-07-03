@@ -9,7 +9,9 @@ module fpu_arithmetic_top
     input [31:0] A,
     input [31:0] B,
     input        rs2_lsb,
+    input        reg_AB_en,
     input        f2_valid,
+    input        f3_valid,
     // outputs
     output [31:0] fpu_arith_out,
     output        done,
@@ -34,11 +36,6 @@ module fpu_arithmetic_top
    5'b10100 |      FEQ, FLT, FLE
 
 */
-
-// F1/F2 pipeline register enable: high while fpu_top_ctrl's FSM is in FIRST.
-// f2_valid is the FSM's SECOND-state flag, so this is just its complement.
-wire reg_AB_en;
-assign reg_AB_en = ~f2_valid;
 
 // decoder signals
 wire       sign_A, sign_B;
@@ -76,6 +73,7 @@ fpu_add_sub fas(
     .clk(clk),
     .reset(reset),
     .reg_AB_en(reg_AB_en),
+    .f2_en(f2_valid),
     .sign_A(sign_A),
     .sign_B(sign_B),
     .exp_A(exp_A_for_sgninj),
@@ -120,7 +118,7 @@ assign is_mds = (op == 5'b00010) | (op == 5'b00011) | (op == 5'b01011);
 
 assign mds_start = start & is_mds;
 
-fpu_mds_top fpu_mds_top(clk, mds_start, reset, round_override, isSubnormalA, isZeroA, isZeroB, isInfA, isInfB, isNaNA, isNaNB, isSignaling, sign_A, sign_B, exp_A, exp_B, sig_A, sig_B, mds_op, mds_out, mds_done, overflow_mds, underflow_mds, invalid_mds, inexact_mds, div_by_zero_mds);
+fpu_mds_top fpu_mds_top(clk, mds_start, reset, round_override, isSubnormalA, isZeroA, isZeroB, isInfA, isInfB, isNaNA, isNaNB, isSignaling, sign_A, sign_B, exp_A, exp_B, sig_A, sig_B, mds_op, reg_AB_en, mds_out, mds_done, overflow_mds, underflow_mds, invalid_mds, inexact_mds, div_by_zero_mds);
 
 
 // FPU-COMPARE signals
@@ -234,7 +232,7 @@ assign div_by_zero = is_mds ? div_by_zero_mds : 1'b0; // mul, div, sqrt
 
 assign done        = !start ? 1'b0 :
                      is_mds ? mds_done :
-                     f2_valid;
+                     f3_valid;
 
 
 

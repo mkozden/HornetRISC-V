@@ -11,6 +11,7 @@ module fpu_add_sub
     input wire       clk,
     input wire       reset,
     input wire       reg_AB_en, // F1/F2 pipeline register load enable ("we are in F1")
+    input wire       f2_en,     // F2/F3 pipeline register load enable ("we are in F2")
     input wire       sign_A,
     input wire       sign_B,
     input wire [7:0] exp_A,
@@ -38,7 +39,7 @@ module fpu_add_sub
 
 
 // ============================================================
-// F1 (combinational): decode, align, 28-bit add, fast path
+// F1 (combinational): decode, align (shift + sticky collapse), fast path
 // ============================================================
 
 wire        is_exp_equal;
@@ -47,12 +48,8 @@ wire [27:0] big_sig;
 wire [27:0] less_sig;
 wire [47:0] less_sig_shifted;
 wire [27:0] less_adjusted;
-wire [27:0] big_sig_2C;
-wire [27:0] less_adjusted_2C;
 wire        sign_big;
 wire        sign_less;
-reg  [27:0] first_operand;
-reg  [27:0] second_operand;
 
 
 wire        eff_sign_B;
@@ -63,9 +60,7 @@ reg  [7:0]  exp_A_adjusted;
 reg  [7:0]  exp_B_adjusted;
 wire [7:0]  exp_O;
 wire [24:0] sig_A_adjusted, sig_B_adjusted;
-wire [27:0] out_sig;
 
-wire [27:0] out_sig_abs;
 reg  [7:0]  exp_diff;
 
 assign eff_sign_B        = sub_op ? !sign_B : sign_B;
@@ -83,9 +78,6 @@ assign less_sig           = !is_exp_equal ? (is_exp_A_Big ? sig_B_adjusted : sig
 assign less_sig_shifted   = {less_sig,23'b0} >> exp_diff;
 assign less_adjusted      = |less_sig_shifted[20:0] ? {less_sig_shifted[47:21],1'b1} : less_sig_shifted[47:20];
 
-assign big_sig_2C         = ~big_sig + 1;
-assign less_adjusted_2C   = ~less_adjusted + 1;
-
 always @(*) // exp and significand assignment
 begin
 
@@ -100,20 +92,6 @@ begin
         exp_B_adjusted = exp_B;
 end
 
-
-always @(*)
-begin
-
-    if(!sign_big)
-        first_operand = big_sig;
-    else
-        first_operand = big_sig_2C;
-    if(!sign_less)
-        second_operand = less_adjusted;
-    else
-        second_operand = less_adjusted_2C;
-end
-
 always @(exp_A_adjusted, exp_B_adjusted) // calculate exp_diff
 begin
 
@@ -122,9 +100,6 @@ begin
     else
         exp_diff = exp_B_adjusted - exp_A_adjusted;
 end
-
-
-wire isout_sigNeg        = (sign_A && eff_sign_B) || (sign_A && out_sig[27] || (eff_sign_B && out_sig[27]));
 
 reg sign_O_equal;
 
@@ -148,16 +123,9 @@ always @(*) begin //Sign of the output when |A|=|B| according to which operation
 end
 
 assign exp_O             = (exp_A_adjusted >= exp_B_adjusted) ? exp_A_adjusted : exp_B_adjusted;
-assign out_sig           = first_operand + second_operand;
-assign out_sig_abs       = isout_sigNeg  ? ~out_sig+1 : out_sig;
 assign sign_O            = (exp_A_adjusted == exp_B_adjusted) ? (sig_A_adjusted == sig_B_adjusted ? sign_O_equal :
                            (sig_A_adjusted > sig_B_adjusted ? sign_A : eff_sign_B)) :
                            (exp_A_adjusted >  exp_B_adjusted) ? sign_A : eff_sign_B;
-
-wire second_operand_zero;
-
-//These can also output 1 if one of the inputs is zero, but that's going to be overwritten by fast output so doesn't matter
-assign second_operand_zero = (second_operand == 27'b0);
 
 wire        invalid_fast;
 wire        mux_fastres_sel;
@@ -167,8 +135,94 @@ fpu_add_fast fpu_add_fast(rounding_mode, isZeroA, isZeroB,isInfA, isInfB, isNaNA
 
 // ============================================================
 // F1/F2 pipeline register — loaded while reg_AB_en (F1) is high,
-// consumed by the F2 (normalize/round) logic below. Reset is
+// consumed by the F2 (2's-complement/add) logic below. Reset is
 // async active-low like the rest of the design.
+// ============================================================
+
+reg [27:0] p1_big_sig;
+reg [27:0] p1_less_adjusted;
+reg        p1_sign_big;
+reg        p1_sign_less;
+reg        p1_sign_A;
+reg        p1_eff_sign_B;
+reg        p1_sign_O;
+reg [7:0]  p1_exp_O;
+reg        p1_mux_fastres_sel;
+reg [31:0] p1_fast_res;
+reg        p1_overflow_fast;
+reg        p1_invalid_fast;
+
+always @ (posedge clk or negedge reset) begin
+    if(!reset) begin
+        p1_big_sig         <= 28'b0;
+        p1_less_adjusted   <= 28'b0;
+        p1_sign_big        <= 1'b0;
+        p1_sign_less       <= 1'b0;
+        p1_sign_A          <= 1'b0;
+        p1_eff_sign_B      <= 1'b0;
+        p1_sign_O          <= 1'b0;
+        p1_exp_O           <= 8'b0;
+        p1_mux_fastres_sel <= 1'b0;
+        p1_fast_res        <= 32'b0;
+        p1_overflow_fast   <= 1'b0;
+        p1_invalid_fast    <= 1'b0;
+    end
+    else if(reg_AB_en) begin
+        p1_big_sig         <= big_sig;
+        p1_less_adjusted   <= less_adjusted;
+        p1_sign_big        <= sign_big;
+        p1_sign_less       <= sign_less;
+        p1_sign_A          <= sign_A;
+        p1_eff_sign_B      <= eff_sign_B;
+        p1_sign_O          <= sign_O;
+        p1_exp_O           <= exp_O;
+        p1_mux_fastres_sel <= mux_fastres_sel;
+        p1_fast_res        <= fast_res;
+        p1_overflow_fast   <= overflow_fast;
+        p1_invalid_fast    <= invalid_fast;
+    end
+end
+
+// ============================================================
+// F2 (combinational on p1_* registers): 2's-complement conditioning,
+// the 28-bit add, the conditional negate
+// ============================================================
+
+wire [27:0] big_sig_2C;
+wire [27:0] less_adjusted_2C;
+reg  [27:0] first_operand;
+reg  [27:0] second_operand;
+wire [27:0] out_sig;
+wire [27:0] out_sig_abs;
+wire        second_operand_zero;
+
+assign big_sig_2C         = ~p1_big_sig + 1;
+assign less_adjusted_2C   = ~p1_less_adjusted + 1;
+
+always @(*)
+begin
+
+    if(!p1_sign_big)
+        first_operand = p1_big_sig;
+    else
+        first_operand = big_sig_2C;
+    if(!p1_sign_less)
+        second_operand = p1_less_adjusted;
+    else
+        second_operand = less_adjusted_2C;
+end
+
+wire isout_sigNeg        = (p1_sign_A && p1_eff_sign_B) || (p1_sign_A && out_sig[27] || (p1_eff_sign_B && out_sig[27]));
+
+assign out_sig           = first_operand + second_operand;
+assign out_sig_abs       = isout_sigNeg  ? ~out_sig+1 : out_sig;
+
+//These can also output 1 if one of the inputs is zero, but that's going to be overwritten by fast output so doesn't matter
+assign second_operand_zero = (second_operand == 27'b0);
+
+// ============================================================
+// F2/F3 pipeline register — loaded while f2_en (F2) is high,
+// consumed by the F3 (normalize/round) logic below.
 // ============================================================
 
 reg [27:0] f12_out_sig_abs;
@@ -193,21 +247,21 @@ always @ (posedge clk or negedge reset) begin
         f12_overflow_fast       <= 1'b0;
         f12_invalid_fast        <= 1'b0;
     end
-    else if(reg_AB_en) begin
+    else if(f2_en) begin
         f12_out_sig_abs         <= out_sig_abs;
-        f12_exp_O               <= exp_O;
-        f12_sign_O              <= sign_O;
-        f12_sign_less           <= sign_less;
+        f12_exp_O               <= p1_exp_O;
+        f12_sign_O              <= p1_sign_O;
+        f12_sign_less           <= p1_sign_less;
         f12_second_operand_zero <= second_operand_zero;
-        f12_mux_fastres_sel     <= mux_fastres_sel;
-        f12_fast_res            <= fast_res;
-        f12_overflow_fast       <= overflow_fast;
-        f12_invalid_fast        <= invalid_fast;
+        f12_mux_fastres_sel     <= p1_mux_fastres_sel;
+        f12_fast_res            <= p1_fast_res;
+        f12_overflow_fast       <= p1_overflow_fast;
+        f12_invalid_fast        <= p1_invalid_fast;
     end
 end
 
 // ============================================================
-// F2 (combinational on registered values): normalize + round
+// F3 (combinational on registered values): normalize + round
 // ============================================================
 
 wire  [3:0] LGRS;

@@ -20,7 +20,7 @@ module fpu_top
     output        div_by_zero
 );
 
-wire in_sel, reg_AB_en, f2_valid;
+wire in_sel, reg_AB_en, f2_valid, f3_valid;
 wire [31:0] in_A;
 wire [31:0] in_B;
 wire        in_rs2_lsb;
@@ -51,7 +51,9 @@ fpu_arithmetic_top fpu_arithmetic_top(
     .A(in_A),
     .B(in_B),
     .rs2_lsb(in_rs2_lsb),
+    .reg_AB_en(reg_AB_en),
     .f2_valid(f2_valid),
+    .f3_valid(f3_valid),
     .fpu_arith_out(fpu_arith_out),
     .done(done),
     .overflow(overflow),
@@ -69,7 +71,8 @@ fpu_top_ctrl fpu_top_ctrl(
     .done(done),
     .in_sel(in_sel),
     .reg_AB_en(reg_AB_en),
-    .f2_valid(f2_valid)
+    .f2_valid(f2_valid),
+    .f3_valid(f3_valid)
 );
 
 
