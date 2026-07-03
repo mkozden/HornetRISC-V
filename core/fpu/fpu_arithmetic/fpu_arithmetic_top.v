@@ -161,11 +161,15 @@ fpu_classifier fpu_classifier(sign_A, isSubnormalA, isZeroA, isInfA, isNaNA, isS
 
 
 // ============================================================
-// F1/F2 register for the "simple" (single-cycle-class) ops:
+// F2/F3 register for the "simple" (single-cycle-class) ops:
 // sgnj, min/max, cvt-to-int, cvt-to-float, compare, classify/fmv.
-// These complete combinationally in F1; their muxed result and
-// flag bits are sampled at the end of F1 (reg_AB_en) and read
-// out in F2, alongside add_sub_out/mds_out.
+// These complete combinationally from decode; their muxed result and
+// flag bits are sampled at the end of SECOND (f2_valid, §8.2c) rather
+// than FIRST (reg_AB_en) — in cycle 2 in_sel is low, so this cone reads
+// from the FPU's own reg_A/reg_B latch instead of the live forwarding
+// mux, which drops the forwarding comparators/IDEX registers out of the
+// done-cycle timing path. Value-identical either way (the latch holds).
+// Read out in the done cycle (THIRD), alongside add_sub_out/mds_out.
 // ============================================================
 
 wire [31:0] misc_result;
@@ -190,7 +194,7 @@ always @ (posedge clk or negedge reset) begin
         f12_invalid_min_max     <= 1'b0;
         f12_overflow_cvt_to_int <= 1'b0;
     end
-    else if(reg_AB_en) begin
+    else if(f2_valid) begin
         f12_misc_result         <= misc_result;
         f12_invalid_comp        <= invalid_comp;
         f12_invalid_min_max     <= invalid_min_max;
