@@ -42,6 +42,16 @@ assign in_B              = in_sel ? B            : reg_B;
 assign in_rs2_lsb        = in_sel ? rs2_lsb       : reg_rs2_lsb;
 assign in_round_override = in_sel ? round_override : reg_round_override;
 
+// §8.2d: registered-only sources for the misc lane (sgnj/min-max/cvt/
+// compare/classify). Unlike in_A/in_B these never pass through the in_sel
+// mux, so the misc cone's structural source is the reg_A/reg_B latch
+// itself instead of a mux Vivado must still time against IDEX even though
+// the f2_valid capture makes that path functionally false.
+wire [31:0] A_q              = reg_A;
+wire [31:0] B_q              = reg_B;
+wire        rs2_lsb_q        = reg_rs2_lsb;
+wire [2:0]  round_override_q = reg_round_override;
+
 fpu_arithmetic_top fpu_arithmetic_top(
     .clk(clk),
     .reset(reset),
@@ -51,6 +61,10 @@ fpu_arithmetic_top fpu_arithmetic_top(
     .A(in_A),
     .B(in_B),
     .rs2_lsb(in_rs2_lsb),
+    .A_q(A_q),
+    .B_q(B_q),
+    .rs2_lsb_q(rs2_lsb_q),
+    .round_override_q(round_override_q),
     .reg_AB_en(reg_AB_en),
     .f2_valid(f2_valid),
     .f3_valid(f3_valid),

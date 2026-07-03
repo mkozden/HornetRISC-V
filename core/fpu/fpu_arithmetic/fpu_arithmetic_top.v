@@ -9,6 +9,10 @@ module fpu_arithmetic_top
     input [31:0] A,
     input [31:0] B,
     input        rs2_lsb,
+    input [31:0] A_q,              // §8.2d: registered-only (= reg_A), for the misc lane only
+    input [31:0] B_q,              // §8.2d: registered-only (= reg_B), for the misc lane only
+    input        rs2_lsb_q,        // §8.2d: registered-only (= reg_rs2_lsb)
+    input [2:0]  round_override_q, // §8.2d: registered-only (= reg_round_override)
     input        reg_AB_en,
     input        f2_valid,
     input        f3_valid,
@@ -57,6 +61,34 @@ wire       isSignaling;
 wire       isBothSubnorm;
 assign isSignaling = isSignalingA | isSignalingB;
 assign isBothSubnorm = isSubnormalA & isSubnormalB;
+
+// ============================================================
+// §8.2d: second decoder pair for the misc lane, fed from A_q/B_q
+// (= reg_A/reg_B directly, no in_sel mux). This gives the misc-op
+// cone (sgnj/min-max/cvt/compare/classify) a structurally registered
+// source instead of a mux Vivado still has to time against IDEX even
+// though the §8.2c f2_valid capture makes that path functionally
+// false. Garbage in cycle 1 (previous op's latch contents) is
+// harmless — f12_misc_* only captures at f2_valid, when reg_A/reg_B
+// already hold the current op's operands.
+// ============================================================
+wire       sign_A_q, sign_B_q;
+wire [7:0] exp_A_q_tmp, exp_B_q_tmp, exp_A_q_for_sgninj, exp_B_q_for_sgninj;
+wire [7:0] exp_A_q, exp_B_q;
+wire[23:0] sig_A_q, sig_B_q;
+wire       isSubnormalA_q;
+wire       isZeroA_q, isZeroB_q;
+wire       isInfA_q, isInfB_q, isSignalingA_q, isSignalingB_q;
+wire       isNaNA_q, isNaNB_q;
+
+fpu_decoder  decA_q(.in(A_q), .sign_o(sign_A_q), .exp_o(exp_A_q_tmp), .sig_o(sig_A_q), .isSubnormal(isSubnormalA_q), .isZero(isZeroA_q), .isInf(isInfA_q), .isNaN(isNaNA_q), .isSignaling(isSignalingA_q), .exp_o_for_sgninj(exp_A_q_for_sgninj));
+fpu_decoder  decB_q(.in(B_q), .sign_o(sign_B_q), .exp_o(exp_B_q_tmp), .sig_o(sig_B_q), .isSubnormal(), .isZero(isZeroB_q), .isInf(isInfB_q), .isNaN(isNaNB_q), .isSignaling(isSignalingB_q), .exp_o_for_sgninj(exp_B_q_for_sgninj));
+
+assign exp_A_q = op == 5'b00100 ? exp_A_q_for_sgninj : exp_A_q_tmp;
+assign exp_B_q = op == 5'b00100 ? exp_B_q_for_sgninj : exp_B_q_tmp;
+
+wire isSignaling_q;
+assign isSignaling_q = isSignalingA_q | isSignalingB_q;
 
 
 // ADD-SUB signals
@@ -126,7 +158,7 @@ wire comp_out;
 wire invalid_comp;
 // round_override[1:0] is used  for compare function
 
-fpu_compare fpu_compare(round_override[1:0], sign_A, sign_B, exp_A, exp_B, sig_A, sig_B, isNaNA, isNaNB, isZeroA, isZeroB, isSignaling, comp_out, invalid_comp);
+fpu_compare fpu_compare(round_override_q[1:0], sign_A_q, sign_B_q, exp_A_q, exp_B_q, sig_A_q, sig_B_q, isNaNA_q, isNaNB_q, isZeroA_q, isZeroB_q, isSignaling_q, comp_out, invalid_comp);
 
 //FPU-MIN_MAX signals
 wire [31:0] min_max_out;
@@ -134,30 +166,30 @@ wire invalid_min_max;
 // rounding mode's lsb is determine min or max operatin
 
 
-fpu_min_max fpu_min_max(round_override[0], sign_A, sign_B, exp_A_for_sgninj, exp_B_for_sgninj, sig_A, sig_B, isInfA, isInfB, isNaNA, isNaNB, isSignaling, min_max_out, invalid_min_max);
+fpu_min_max fpu_min_max(round_override_q[0], sign_A_q, sign_B_q, exp_A_q_for_sgninj, exp_B_q_for_sgninj, sig_A_q, sig_B_q, isInfA_q, isInfB_q, isNaNA_q, isNaNB_q, isSignaling_q, min_max_out, invalid_min_max);
 
 //FPU-SIGN INJECTION signals
 wire sign_O_inj;
 // rounding mode's lsb is determine injection operation
 
-fpu_sign_inj fpu_sign_inj(round_override[1:0], sign_A, sign_B, sign_O_inj);
+fpu_sign_inj fpu_sign_inj(round_override_q[1:0], sign_A_q, sign_B_q, sign_O_inj);
 
 //FPU-CONVERT TO INTEGER signals
-wire is_exp_neg;
+wire is_exp_neg_q;
 wire [31:0] cvt_to_int_out;
 wire overflow_cvt_to_int;
-assign is_exp_neg = exp_A[7] ? 1'b0 : (&exp_A[6:0] ? 1'b0 : 1'b1);
-fpu_cvt_to_int fpu_cvt_to_int(rs2_lsb, is_exp_neg, round_override, isNaNA, isInfA, isZeroA, sign_A, exp_A, sig_A, cvt_to_int_out, overflow_cvt_to_int);
+assign is_exp_neg_q = exp_A_q[7] ? 1'b0 : (&exp_A_q[6:0] ? 1'b0 : 1'b1);
+fpu_cvt_to_int fpu_cvt_to_int(rs2_lsb_q, is_exp_neg_q, round_override_q, isNaNA_q, isInfA_q, isZeroA_q, sign_A_q, exp_A_q, sig_A_q, cvt_to_int_out, overflow_cvt_to_int);
 
 
 //FPU-CONVERT TO FLOAT signals
 wire [31:0] cvt_to_float_out;
-fpu_cvt_to_float fpu_cvt_to_float(rs2_lsb, round_override, A, cvt_to_float_out);
+fpu_cvt_to_float fpu_cvt_to_float(rs2_lsb_q, round_override_q, A_q, cvt_to_float_out);
 
 //FPU-CLASSIFIER signals
 wire[9:0] classifier_out;
 
-fpu_classifier fpu_classifier(sign_A, isSubnormalA, isZeroA, isInfA, isNaNA, isSignalingA, classifier_out);
+fpu_classifier fpu_classifier(sign_A_q, isSubnormalA_q, isZeroA_q, isInfA_q, isNaNA_q, isSignalingA_q, classifier_out);
 
 
 // ============================================================
@@ -173,13 +205,13 @@ fpu_classifier fpu_classifier(sign_A, isSubnormalA, isZeroA, isInfA, isNaNA, isS
 // ============================================================
 
 wire [31:0] misc_result;
-assign misc_result = op == 5'b00100                                     ? {sign_O_inj, exp_A, sig_A[22:0]} : // sign injection
-                      op == 5'b00101                                     ? min_max_out                      : // min, max
-                      op == 5'b11000                                     ? cvt_to_int_out                   : // convert to int
-                      op == 5'b11010                                     ? cvt_to_float_out                 : // convert to float
-                      op == 5'b10100                                     ? {31'b0,comp_out}                 : // equ, lt, le
-                      op == 5'b11100 & round_override[0]                  ? {22'b0,classifier_out}           : // classifier out
-                   (op == 5'b11100 | op == 5'b11110) & !(|round_override) ? A                                :
+assign misc_result = op == 5'b00100                                       ? {sign_O_inj, exp_A_q, sig_A_q[22:0]} : // sign injection
+                      op == 5'b00101                                       ? min_max_out                          : // min, max
+                      op == 5'b11000                                       ? cvt_to_int_out                       : // convert to int
+                      op == 5'b11010                                       ? cvt_to_float_out                     : // convert to float
+                      op == 5'b10100                                       ? {31'b0,comp_out}                     : // equ, lt, le
+                      op == 5'b11100 & round_override_q[0]                  ? {22'b0,classifier_out}               : // classifier out
+                   (op == 5'b11100 | op == 5'b11110) & !(|round_override_q) ? A_q                                  :
                       32'b0;
 
 reg [31:0] f12_misc_result;
