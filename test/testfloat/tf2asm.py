@@ -1,34 +1,48 @@
 #!/usr/bin/env python3
 # Convert Berkeley testfloat_gen output into chunked RISC-V assembly tests.
 #
-#   tf2asm.py <vectors.txt> <op-mnemonic> <num-operands> [cases-per-chunk] [frm]
+#   tf2asm.py <op-mnemonic> <num-operands> [cases-per-chunk] [seed] <vectors.txt>...
 #
-#   vectors.txt      output of testfloat_gen (one case per line, hex fields:
-#                    operands... expected flags)
 #   op-mnemonic      e.g. fadd.s / fdiv.s / fsqrt.s
 #   num-operands     2 for add/sub/mul/div, 1 for sqrt
 #   cases-per-chunk  cases per generated .S file (default 1500)
-#   frm              rounding mode written to frm at start (default 0 = RNE;
-#                    1 = RTZ, 2 = RDN, 3 = RUP, 4 = RMM). Must match the -r
-#                    flag given to testfloat_gen.
+#   seed             random seed controlling chunk-to-rounding-mode assignment
+#                    (default 1)
+#   vectors.txt...   one or more testfloat_gen output files, each named
+#                     <TFOP>_<rm>.txt (e.g. f32_div_near_even.txt) so its
+#                     rounding mode can be inferred from the filename
 #
 # Only the operands are embedded; results/flags are checked by the existing
 # RTL-vs-Spike trace diff. Every 4th case feeds the previous result back in
 # as an operand so corner values also stress back-to-back forwarding.
+#
+# Each output chunk draws its cases from a single, randomly chosen input
+# vector file, so its rounding mode (and the frm CSR value baked into the
+# chunk) varies chunk-to-chunk across the whole regression.
 
+import random
 import sys
 
-vecfile, op, nops = sys.argv[1], sys.argv[2], int(sys.argv[3])
-chunk = int(sys.argv[4]) if len(sys.argv) > 4 else 1500
-frm = int(sys.argv[5]) if len(sys.argv) > 5 else 0
+RM_TO_FRM = {
+    "near_even": 0,
+    "minMag": 1,
+    "min": 2,
+    "max": 3,
+    "near_maxMag": 4,
+}
 
-lines = [l.split() for l in open(vecfile) if l.strip()]
-prefix = "tf_" + op.replace(".", "_")
 
-for ci in range(0, len(lines), chunk):
-    cases = lines[ci:ci + chunk]
-    name = f"{prefix}_{ci // chunk:03d}.S"
+def rm_for(vecfile):
+    stem = vecfile.rsplit(".", 1)[0]
+    for rm in RM_TO_FRM:
+        if stem.endswith(rm):
+            return rm
+    raise ValueError(f"could not infer rounding mode from filename: {vecfile}")
+
+
+def write_chunk(name, cases, op, nops, frm, rm):
     with open(name, "w") as f:
+        f.write(f"# ROUNDING_MODE: {rm} (frm={frm})\n")
         f.write(".section .rodata\n.align 2\nvecs:\n")
         for c in cases:
             for w in c[:nops]:
@@ -68,3 +82,29 @@ loop:
     ret
 """)
     print(f"{name}: {len(cases)} cases")
+
+
+op, nops = sys.argv[1], int(sys.argv[2])
+chunk = int(sys.argv[3]) if len(sys.argv) > 3 else 1500
+seed = int(sys.argv[4]) if len(sys.argv) > 4 else 1
+vecfiles = sys.argv[5:]
+
+random.seed(seed)
+prefix = "tf_" + op.replace(".", "_")
+
+pools = []
+for vecfile in vecfiles:
+    rm = rm_for(vecfile)
+    lines = [l.split() for l in open(vecfile) if l.strip()]
+    pools.append({"rm": rm, "frm": RM_TO_FRM[rm], "lines": lines, "cursor": 0})
+
+chunk_idx = 0
+while True:
+    candidates = [p for p in pools if p["cursor"] < len(p["lines"])]
+    if not candidates:
+        break
+    pool = random.choice(candidates)
+    cases = pool["lines"][pool["cursor"]:pool["cursor"] + chunk]
+    pool["cursor"] += len(cases)
+    write_chunk(f"{prefix}_{chunk_idx:03d}.S", cases, op, nops, pool["frm"], pool["rm"])
+    chunk_idx += 1
