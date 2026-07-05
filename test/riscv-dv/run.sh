@@ -9,7 +9,7 @@ LOG_FILE="simulation.log"
 WAVE_CONFIG="barebones_top_tb_behav.wcfg"  # Optional waveform config
 CC32=riscv32-unknown-elf
 USE_RISCVDV=0
-TEST="tf_fdiv.s"
+TEST="tf_fdiv_s_011"
 # TEST="tf_fdiv.s" also works: runs a full testfloat regression (all
 # rounding modes, randomized per chunk) for that op instead. Requires
 # USE_RISCVDV=0.
@@ -139,7 +139,7 @@ if [ "$USE_RISCVDV" -eq 1 ]; then
         echo 1 > "$COUNTER_FILE"
     fi
 
-elif [[ "$TEST" == tf_* ]]; then
+elif [[ "$TEST" == tf_*.s ]]; then
     TF_OP="${TEST#tf_}"
     case "$TF_OP" in
         fadd.s)  TFOP=f32_add;  NOPS=2 ;;
