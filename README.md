@@ -59,7 +59,6 @@ source env.fish   # or: source env.sh
 ```
 
 ### Known issues
-* `fdiv.s` mis-rounds at least one subnormal/normal-boundary rounding tie: dividing `0x00ffffff` by `0x40000000` (2.0) should round (RNE, tie-to-even) up to the smallest normal number `0x00800000`, but the RTL currently produces `0x00400000` — off by a factor of 2 from either rounding candidate. Found via `test/testfloat`'s `tf_fdiv_s_002` chunk; not yet root-caused (undetermined whether it's a regression from the FPU pipelining work or a pre-existing bug newly exposed by TestFloat's targeted corner-case vectors).
 * A handful of FPU ops leave the cumulative `fflags` CSR diverged from Spike's while the computed result value itself stays bit-identical (e.g. dense `fdiv.s` corner-case runs report ~500 such warnings). Also not yet root-caused; observed both before and after the pipelining work.
 
 ## Troubleshooting, Bugs & Suggestions
