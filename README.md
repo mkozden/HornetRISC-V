@@ -36,11 +36,27 @@ cd test/riscv-dv
 `run.sh` has `TEST` and `USE_RISCVDV` variables at the top; with `USE_RISCVDV=0`, it builds and runs whatever directed test `TEST` names, then compares the RTL trace against Spike with `scripts/compare.py`.
 
 #### TestFloat-driven FPU tests
-`test/testfloat` feeds Berkeley TestFloat's corner-biased operand vectors (subnormals, rounding ties, NaN payloads, overflow boundaries) through the FPU as prebuilt directed ROM images — see `test/testfloat/README.md` for how new chunks are generated. Each chunk is a standalone test named `tf_<op>_s_NNN` (e.g. `tf_fdiv_s_000`, `tf_fdiv_s_001`, ...); point `run.sh` at one the same way as any other directed test:
-```sh
-TEST="tf_fdiv_s_000"
-```
-`run.sh`'s directed branch falls back to `test/testfloat/` (and skips recompilation, since these chunks' `.elf`s are prebuilt by testfloat's own makefile) whenever a dedicated `test/<TEST>/` directory doesn't exist.
+`test/testfloat` feeds Berkeley TestFloat's corner-biased operand vectors (subnormals, rounding ties, NaN payloads, overflow boundaries) through the FPU as directed ROM images — see `test/testfloat/README.md` for how chunks are generated (`test/testfloat/makefile` + `tf2asm.py`). Each chunk is a standalone test named `tf_<op>_s_NNN` (e.g. `tf_fdiv_s_000`, `tf_fdiv_s_001`, ...).
+
+There are two ways to drive this from `run.sh` (`USE_RISCVDV=0` in both cases):
+
+1. **Single prebuilt chunk** — point `TEST` at one chunk's exact name:
+   ```sh
+   TEST="tf_fdiv_s_000"
+   ```
+   `run.sh`'s directed branch falls back to `test/testfloat/` (and skips recompilation, since this chunk's `.elf` is expected to already be built) whenever a dedicated `test/<TEST>/` directory doesn't exist.
+
+2. **Full regression for one op** — point `TEST` at the RISC-V mnemonic prefixed with `tf_` (note the dot, e.g. `fdiv.s` not `fdiv_s`):
+   ```sh
+   TEST="tf_fdiv.s"   # also: tf_fadd.s, tf_fsub.s, tf_fmul.s, tf_fsqrt.s
+   ```
+   This drives `run.sh`'s dedicated `tf_*` branch, which on every invocation:
+   - runs `make gen-mixed` in `test/testfloat/`, regenerating TestFloat vectors for **all 5 IEEE rounding modes** (near_even/minMag/min/max/near_maxMag) and re-chunking them — each output chunk is independently, randomly assigned one rounding mode (seeded by `TF_SEED`, so a given seed reproduces the same chunk-to-mode assignment; the vector file's expected results are never used since Spike is the actual golden reference, so mixing rounding modes across chunks doesn't affect correctness checking),
+   - runs `make build` to compile every chunk to a ROM image,
+   - loops over every chunk in order: loads it into `test/memory_contents/instruction.data`, runs Spike, runs the Vivado sim, and diffs the trace — printing each chunk's name and rounding mode (e.g. `=== Running chunk tf_fdiv_s_014 (rounding mode: minMag (frm=1)) ===`),
+   - **stops at the first mismatching chunk** (leaving its `instruction.data`/`spike.log`/`combined.csv` in place for debugging) rather than running the whole set and summarizing.
+
+   Config knobs at the top of `run.sh`: `TF_SEED` (chunk-to-rounding-mode seed, default `1`), `TF_LEVEL` (TestFloat test level, 1 or 2), `TF_CHUNK` (cases per chunk, default 1500), `TF_VIVADO_DURATION` (sim duration per chunk, default `400ms`).
 
 ### Randomized tests (riscv-dv)
 Setting `USE_RISCVDV=1` instead drives [riscv-dv](https://github.com/chipsalliance/riscv-dv) to generate a random instruction stream (`TEST` then names one of the registered riscv-dv tests, e.g. `riscv_floating_point_arithmetic_test` — see `test/riscv-dv/target/rv32imc/testlist.yaml` and `test/riscv-dv/yaml/base_testlist.yaml` for the full list), simulates it, and compares against Spike the same way. On a clean pass it repeats automatically (up to 1000 iterations) to build up confidence with fresh random seeds each time.
