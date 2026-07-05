@@ -8,7 +8,8 @@ module tracer(input clk_i,
                 input [1:0] mem_size,
                 input [31:0] mem_addr,
                 input [31:0] mem_data,
-                input [31:0] fpu_flags);
+                input [31:0] fpu_flags,
+                input [31:0] fpu_flags_accum);
 // This module is used to trace the execution of the processor. It writes the PC, instruction, register address, register data, memory write enable, memory address and memory data to a file.
 
 
@@ -49,7 +50,7 @@ file_pointer = $fopen("../../../../../trace.log", "w"); //The file is normally l
                 end
             end
             else begin
-                if (fpu_flags != 0) $fwrite(file_pointer, " c1_fflags 0x%8h", fpu_flags);
+                if (fpu_flags != 0) $fwrite(file_pointer, " c1_fflags 0x%8h", fpu_flags_accum);
 
                 if (reg_addr > 9) begin
                     $fwrite(file_pointer, " f%0d 0x%8h", reg_addr, reg_data);

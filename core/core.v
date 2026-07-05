@@ -21,7 +21,8 @@ module core(input reset_i, //active-low reset
             output irq_ack_o, //interrupt acknowledge signal. driven high for one cycle when an external interrupt is handled. 
             //Tracer signals
             output reg [31:0] tr_mem_data, tr_mem_addr,
-            output [31:0] tr_reg_data, tr_pc, tr_instr, fflags,
+            output [31:0] tr_reg_data, tr_pc, tr_instr, fflags, 
+            output [4:0]  fflags_accum,
             output [4:0]  tr_reg_addr,
             output [1:0]  tr_mem_len,
             output        tr_valid, tr_load, tr_store, tr_is_float
@@ -287,6 +288,7 @@ csr_unit #(.reset_vector(reset_vector)) CSR_UNIT
                   .instr_access_fault_i(instr_access_fault_i),
                   .data_err_i(data_err_i),
                   .wb_fflags_i(MEMWB_preg_fflags),
+                  .fflags_accum_o(fflags_accum),
 
                   .fpu_dyn_rm(csr_fpu_dyn_rm),
                   .csr_reg_o(csr_reg_out),
